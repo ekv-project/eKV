@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\User\UserController;
+use App\Http\Controllers\User\UserProfileController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -32,6 +33,14 @@ Route::get('/dashboard', function () {
     return view('dashboard.dashboard');
 })->middleware('auth');
 
+/**
+ * User Profile
+ */
+
+Route::get('/dashboard/user/profile/{username}', [UserProfileController::class, 'view']);//->middleware('auth');
+Route::get('/dashboard/user/profile/{username}/update', [UserProfileController::class, 'update']);//->middleware('auth');
+Route::get('/dashboard/user/profile/{username}/download', [UserProfileController::class, 'download']);//->middleware('auth');
+
 /** 
  * Administration Area
  */
@@ -40,6 +49,6 @@ Route::get('/dashboard', function () {
 
 Route::get('/dashboard/admin/user/add', function () {
     return view('dashboard.admin.user.user');
-})->name('admin.user_add')->middleware('auth');
+})->name('admin.user_add');//->middleware('auth');
 
-Route::post('/dashboard/admin/user/add',[UserController::class, 'addNewUser'])->name('admin.user_add')->middleware('auth');
+Route::post('/dashboard/admin/user/add',[UserController::class, 'addNewUser'])->name('admin.user_add');//->middleware('auth');

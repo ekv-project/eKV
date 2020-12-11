@@ -10,7 +10,9 @@ use Illuminate\Notifications\Notifiable;
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
-
+    protected $table = 'users';
+    protected $primaryKey = "username";
+    public $incrementing = false;
     /**
      * The attributes that are mass assignable.
      *
@@ -23,7 +25,6 @@ class User extends Authenticatable
         'password',
         'role'
     ];
-
     /**
      * The attributes that should be hidden for arrays.
      *
