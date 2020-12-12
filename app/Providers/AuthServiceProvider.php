@@ -3,11 +3,14 @@
 namespace App\Providers;
 
 use App\Http\Controllers\User\AuthorizationController;
+use App\Models\Classroom;
+use App\Models\Coordinator;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\UserProfile;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -41,9 +44,9 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('authLecturer', function (User $user){
             return $user->role === 'lecturer';
         });
-        // Check if current use is coordinator for  //In progress 
-        Gate::define('authCoordinator', function (User $user, Coordinator $coordinator){
-            return $user->username === 'lecturer';
+        // Check if current user is coordinator for a user page they trying to access  //In progress 
+        Gate::define('authCoordinator', function ($username, Coordinator $coordinator, Classroom $classroom, UserProfile $userProfile){
+            return $username;
         });
     }
 }

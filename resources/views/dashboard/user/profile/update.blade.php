@@ -1,13 +1,18 @@
 @extends('dashboard.layout.main')
-@section('allowed')
+@section('content')
     @auth
-        Kemas Kini Profil
+        {{-- Only allows current authenticated user to update their own profile --}} 
+        @if(Gate::allows('authUser', $username))
+            {{ $username }}
+        @elseif(Gate::denies('authUser', $username))
+            <div class="error">
+                <p>Anda Tiada Akses Pada Laman Ini!</p>
+            </div>
+        @endif
     @endauth
-@endsection
-@section('not-allowed')
-    @auth
+    @guest
         <div class="error">
-            <p>Anda tiada akses pada page ini!</p>
+            <p>Sila Log Masuk!</p>
         </div>
-    @endauth
+    @endguest
 @endsection

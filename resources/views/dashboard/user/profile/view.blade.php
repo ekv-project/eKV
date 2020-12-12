@@ -1,13 +1,18 @@
 @extends('dashboard.layout.main')
-@section('allowed')
+@section('content')
     @auth
-        {{ auth()->user()->username }}
+        {{-- Only allows current authenticated user to view their own profile + admin + their coordinator --}} 
+        @if(Gate::allows('authUser', $username) || Gate::allows('authAdmin', $username) || Gate::allows('authCoordinator', $username))
+            {{ $username }}
+        @elseif(Gate::denies('authUser', $username) || Gate::allows('authAdmin', $username) || Gate::allows('authCoordinator', $username))
+            <div class="error">
+                <p>Anda Tiada Akses Pada Laman Ini!</p>
+            </div>
+        @endif
     @endauth
-@endsection
-@section('not-allowed')
-    @auth
+    @guest
         <div class="error">
-            <p>Anda tiada akses pada page ini!</p>
+            <p>Sila Log Masuk!</p>
         </div>
-    @endauth
+    @endguest
 @endsection

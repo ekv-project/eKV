@@ -7,17 +7,6 @@
     <title>Dashboard - {{ $page }} - {{ env('APP_NAME') }}</title>
 </head>
 <body>
-    @auth
-        @if($permission == true)
-            @yield('allowed')
-        @elseif($permission == false)
-            @yield('not-allowed')
-        @endif
-    @endauth
-    @guest
-        <div class="error">
-            <p>Sila log masuk!</p> 
-        </div>
-    @endguest
+    @yield('content')
 </body>
 </html>
