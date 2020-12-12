@@ -37,9 +37,9 @@ Route::get('/dashboard', function () {
  * User Profile
  */
 
-Route::get('/dashboard/user/profile/{username}', [UserProfileController::class, 'view']);//->middleware('auth');
-Route::get('/dashboard/user/profile/{username}/update', [UserProfileController::class, 'update']);//->middleware('auth');
-Route::get('/dashboard/user/profile/{username}/download', [UserProfileController::class, 'download']);//->middleware('auth');
+Route::get('/dashboard/user/profile/{username}', [UserProfileController::class, 'view'])->middleware('auth');
+Route::get('/dashboard/user/profile/{username}/update', [UserProfileController::class, 'update'])->middleware('auth');
+Route::get('/dashboard/user/profile/{username}/download', [UserProfileController::class, 'download'])->middleware('auth');
 
 /** 
  * Administration Area
@@ -49,6 +49,6 @@ Route::get('/dashboard/user/profile/{username}/download', [UserProfileController
 
 Route::get('/dashboard/admin/user/add', function () {
     return view('dashboard.admin.user.user');
-})->name('admin.user_add');//->middleware('auth');
+})->name('admin.user_add')->middleware(['auth', 'userIsAdmin']);
 
-Route::post('/dashboard/admin/user/add',[UserController::class, 'addNewUser'])->name('admin.user_add');//->middleware('auth');
+Route::post('/dashboard/admin/user/add',[UserController::class, 'addNewUser'])->name('admin.user_add')->middleware(['auth', 'userIsAdmin']);
