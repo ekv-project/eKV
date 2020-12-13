@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\LoginActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -14,6 +15,11 @@ class UserController extends Controller
         $credentials = $request->only('username', 'password');
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
+            LoginActivity::create([
+                'users_username' => $request->username,
+                'ip_address' => $request->ip(),
+                'user_agent' => $request->server('HTTP_USER_AGENT')
+            ]);
             return redirect()->intended('dashboard');
         }
         return back()->withErrors([

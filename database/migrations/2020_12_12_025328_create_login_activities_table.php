@@ -20,6 +20,11 @@ class CreateLoginActivitiesTable extends Migration
             $table->string('user_agent');
             $table->timestamps();
         });
+        Schema::table('login_activities', function (Blueprint $table) {
+            $table->foreign('users_username')->references('username')->on('users')
+            ->onUpdate('cascade')
+            ->onDelete('cascade');
+        });
     }
 
     /**

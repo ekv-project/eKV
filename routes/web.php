@@ -49,9 +49,11 @@ Route::get('/dashboard/user/profile/{username}/download', [UserProfileController
     // View user list
 Route::get('/dashboard/admin/user', function () {
 })->middleware(['auth','userIsAdmin']);
+
     // Add new user view
 Route::get('/dashboard/admin/user/add', function () {
     return view('dashboard.admin.user.user');
 })->name('admin.user_add')->middleware(['auth', 'userIsSuperAdmin']);
+
     // Add new user controller 
 Route::post('/dashboard/admin/user/add',[UserController::class, 'addNewUser'])->middleware(['auth', 'userIsSuperAdmin']);
