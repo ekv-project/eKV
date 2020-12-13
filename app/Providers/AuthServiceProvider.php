@@ -32,13 +32,17 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        // Check if current user allowed to view
-        Gate::define('authUser', function (User $user, $username){
-            return $user->username === $username;
+         // Check if current user a super admin
+         Gate::define('authSuperAdmin', function (User $user){
+            return $user->role === 'superadmin';
         });
         // Check if current user an admin
         Gate::define('authAdmin', function (User $user){
             return $user->role === 'admin';
+        });
+        // Check if current user allowed to view
+        Gate::define('authUser', function (User $user, $username){
+            return $user->username === $username;
         });
         // Check if current use is lecturer
         Gate::define('authLecturer', function (User $user){

@@ -51,7 +51,7 @@ class Install extends Command
                 'username' => 'admin',
                 'email' => $this->argument('email'),
                 'password' => Hash::make($this->argument('password')),
-                'role' => 'admin',
+                'role' => 'superadmin',
             ]);
             $this->info('A user with the username:admin was successfully created!');
         }
