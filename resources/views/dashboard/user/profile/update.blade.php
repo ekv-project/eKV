@@ -83,10 +83,6 @@
                     </form>
                 </div>
             </div>
-        @elseif(Gate::denies('authUser', $username))
-            <div class="error">
-                <p>Anda Tiada Akses Pada Laman Ini!</p>
-            </div>
         @endif
     @endauth
     @guest

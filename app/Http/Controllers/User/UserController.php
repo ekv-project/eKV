@@ -12,20 +12,25 @@ use App\Models\User;
 class UserController extends Controller
 {
     public function login(Request $request){
-        $credentials = $request->only('username', 'password');
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-            LoginActivity::create([
-                'users_username' => $request->username,
-                'ip_address' => $request->ip(),
-                'user_agent' => $request->server('HTTP_USER_AGENT')
+        if(User::where('username', '=', $request->username)->count() > 0){
+            $credentials = $request->only('username', 'password');
+            if(Auth::attempt($credentials)) {
+                $request->session()->regenerate();
+                LoginActivity::create([
+                    'users_username' => $request->username,
+                    'ip_address' => $request->ip(),
+                    'user_agent' => $request->server('HTTP_USER_AGENT')
+                ]);
+                return redirect()->intended('dashboard');
+            }
+            return back()->withErrors([
+                'password' => 'Kata Laluan Salah.'
             ]);
-            return redirect()->intended('dashboard');
+        }else{
+            return back()->withErrors([
+                'username' => 'Pengguna tidak wujud.'
+            ]);
         }
-        return back()->withErrors([
-            'username' => 'Pengguna tidak wujud.',
-            'password' => 'Kata Laluan Salah.'
-        ]);
     }
     public function logout(Request $request){
         Auth::logout();
@@ -52,7 +57,7 @@ class UserController extends Controller
             $validated = $request->validate([
                 'fullname' => ['required'],
                 'username' => ['required', 'min:8'],
-                'email' => ['required', 'email:rfc,dns'],
+                'email' => ['required', 'email:rfc'],
                 'password' => ['required', 'confirmed'],
                 'role' => ['required']
             ]);

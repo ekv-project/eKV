@@ -34,11 +34,15 @@ class AuthServiceProvider extends ServiceProvider
 
          // Check if current user a super admin
          Gate::define('authSuperAdmin', function (User $user){
-            return $user->role === 'superadmin';
+            if($user->role === 'superadmin'){
+                return true;
+            }
         });
         // Check if current user an admin
         Gate::define('authAdmin', function (User $user){
-            return $user->role === 'admin';
+            if($user->role === 'admin'){
+                return true;
+            }
         });
         // Check if current user allowed to view
         Gate::define('authUser', function (User $user, $username){
@@ -48,9 +52,10 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('authLecturer', function (User $user){
             return $user->role === 'lecturer';
         });
+        /*
         // Check if current user is coordinator for a user page they trying to access  //In progress 
         Gate::define('authCoordinator', function ($username, Coordinator $coordinator, Classroom $classroom, UserProfile $userProfile){
             return $username;
-        });
+        });*/
     }
 }

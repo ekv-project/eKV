@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\User\UserProfileController;
+use Illuminate\Support\Facades\Auth;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -20,7 +22,11 @@ use App\Http\Controllers\User\UserProfileController;
 
 // If user not logged in show login page, if logged in redirect to dashboard
 Route::get('/', function () {
-    return view('home');
+    if(Auth::check()){
+        return redirect()->route('dashboard');
+    }else{
+        return view('home');
+    }
 })->name('login');
 
 // User Login and Logout
@@ -33,13 +39,13 @@ Route::post('/dashboard/logout', [UserController::class, 'logout'])->name('logou
 
 Route::get('/dashboard', function () { 
     return view('dashboard.dashboard');
-})->middleware('auth');
+})->name('dashboard')->middleware('auth');
 
 /**
  * User Profile
  */
-
-Route::get('/dashboard/user/profile/{username}', [UserProfileController::class, 'view'])->name('profile')->middleware('auth');
+Route::get('/dashboard/user/profile', [UserProfileController::class, 'viewProfile'])->name('profile')->middleware('auth');
+Route::get('/dashboard/user/profile/{username}', [UserProfileController::class, 'view'])->name('profile.user')->middleware('auth');
 Route::get('/dashboard/user/profile/{username}/update', [UserProfileController::class, 'updateView'])->name('profile.user_update')->middleware('auth');
 Route::post('/dashboard/user/profile/{username}/update', [UserProfileController::class, 'update'])->middleware('auth');
 Route::get('/dashboard/user/profile/{username}/download', [UserProfileController::class, 'download'])->middleware('auth');
