@@ -17,6 +17,8 @@ use App\Http\Controllers\User\UserProfileController;
 
 // Don't forget to add Auth middleware for each routes that needed user to be authenticate to access
 
+
+// If user not logged in show login page, if logged in redirect to dashboard
 Route::get('/', function () {
     return view('home');
 })->name('login');
@@ -37,8 +39,9 @@ Route::get('/dashboard', function () {
  * User Profile
  */
 
-Route::get('/dashboard/user/profile/{username}', [UserProfileController::class, 'view'])->middleware('auth');
-Route::get('/dashboard/user/profile/{username}/update', [UserProfileController::class, 'update'])->middleware('auth');
+Route::get('/dashboard/user/profile/{username}', [UserProfileController::class, 'view'])->name('profile')->middleware('auth');
+Route::get('/dashboard/user/profile/{username}/update', [UserProfileController::class, 'updateView'])->name('profile.user_update')->middleware('auth');
+Route::post('/dashboard/user/profile/{username}/update', [UserProfileController::class, 'update'])->middleware('auth');
 Route::get('/dashboard/user/profile/{username}/download', [UserProfileController::class, 'download'])->middleware('auth');
 
 /** 

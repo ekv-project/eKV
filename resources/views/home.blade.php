@@ -22,12 +22,12 @@
                 @error('username')
                     <div class="alert alert-danger">{{ $message }}</div>
                 @enderror
-                <label for="username" class="form-label">Kata Laluan</label>
+                <label for="password" class="form-label">Kata Laluan</label>
                 <input type="password" name="password" id="password" class="form-control">
                 @error('password')
                     <div class="alert alert-danger">{{ $message }}</div>
                 @enderror
-                <button type="submit" class="btn btn-primary mt-2">Log Masuk</button>
+                <button type="submit" class="btn btn-primary w-100 mt-2">Log Masuk</button>
             </form>
         </div>
     </div>

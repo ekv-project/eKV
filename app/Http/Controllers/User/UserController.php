@@ -64,7 +64,7 @@ class UserController extends Controller
                 'password' => Hash::make($request->password),
                 'role' => $request->role,
             ]);
-            redirect()->route('admin.user_add');
+            redirect()->back();
         }
     }
 }
