@@ -31,8 +31,16 @@ class UserProfileController extends Controller
     }
     // Only the current authenticated user can view their own profile update page
     public function updateView($username){
-        if(Gate::allows('authUser', $username)){
-            return view('dashboard.user.profile.update')->with(['page' => 'Kemas Kini Profil Pengguna', 'username' => $username]);
+        // Check if user exist. True, return view.
+        if(User::where('username', '=', $username)->count() > 0){
+            if(Gate::allows('authUser', $username)){
+                return view('dashboard.user.profile.update')->with(['page' => 'Kemas Kini Profil Pengguna', 'username' => $username]);
+            }else{
+                abort(403, 'Anda tiada akses pada laman ini!');
+            }
+        }else{
+        // Check if user exist. Else, abort with 404.
+            abort(404, 'Tiada pengguna dijumpai!');
         }
     }
     // Only the current authenticated user can update their profile
