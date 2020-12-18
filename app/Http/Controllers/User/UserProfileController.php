@@ -69,7 +69,7 @@ class UserProfileController extends Controller
                     'guardian_phone_number' => $request->guardian_phone_number
                 ]);
                 session()->flash('profileUpdateSuccess', 'Profil berjaya dikemas kini!');
-                return redirect()->route('profile.user_update', $username);
+                return redirect()->route('profile.update', $username);
             }elseif(!UserProfile::where('users_username', $username)->first()){
                 // Create new profile if user profile not exist.
                 UserProfile::create([
@@ -84,7 +84,7 @@ class UserProfileController extends Controller
                     'guardian_phone_number' => $request->guardian_phone_number
                 ]);
                 session()->flash('profileUpdateSuccess', 'Profil berjaya dikemas kini!');
-                return redirect()->route('profile.user_update', $username);
+                return redirect()->route('profile.update', $username);
             }
         }
     }

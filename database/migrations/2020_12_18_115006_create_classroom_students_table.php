@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCoordinatorsTable extends Migration
+class CreateClassroomStudentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,10 @@ class CreateCoordinatorsTable extends Migration
      */
     public function up()
     {
-        Schema::create('coordinators', function (Blueprint $table) {
+        Schema::create('classroom_students', function (Blueprint $table) {
             $table->id();
-            $table->string('users_username');
+            $table->string('users_username')->unique();
+            $table->unsignedBigInteger('classroom_id');
             $table->timestamps();
         });
     }
@@ -27,6 +28,6 @@ class CreateCoordinatorsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('coordinators');
+        Schema::dropIfExists('classroom_students');
     }
 }

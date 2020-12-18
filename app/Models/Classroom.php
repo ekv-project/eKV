@@ -16,4 +16,11 @@ class Classroom extends Model
         'study_year',
         'study_levels_code'
     ];
+    // Relationships
+    public function student(){
+        return $this->hasMany(ClassroomStudent::class);
+    }
+    public function coordinator(){
+        return $this->hasOne(ClassroomCoordinator::class);
+    }
 }

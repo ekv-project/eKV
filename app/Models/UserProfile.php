@@ -18,7 +18,12 @@ class UserProfile extends Model
         'home_address',
         'home_number',
         'guardian_name',
-        'guardian_phone_number',
-        'classrooms_id'
+        'guardian_phone_number'
     ];
+
+
+    // Relationships
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
 }

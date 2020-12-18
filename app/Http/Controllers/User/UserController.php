@@ -56,7 +56,7 @@ class UserController extends Controller
         // If no user exist, add them
             $validated = $request->validate([
                 'fullname' => ['required'],
-                'username' => ['required', 'min:8'],
+                'username' => ['required'],
                 'email' => ['required', 'email:rfc'],
                 'password' => ['required', 'confirmed'],
                 'role' => ['required']

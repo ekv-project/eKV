@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateLoginActivitiesTable extends Migration
+class CreateClassroomCoordinatorsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,10 @@ class CreateLoginActivitiesTable extends Migration
      */
     public function up()
     {
-        Schema::create('login_activities', function (Blueprint $table) {
+        Schema::create('classroom_coordinators', function (Blueprint $table) {
             $table->id();
             $table->string('users_username');
-            $table->ipAddress('ip_address');
-            $table->string('user_agent');
+            $table->unsignedBigInteger('classroom_id');
             $table->timestamps();
         });
     }
@@ -29,6 +28,6 @@ class CreateLoginActivitiesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('login_activities');
+        Schema::dropIfExists('classroom_coordinators');
     }
 }
