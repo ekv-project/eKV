@@ -41,20 +41,16 @@ class Install extends Command
     public function handle()
     {
         Artisan::call('migrate');
-         // Check if user already exist
-         if(User::where('username', 'admin')->first()){
-            $this->error('User with the username: admin already exist!');
-        }else{
-        // If user not already exit, CREATE IT!
-            User::create([
-                'fullname' => $this->argument('fullname'),
-                'username' => 'admin',
-                'email' => $this->argument('email'),
-                'password' => Hash::make($this->argument('password')),
-                'role' => 'superadmin',
+        $this->info('Database migrated!');
+        User::updateOrCreate(
+            ['username' => 'admin'],
+            [
+            'fullname' => $this->argument('fullname'),
+            'email' => $this->argument('email'),
+            'password' => Hash::make($this->argument('password')),
+            'role' => 'superadmin',
             ]);
-            $this->info('A user with the username:admin was successfully created!');
-        }
+        $this->info('A user with the admin user was successfully created or updated!');
         $this->info('System was successfully installed!');
     }
 }
