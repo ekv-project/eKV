@@ -12,20 +12,25 @@ use App\Models\User;
 class UserController extends Controller
 {
     public function login(Request $request){
-        if(User::where('username', '=', $request->username)->count() > 0){
-            $credentials = $request->only('username', 'password');
+        $username = strtolower($request->username);
+        if(User::where('username', '=', $username)->count() > 0){
+            $credentials = [
+                'username' => $username,
+                'password' => $request->password
+            ];   
             if(Auth::attempt($credentials)) {
                 $request->session()->regenerate();
                 LoginActivity::create([
-                    'users_username' => $request->username,
+                    'users_username' => $username,
                     'ip_address' => $request->ip(),
                     'user_agent' => $request->server('HTTP_USER_AGENT')
                 ]);
                 return redirect()->intended('dashboard');
+            }else{
+                return back()->withErrors([
+                    'password' => 'Kata Laluan Salah.'
+                ]);
             }
-            return back()->withErrors([
-                'password' => 'Kata Laluan Salah.'
-            ]);
         }else{
             return back()->withErrors([
                 'username' => 'Pengguna tidak wujud.'
@@ -48,7 +53,8 @@ class UserController extends Controller
      */
     public function addNewUser(Request $request){
         // Check if user already exist
-        if(User::where('username', $request->username)->first()){
+        $username = strtolower($request->username);
+        if(User::where('username', $username)->first()){
             return back()->withErrors([
                 'userExist' => 'Pengguna telah wujud!',
             ]);
@@ -64,7 +70,7 @@ class UserController extends Controller
             // If validation failed, display the error
             User::create([
                 'fullname' => $request->fullname,
-                'username' => $request->username,
+                'username' => $username,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
                 'role' => $request->role,

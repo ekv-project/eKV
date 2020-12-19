@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\User\UserProfileController;
+use App\Http\Controllers\Classroom\ClassroomController;
+use App\Models\ClassroomStudent;
 use App\Models\User;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
@@ -30,6 +32,11 @@ Route::get('/', function () {
         return view('home');
     }
 })->name('login');
+
+Route::get('/test', function () {
+    $classroom = ClassroomStudent::find('1')->classroom->first();
+    dd($classroom);
+});
 
 // User Login and Logout
 Route::post('/', [UserController::class, 'login']);

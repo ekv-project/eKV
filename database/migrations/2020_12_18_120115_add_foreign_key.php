@@ -25,7 +25,7 @@ class AddForeignKey extends Migration
             $table->foreign('users_username')->references('username')->on('users')
             ->onUpdate('cascade')
             ->onDelete('cascade');
-            $table->foreign('classroom_id')->references('id')->on('classrooms')
+            $table->foreign('classrooms_id')->references('id')->on('classrooms')
             ->onUpdate('cascade')
             ->onDelete('cascade');    
         });
@@ -33,7 +33,7 @@ class AddForeignKey extends Migration
             $table->foreign('users_username')->references('username')->on('users')
             ->onUpdate('cascade')
             ->onDelete('cascade');
-            $table->foreign('classroom_id')->references('id')->on('classrooms')
+            $table->foreign('classrooms_id')->references('id')->on('classrooms')
             ->onUpdate('cascade')
             ->onDelete('cascade');
         });

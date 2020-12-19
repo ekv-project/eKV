@@ -11,7 +11,7 @@ class ClassroomCoordinator extends Model
     protected $table = 'classroom_coordinators';
     protected $fillable = [
         'users_username',
-        'classroom_id'
+        'classrooms_id'
     ];
     // Relationships
     public function classroom(){

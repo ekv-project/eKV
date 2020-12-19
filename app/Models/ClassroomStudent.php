@@ -11,7 +11,7 @@ class ClassroomStudent extends Model
     protected $table = 'classroom_students';
     protected $fillable = [
         'users_username',
-        'classroom_id'
+        'classrooms_id'
     ];
     // Relationships
     public function classroom(){

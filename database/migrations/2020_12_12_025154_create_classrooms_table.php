@@ -17,7 +17,6 @@ class CreateClassroomsTable extends Migration
             $table->id();
             $table->string('programs_code');
             $table->string('admission_year');
-            $table->bigInteger('coordinators_id');
             $table->string('study_year');
             $table->string('study_levels_code');
             $table->timestamps();

@@ -16,7 +16,7 @@ class CreateClassroomCoordinatorsTable extends Migration
         Schema::create('classroom_coordinators', function (Blueprint $table) {
             $table->id();
             $table->string('users_username');
-            $table->unsignedBigInteger('classroom_id');
+            $table->unsignedBigInteger('classrooms_id');
             $table->timestamps();
         });
     }

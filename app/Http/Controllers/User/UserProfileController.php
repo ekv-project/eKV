@@ -56,9 +56,9 @@ class UserProfileController extends Controller
                 'guardian_name' => ['required'],
                 'guardian_phone_number' => ['required']
             ]);
-            if(UserProfile::where('users_username', $username)->first()){
-                // Update user profile if user profile is exist.
-                UserProfile::where('users_username', $request->username)->update([
+            UserProfile::updateOrCreate(
+                ['users_username' => $username],
+                [
                     'identification_number' => $request->identification_number,
                     'phone_number' => $request->phone_number,
                     'date_of_birth' => $request->date_of_birth,
@@ -67,25 +67,10 @@ class UserProfileController extends Controller
                     'home_number' => $request->home_number,
                     'guardian_name' => $request->guardian_name,
                     'guardian_phone_number' => $request->guardian_phone_number
-                ]);
-                session()->flash('profileUpdateSuccess', 'Profil berjaya dikemas kini!');
-                return redirect()->route('profile.update', $username);
-            }elseif(!UserProfile::where('users_username', $username)->first()){
-                // Create new profile if user profile not exist.
-                UserProfile::create([
-                    'users_username' => $username,
-                    'identification_number' => $request->identification_number,
-                    'phone_number' => $request->phone_number,
-                    'date_of_birth' => $request->date_of_birth,
-                    'place_of_birth' => $request->place_of_birth,
-                    'home_address' => $request->home_address,
-                    'home_number' => $request->home_number,
-                    'guardian_name' => $request->guardian_name,
-                    'guardian_phone_number' => $request->guardian_phone_number
-                ]);
-                session()->flash('profileUpdateSuccess', 'Profil berjaya dikemas kini!');
-                return redirect()->route('profile.update', $username);
-            }
+                ]
+            );
+            session()->flash('profileUpdateSuccess', 'Profil berjaya dikemas kini!');
+            return redirect()->route('profile.update', $username);
         }
     }
     // Only current authenticated user (their own profile), admin and their coordinator is allowed to download the profile.

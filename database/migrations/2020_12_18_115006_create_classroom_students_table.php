@@ -16,7 +16,7 @@ class CreateClassroomStudentsTable extends Migration
         Schema::create('classroom_students', function (Blueprint $table) {
             $table->id();
             $table->string('users_username')->unique();
-            $table->unsignedBigInteger('classroom_id');
+            $table->unsignedBigInteger('classrooms_id');
             $table->timestamps();
         });
     }
