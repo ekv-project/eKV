@@ -24,15 +24,15 @@ class UserProfileController extends Controller
     public function view($username){
         // Check if user exist. If true, return view
         if(User::where('username', '=', $username)->count() > 0){
-            if(Gate::allows('authUser', $username) || Gate::allows('authAdmin') || Gate::allows('authSuperAdmin')){
+            if(Gate::allows('authUser', $username) || Gate::allows('authCoordinator', $username) || Gate::allows('authAdmin') || Gate::allows('authSuperAdmin')){
                 $profile = UserProfile::where('users_username', $username)->first();
                 return view('dashboard.user.profile.view')->with(['page' => 'Profil Pengguna', 'username' => $username, 'profile' => $profile]);
             }else{
-                abort(403, 'Anda tiada akses pada laman ini!');
+                abort(403, 'Anda tiada akses pada laman ini');
             }
         }else{
         // Check if user exist. Else, abort with 404.
-            abort(404, 'Tiada pengguna dijumpai!');
+            abort(404, 'Tiada pengguna dijumpai');
         }
     }
     // Only the current authenticated user can view their own profile update page

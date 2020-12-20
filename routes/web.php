@@ -7,6 +7,7 @@ use App\Http\Controllers\Classroom\ClassroomController;
 use App\Http\Controllers\Exam\ExamController;
 use App\Http\Controllers\SystemSettingController;
 use App\Models\Classroom;
+use App\Models\ClassroomCoordinator;
 use App\Models\ClassroomStudent;
 use App\Models\User;
 use Illuminate\Support\Facades\App;
@@ -26,6 +27,12 @@ use Illuminate\Support\Facades\Auth;
 
 // Don't forget to add Auth middleware for each routes that needed user to be authenticate to access
 
+Route::get('/test/{studentProfile}', function ($studentProfile) {
+    $currentUser = Auth::user()->username;
+    $studentClassroom = ClassroomStudent::where('users_username', $studentProfile)->first()->classroom->id;
+    $coordinatorClassroom = ClassroomCoordinator::where('users_username', $currentUser)->first()->classroom->id;
+    return $studentClassroom === $coordinatorClassroom;
+})->middleware('auth');
 
 // If user not logged in show login page, if logged in redirect to dashboard
 Route::get('/', function () {

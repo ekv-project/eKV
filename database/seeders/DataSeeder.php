@@ -121,14 +121,17 @@ class DataSeeder extends Seeder
                 ]
             ], ['users_username'], ['users_username', 'classrooms_id']
         );
-        /*
         ClassroomCoordinator::upsert(
             [
                 [
-                    'users_username' => '',
-                    'classrooms_id' => ''
+                    'users_username' => 'lecturer1',
+                    'classrooms_id' => '1'
+                ],
+                [
+                    'users_username' => 'lecturer2',
+                    'classrooms_id' => '2'
                 ]
                 ], ['id'], ['users_username', 'classrooms_id']
-        );*/
+        );
     }
 }
