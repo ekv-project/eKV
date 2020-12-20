@@ -17,10 +17,10 @@ class Classroom extends Model
         'study_levels_code'
     ];
     // Relationships
-    public function student(){
-        return $this->hasMany(ClassroomStudent::class);
+    public function students(){
+        return $this->hasMany(ClassroomStudent::class, 'classrooms_id');
     }
     public function coordinator(){
-        return $this->hasOne(ClassroomCoordinator::class);
+        return $this->hasOne(ClassroomCoordinator::class, 'classrooms_id');
     }
 }

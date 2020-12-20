@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\LoginActivity;
+use App\Models\SystemSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -11,6 +12,11 @@ use App\Models\User;
 
 class UserController extends Controller
 {
+    public $systemSettings;
+    public function __construct()
+    {
+        $this->systemSettings = SystemSetting::find(1);
+    }
     public function login(Request $request){
         $username = strtolower($request->username);
         if(User::where('username', '=', $username)->count() > 0){

@@ -4,6 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\User\UserProfileController;
 use App\Http\Controllers\Classroom\ClassroomController;
+use App\Http\Controllers\Exam\ExamController;
+use App\Http\Controllers\SystemSettingController;
+use App\Models\Classroom;
 use App\Models\ClassroomStudent;
 use App\Models\User;
 use Illuminate\Support\Facades\App;
@@ -32,11 +35,6 @@ Route::get('/', function () {
         return view('home');
     }
 })->name('login');
-
-Route::get('/test', function () {
-    $classroom = ClassroomStudent::find('1')->classroom->first();
-    dd($classroom);
-});
 
 // User Login and Logout
 Route::post('/', [UserController::class, 'login']);
@@ -68,19 +66,30 @@ Route::get('/dashboard/profile/{username}/update', [UserProfileController::class
 Route::post('/dashboard/profile/{username}/update', [UserProfileController::class, 'update'])->middleware('auth');
 Route::get('/dashboard/profile/{username}/download', [UserProfileController::class, 'download'])->name('profile.download')->middleware('auth');
 
+
+/**
+*   Exam Transcript  
+*/
+Route::get('/dashboard/exam', [ExamController::class, 'exam'])->name('exam')->middleware('auth');
+Route::get('/dashboard/exam/transcript', [ExamController::class, 'transcriptView'])->name('transcript')->middleware('auth');
+Route::get('/dashboard/exam/transcript/download', [ExamController::class, 'transcriptDownload'])->name('transcript.download')->middleware('auth');
+
 /** 
- * Administration Area
+ *  Administration Area
  */
 
- // User 
+// User 
     // View user list
-Route::get('/admin/user', function () {
+Route::get('/dashboard/admin/user', function () {
 })->middleware(['auth','userIsAdmin']);
 
     // Add new user view
-Route::get('/admin/user/add', function () {
+Route::get('/dashboard/admin/user/add', function () {
     return view('dashboard.admin.user.user')->with(['page' => 'Tambah Pengguna']);
 })->name('admin.user_add')->middleware(['auth', 'userIsSuperAdmin']);
 
-    // Add new user controller 
-Route::post('/admin/user/add',[UserController::class, 'addNewUser'])->middleware(['auth', 'userIsSuperAdmin']);
+    // Add new user 
+Route::post('/dashboard/admin/user/add',[UserController::class, 'addNewUser'])->middleware(['auth', 'userIsSuperAdmin']);
+
+// System settings
+Route::get('/dashboard/admin/system',[SystemSettingController::class, 'view'])->middleware(['auth', 'userIsSuperAdmin']);

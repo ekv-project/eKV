@@ -15,7 +15,7 @@ class ClassroomCoordinator extends Model
     ];
     // Relationships
     public function classroom(){
-        return $this->belongsTo(Classroom::class);
+        return $this->belongsTo(Classroom::class, 'classrooms_id');
     }
 }
 
