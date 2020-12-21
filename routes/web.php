@@ -27,13 +27,6 @@ use Illuminate\Support\Facades\Auth;
 
 // Don't forget to add Auth middleware for each routes that needed user to be authenticate to access
 
-Route::get('/test/{studentProfile}', function ($studentProfile) {
-    $currentUser = Auth::user()->username;
-    $studentClassroom = ClassroomStudent::where('users_username', $studentProfile)->first()->classroom->id;
-    $coordinatorClassroom = ClassroomCoordinator::where('users_username', $currentUser)->first()->classroom->id;
-    return $studentClassroom === $coordinatorClassroom;
-})->middleware('auth');
-
 // If user not logged in show login page, if logged in redirect to dashboard
 Route::get('/', function () {
     if(Auth::check()){
@@ -56,15 +49,6 @@ Route::get('/dashboard', function () {
 })->name('dashboard')->middleware('auth');
 
 /**
- *  Student Classroom
- */
-Route::get('/dashboard/classroom', [ClassroomController::class, 'classroom'])->name('classroom')->middleware('auth');
-Route::get('/dashboard/classroom/{classroomID}', [ClassroomController::class, 'view'])->name('classroom.view')->middleware('auth');
-Route::get('/dashboard/classroom/{classroomID}/update', [ClassroomController::class, 'update'])->name('classroom.update')->middleware(['auth', 'userIsAdmin', 'userIsSuperAdmin']);
-Route::get('/dashboard/classroom/{classroomID}/add', [ClassroomController::class, 'addStudent'])->name('classroom.add')->middleware(['auth', 'userIsAdmin', 'userIsSuperAdmin']);
-
-
-/**
  *  User Profile
  */
 Route::get('/dashboard/profile', [UserProfileController::class, 'viewProfile'])->name('profile')->middleware('auth');
@@ -73,6 +57,12 @@ Route::get('/dashboard/profile/{username}/update', [UserProfileController::class
 Route::post('/dashboard/profile/{username}/update', [UserProfileController::class, 'update'])->middleware('auth');
 Route::get('/dashboard/profile/{username}/download', [UserProfileController::class, 'download'])->name('profile.download')->middleware('auth');
 
+/**
+ *  Student Classroom
+ */
+Route::get('/dashboard/classroom', [ClassroomController::class, 'classroom'])->name('classroom')->middleware('auth');
+Route::get('/dashboard/classroom/{classroomID}', [ClassroomController::class, 'view'])->name('classroom.view')->middleware('auth');
+Route::get('/dashboard/classroom/{classroomID}/update', [ClassroomController::class, 'update'])->name('classroom.update')->middleware(['auth']);
 
 /**
 *   Exam Transcript  

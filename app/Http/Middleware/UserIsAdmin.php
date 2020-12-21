@@ -18,9 +18,9 @@ class UserIsAdmin
      */
     public function handle(Request $request, Closure $next)
     {   
-        if(Gate::allows('authAdmin', Auth::user()->username)){
+        if(Gate::allows('authAdmin')){
             return $next($request);   
-        }elseif(Gate::denies('authAdmin', Auth::user()->username)){
+        }elseif(Gate::denies('authAdmin')){
             abort(403, 'Anda tiada akses pada laman ini!');
         }
     }

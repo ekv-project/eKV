@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Classroom;
 
 use App\Http\Controllers\Controller;
+use App\Models\Classroom;
+use App\Models\ClassroomCoordinator;
 use App\Models\ClassroomStudent;
 use App\Models\SystemSetting;
 use App\Models\User;
@@ -18,32 +20,48 @@ class ClassroomController extends Controller
         $this->systemSettings = SystemSetting::find(1);
     }
     public function classroom(){
-            // If authenticated user is a student or coordinator of a classroom, they will be redirected to their own classroom.
-        if(Auth::user()){
-            
-        }/*else{
-            // Else redirect to dashboard.
-            redirect()->route('dashboard');
-        }*/
-    }
-    public function view($classroomID){
-        // Check if classroom exist. If true, return view
-        if(User::where('id', '=', $classroomID)->count() > 0){
-            // Only admin, superadmin and student + coordinator in the classroom can view it.
-            if(Gate::allows('authAdmin') || Gate::allows('authSuperAdmin')){
-                
-            }else{
-                abort(403, 'Anda tiada akses pada laman ini!');
-            }
+        // If authenticated user is a student or coordinator of a classroom, they will be redirected to their own classroom.
+        if(isset(ClassroomCoordinator::where('users_username', Auth::user()->username)->first()->classroom)){
+            $classroomCoordinator = ClassroomCoordinator::where('users_username', Auth::user()->username)->first()->classroom;
+            return redirect()->route('classroom.view', ['classroomID' => $classroomCoordinator->id]);
+        }elseif(isset(ClassroomStudent::where('users_username', Auth::user()->username)->first()->classroom)){
+            $classroomStudent = ClassroomStudent::where('users_username', Auth::user()->username)->first()->classroom;
+            return redirect()->route('classroom.view', ['classroomID' => $classroomStudent->id]);
         }else{
-        // Check if classroom exist. Else, abort with 404.
-            abort(404, 'Tiada kelas dijumpai!');
+            return redirect()->route('dashboard');
         }
     }
-    public function update(){
-        
+    public function view($classroomID){
+        if(Classroom::where('id', $classroomID)->count() < 1){
+            abort(404, 'Tiada kelas dijumpai');
+        }elseif(isset(ClassroomCoordinator::where('users_username', Auth::user()->username)->first()->classroom)){
+            $classroomCoordinatorID = ClassroomCoordinator::where('users_username', Auth::user()->username)->first()->classroom->id;
+            if(Gate::allows('authSuperAdmin') || Gate::allows('authAdmin') ||  $classroomCoordinatorID == $classroomID){
+                return view('dashboard.user.classroom.view')->with(['settings' => $this->systemSettings, 'page' => 'Maklumat Kelas']);
+            }else{
+                abort(403, 'Anda tiada akses paga laman ini');
+            }
+        }elseif(isset(ClassroomStudent::where('users_username', Auth::user()->username)->first()->classroom)){
+            $classroomStudentID = ClassroomStudent::where('users_username', Auth::user()->username)->first()->classroom->id;
+            if(Gate::allows('authSuperAdmin') || Gate::allows('authAdmin') ||  $classroomStudentID == $classroomID){
+                return view('dashboard.user.classroom.view')->with(['settings' => $this->systemSettings, 'page' => 'Maklumat Kelas']);
+            }else{
+                abort(403, 'Anda tiada akses paga laman ini');
+            }
+        }
     }
-    public function addStudent(){
-
+    public function update($classroomID){
+        if(Classroom::where('id', $classroomID)->count() < 1){
+            abort(404, 'Tiada kelas dijumpai');
+        }elseif(isset(ClassroomCoordinator::where('users_username', Auth::user()->username)->first()->classroom)){
+            $classroomCoordinatorID = ClassroomCoordinator::where('users_username', Auth::user()->username)->first()->classroom->id;
+            if(Gate::allows('authSuperAdmin') || Gate::allows('authAdmin') || $classroomCoordinatorID == $classroomID){
+                return view('dashboard.user.classroom.view')->with(['settings' => $this->systemSettings, 'page' => 'Kemaskini Kelas']);
+            }else{
+                abort(403, 'Anda tiada akses paga laman ini');
+            }
+        }else{
+            return redirect()->route('dashboard');
+        }
     }
 }

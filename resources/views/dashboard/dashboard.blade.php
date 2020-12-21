@@ -7,7 +7,7 @@
         {{ 'E-MEL: ' . strtoupper(Auth::user()->email) }}
         <form action="{{ route('logout') }}" method="post">
             @csrf
-            <button type="submit">Log Keluar</button>
+            <button type="submit" class="btn btn-primary">Log Keluar</button>
         </form>
     @endauth
 @endsection
