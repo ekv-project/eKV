@@ -17,6 +17,10 @@ class UserProfileController extends Controller
     {
         $this->systemSettings = SystemSetting::find(1);
     }
+
+    /**
+     * Handling Views
+     */
     public function viewProfile(){
         // Redirect authenticated user to their own profile.
         return redirect()->route('profile.user', ['username' => Auth::user()->username]);
@@ -49,6 +53,10 @@ class UserProfileController extends Controller
             abort(404, 'Tiada pengguna dijumpai!');
         }
     }
+
+    /**
+     * Handling POST Request
+     */
     // Only the current authenticated user can update their profile
     public function update(Request $request, $username){
         if(Gate::allows('authUser', $username)){

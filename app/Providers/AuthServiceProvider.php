@@ -52,10 +52,19 @@ class AuthServiceProvider extends ServiceProvider
         // Check if current user is coordinator for a user page they trying to access
         Gate::define('authCoordinator', function (User $user, $id){
             $currentUser = $user->username;
-            $studentClassroom = ClassroomStudent::where('users_username', $id)->first()->classroom->id;
-            $coordinatorClassroom = ClassroomCoordinator::where('users_username', $currentUser)->first()->classroom->id;
-            if($coordinatorClassroom === $studentClassroom || $coordinatorClassroom === $id){
-                return true;
+            if(!empty(ClassroomStudent::where('users_username', $id)->first()->classroom)){
+                $classroomStudentID = ClassroomStudent::where('users_username', $id)->first()->classroom->id;
+                if(!empty(ClassroomCoordinator::where('users_username', $currentUser)->first()->classroom)){
+                    $classroomCoordinatorID = ClassroomCoordinator::where('users_username', $currentUser)->first()->classroom->id;
+                    if($classroomCoordinatorID == $classroomStudentID){
+                        return true;
+                    }
+                }
+            }elseif(!empty(ClassroomCoordinator::where('users_username', $currentUser)->first()->classroom)){
+                $classroomCoordinatorID = ClassroomCoordinator::where('users_username', $currentUser)->first()->classroom->id;
+                if($classroomCoordinatorID == $id){
+                    return true;
+                }
             }
         });
     }
