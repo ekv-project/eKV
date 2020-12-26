@@ -1,4 +1,7 @@
 @extends('dashboard.layout.main')
 @section('content')
-View
+@foreach ($students as $student)
+    {{ $student->user->username }}
+    {{ $student->user->fullname }} 
+@endforeach
 @endsection

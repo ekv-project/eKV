@@ -28,6 +28,8 @@ use Illuminate\Support\Facades\Auth;
 // Don't forget to add Auth middleware for each routes that needed user to be authenticate to access
 
 // If user not logged in show login page, if logged in redirect to dashboard
+
+
 Route::get('/', function () {
     if(Auth::check()){
         return redirect()->route('dashboard');
