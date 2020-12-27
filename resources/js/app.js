@@ -1,7 +1,8 @@
 require('./bootstrap');
-import { searchStudent } from "./liveSearch.js";
-const studentInput = document.querySelector('#searchInput');
-studentInput.addEventListener("input", function(){
+import { search } from "./liveSearch.js";
+const searchInput = document.querySelector('#searchInput');
+let dataType = searchInput.getAttribute('data-type');
+searchInput.addEventListener("input", function(){
     const token = document.querySelector('meta[name="api-token"]').content;
-    searchStudent(studentInput.value, 'student', token);
+    search(searchInput.value, dataType, token);
 }); 

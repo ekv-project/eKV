@@ -1,11 +1,12 @@
-export function searchStudent(data, searchFor, token){
+export function search(data, dataType, token){
     // Clears search result everytime key is up
     const searchResult = document.querySelector('#searchResult')
     while (searchResult.firstChild){
         searchResult.removeChild(searchResult.firstChild)
     }
-    let url = '/api/search?' + new URLSearchParams('data' + '=' + data) + '&' + new URLSearchParams('searchFor' + '=' + searchFor);
-        fetch(url, {
+    const url = '/api/search?' + new URLSearchParams('data' + '=' + data) + '&' + new URLSearchParams('dataType' + '=' + dataType);
+    async function fetchData(url){
+        const response = await fetch(url, {
             method: 'GET',
             mode: 'same-origin',
             cache: 'no-cache',
@@ -13,28 +14,57 @@ export function searchStudent(data, searchFor, token){
             headers: {
               'Content-Type': 'application/json',
               'API-TOKEN': token
-        }})
-        .then(response => response.json())
-        .then(function(data){
+            }
+        });
+        return response.json();
+    }
+    function user(userType){
+        function checkType(){
+            if(userType == 'user'){
+                let type = 'Pengguna';
+                return type;
+            }
+            if(userType == 'student'){
+                let type = 'Pelajar';
+                return type;
+            }
+        }   
+        fetchData(url)
+        .then(data => {
             for (let index = 0; index < data.length; index++) {
                 const element = data[index];
-                var username = element['username'];
-                var fullname = element['fullname'];
-                var searchResultChildCount = searchResult.childElementCount;
+                let username = element['username'];
+                let fullname = element['fullname'];
+                let email = element['email'];
+                let searchResultChildCount = searchResult.childElementCount;
                 if(searchResultChildCount < data.length){
-                    const searchResult= document.getElementById('searchResult'); 
-                    var result = document.createElement("li");
+                    const searchResult= document.getElementById('searchResult');
+                    let result = document.createElement("li");
                     result.className = "list-group-item list-group-item-action searchResultItem";
-                    var rowOne = document.createElement("div");
-                    rowOne.append('ID Pengguna: ' + username);
+                    let rowOne = document.createElement("div");
+                    rowOne.append('ID ' + checkType() + ': ' + username);
                     rowOne.setAttribute("value", username);
-                    var rowTwo = document.createElement("div");
-                    rowTwo.append('Nama Pengguna: ' + fullname);
-                    rowTwo.setAttribute("value", username);
+                    let rowTwo = document.createElement("div");
+                    rowTwo.append('Nama ' +  checkType() + ': ' + fullname);
+                    rowTwo.setAttribute("value", fullname);
+                    let rowThree = document.createElement("div");
+                    rowThree.append('Emel ' + checkType() + ': ' + email);
+                    rowThree.setAttribute("value", email);
                     result.appendChild(rowOne);
                     result.appendChild(rowTwo);
+                    result.appendChild(rowThree);
                     searchResult.appendChild(result);
                 }
             }
-        })
+        });
+    }
+    if(dataType == 'user'){
+        user('user');
+    }
+    if(dataType == 'student'){
+        user('student');
+    }
+    if(dataType == 'classroom'){
+
+    }
 }  

@@ -71,7 +71,7 @@ class ClassroomController extends Controller
             abort(404, 'Tiada kelas dijumpai');
         }elseif(Gate::allows('authCoordinator', $classroomID) || Gate::allows('authAdmin') || Gate::allows('authSuperAdmin')){
             $students = ClassroomStudent::where('classrooms_id', $classroomID)->with('user')->get();
-            return view('dashboard.user.classroom.student')->with(['settings' => $this->systemSettings, 'apiToken' => $this->apiToken, 'page' => 'Pelajar Kelas', 'students' => $students]);
+            return view('dashboard.user.classroom.student')->with(['settings' => $this->systemSettings, 'apiToken' => $this->apiToken, 'page' => 'Pelajar Kelas', 'students' => $students, 'classroomID' => $classroomID]);
         }else{
             abort(403, 'Anda tiada akses paga laman ini');
         }
@@ -88,4 +88,40 @@ class ClassroomController extends Controller
     /**
      * Handling POST Request
      */
+    public function addStudent(Request $request, $classroomID){
+        if(!empty($request->studentID)){
+            $userRole = User::where('username', $request->studentID)->first()['role'];
+            if($userRole == 'student'){
+                // Check if the student is already in a classroom
+                $classroomStudent = ClassroomStudent::where('users_username', $request->studentID)->get()->count();
+                if($classroomStudent < 1){
+                    ClassroomStudent::create([
+                        'users_username' => $request->studentID,
+                        'classrooms_id' => $classroomID
+                    ]);
+                    session()->flash('successAdd', 'Pelajar berjaya ditambah ke dalam kelas!');
+                    return redirect()->back();
+                }elseif($classroomStudent > 0){
+                    return redirect()->back()->withErrors([
+                        'existed' => 'Pelajar telah berada dalam kelas sebelum ini!'
+                    ]);
+                }
+            }else{
+                return redirect()->back()->withErrors([
+                    'notStudent' => 'Pengguna yang cuba ditambah bukannya seorang pelajar!'
+                ]);
+            }
+        }else{
+            return redirect()->route('dashboard');
+        }
+    }
+    public function removeStudent(Request $request){
+        if(!empty($request->username)){
+            ClassroomStudent::where('users_username', $request->username)->delete();
+            session()->flash('successRemove', 'Pelajar berjaya dibuang daripada kelas!');
+            return redirect()->back();
+        }else{
+            return redirect()->route('dashboard');
+        }
+    }
 }

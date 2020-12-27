@@ -64,7 +64,9 @@ Route::get('/dashboard/profile/{username}/download', [UserProfileController::cla
  */
 Route::get('/dashboard/classroom', [ClassroomController::class, 'classroom'])->name('classroom')->middleware('auth');
 Route::get('/dashboard/classroom/{classroomID}', [ClassroomController::class, 'view'])->name('classroom.view')->middleware('auth');
-Route::get('/dashboard/classroom/{classroomID}/student', [ClassroomController::class, 'student'])->name('classroom.update')->middleware(['auth']);
+Route::get('/dashboard/classroom/{classroomID}/student', [ClassroomController::class, 'student'])->name('classroom.student')->middleware(['auth']);
+Route::post('/dashboard/classroom/{classroomID}/student/add', [ClassroomController::class, 'addStudent'])->name('classroom.student.add')->middleware(['auth']);
+Route::post('/dashboard/classroom/{classroomID}/student/remove', [ClassroomController::class, 'removeStudent'])->name('classroom.student.remove')->middleware(['auth']);
 Route::get('/dashboard/classroom/{classroomID}/update', [ClassroomController::class, 'update'])->name('classroom.update')->middleware(['auth']);
 
 /**
