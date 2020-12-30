@@ -56,7 +56,8 @@ class UserProfileController extends Controller
         // Check if user exist. True, return view.
         if(User::where('username', '=', $username)->count() > 0){
             if(Gate::allows('authUser', $username)){
-                return view('dashboard.user.profile.update')->with(['settings' => $this->systemSettings, 'page' => 'Kemas Kini Profil Pengguna', 'username' => $username]);
+                $profileData = UserProfile::where('users_username', $username)->first();
+                return view('dashboard.user.profile.update')->with(['settings' => $this->systemSettings, 'page' => 'Kemas Kini Profil Pengguna', 'username' => $username, 'profileData' => $profileData]);
             }else{
                 abort(403, 'Anda tiada akses pada laman ini!');
             }

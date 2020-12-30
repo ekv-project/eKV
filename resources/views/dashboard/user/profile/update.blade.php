@@ -53,7 +53,7 @@
                             @enderror
                         </div>
                         <div class="form-floating mb-3">
-                            <input type="text" name="home_number" id="home_number" class="form-control" placeholder="012-3456789" value="{{ old('home_number') }}">
+                            <input type="text" name="home_number" id="home_number" class="form-control" placeholder="012-3456789" value={{ old('home_number') }}>
                             <label for="home_number" class="form-label">No. Telefon Rumah</label>
                             <div class="form-text">
                                 Format: +601-2345678

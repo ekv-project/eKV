@@ -1,7 +1,7 @@
 @extends('dashboard.layout.main')
 @section('content')
 <div class="container col-8">
-    <form action="{{ route('classroom.student.add',['classroomID' => $classroomID]) }}" method="post" class="mt-5">
+    <form action="" method="post" class="mt-5">
         @csrf
         <div class="row">
             <h1>Tambah Pelajar Ke Dalam Kelas</h1>
@@ -25,7 +25,7 @@
                 @enderror
             </div>
             <div class="col-2">
-                <button class="btn btn-primary">Tambah</button>
+                <button class="btn btn-primary" name="add">Tambah</button>
             </div>
         </div>
     </form>
@@ -47,10 +47,10 @@
                 <td>{{ $student->user->username }}</td>
                 <td>{{ $student->user->fullname }} </td>
                 <td>
-                    <form action="{{ route('classroom.student.remove', ['classroomID' => $classroomID]) }}" method="post" action="" class="d-flex justify-content-center">
+                    <form action="" method="post" class="d-flex justify-content-center">
                         @csrf
                         <input type="hidden" name="username" value="{{ $student->user->username }}">
-                        <button type="submit" class="btn btn-danger">X</button>
+                        <button type="submit" class="btn btn-danger" name="remove">X</button>
                     </form>
                 </td>
             </tr>
