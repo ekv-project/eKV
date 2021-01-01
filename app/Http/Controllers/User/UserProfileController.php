@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image;
 
 class UserProfileController extends Controller
 {
@@ -128,6 +130,23 @@ class UserProfileController extends Controller
                         'currentPasswordUpdate' => 'Kata laluan semasa salah!'
                     ]);
                 }
+            }elseif($request->has("picture")){
+                $validated = $request->validate([
+                    'profile-picture' => ['required']
+                ]);
+                $picture = $request->file('profile-picture');
+                $pictureExtension = $picture->extension();
+                if($pictureExtension == 'png'|| $pictureExtension == 'jpeg' || $pictureExtension == 'jpg' || $pictureExtension == 'gif'){
+                    // Only PNG, JPEG and GIF images is supported
+                    // Save image to JPEG (100x100 pixels)
+                    Image::make($picture)->resize(100, 100)->save('public/img/profile/'. $username . '.jpg', 60);
+                    session()->flash('pictureSuccess', 'Gambar profil berjaya dikemas kini!');
+                    return redirect()->back();
+                }else{
+                    return redirect()->back()->withErrors([
+                        "unsupportedType" => "Hanya gambar jenis PNG, JPEG dan GIF sahaja yang disokong!"
+                    ]);
+                }      
             }else{
                 return redirect()->back();
             }

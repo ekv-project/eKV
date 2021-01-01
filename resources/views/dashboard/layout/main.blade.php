@@ -14,6 +14,18 @@
     @endisset        
     ">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="shortcut icon" href="
+    {{-- Change this later --}}
+    @isset($settings)
+        @empty($settings['logo'])
+            {{ asset('/storage/img/system/logo-def-300.png') }}
+        @else
+            {{ asset('/storage/img/system/logo-def-300.png') }}
+        @endempty        
+    @else   
+        {{ asset('/storage/img/system/logo-def-300.png') }}
+    @endisset   
+    " type="image/png">
     <title>{{ $page }} - {{ env('APP_NAME') }} | 
         @isset($settings)
             @empty($settings['institute_name'])

@@ -49,6 +49,10 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('authLecturer', function (User $user){
             return $user->role === 'lecturer';
         });
+        // Check if current use is student
+        Gate::define('authStudent', function (User $user){
+            return $user->role === 'student';
+        });
         // Check if current user is coordinator for a user page they trying to access
         Gate::define('authCoordinator', function (User $user, $id){
             $currentUser = $user->username;
