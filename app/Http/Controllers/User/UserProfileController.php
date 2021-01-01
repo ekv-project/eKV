@@ -9,6 +9,7 @@ use App\Models\UserProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Hash;
 
 class UserProfileController extends Controller
 {
@@ -70,34 +71,68 @@ class UserProfileController extends Controller
     /**
      * Handling POST Request
      */
+
     // Only the current authenticated user can update their profile
     public function update(Request $request, $username){
         if(Gate::allows('authUser', $username)){
-            $validated = $request->validate([
-                'identification_number' => ['required'],
-                'phone_number' => ['required'],
-                'date_of_birth' => ['required'],
-                'place_of_birth' => ['required'],
-                'home_address' => ['required'],
-                'home_number' => ['required'],
-                'guardian_name' => ['required'],
-                'guardian_phone_number' => ['required']
-            ]);
-            UserProfile::updateOrCreate(
-                ['users_username' => $username],
-                [
-                    'identification_number' => $request->identification_number,
-                    'phone_number' => $request->phone_number,
-                    'date_of_birth' => $request->date_of_birth,
-                    'place_of_birth' => $request->place_of_birth,
-                    'home_address' => $request->home_address,
-                    'home_number' => $request->home_number,
-                    'guardian_name' => $request->guardian_name,
-                    'guardian_phone_number' => $request->guardian_phone_number
-                ]
-            );
-            session()->flash('profileUpdateSuccess', 'Profil berjaya dikemas kini!');
-            return redirect()->route('profile.update', $username);
+            if($request->has("profile")){
+                // User's profile update
+                $validated = $request->validate([
+                    'identification_number' => ['required'],
+                    'phone_number' => ['required'],
+                    'date_of_birth' => ['required'],
+                    'place_of_birth' => ['required'],
+                    'home_address' => ['required'],
+                    'home_number' => ['required'],
+                    'guardian_name' => ['required'],
+                    'guardian_phone_number' => ['required']
+                ]);
+                UserProfile::updateOrCreate(
+                    ['users_username' => $username],
+                    [
+                        'identification_number' => $request->identification_number,
+                        'phone_number' => $request->phone_number,
+                        'date_of_birth' => $request->date_of_birth,
+                        'place_of_birth' => $request->place_of_birth,
+                        'home_address' => $request->home_address,
+                        'home_number' => $request->home_number,
+                        'guardian_name' => $request->guardian_name,
+                        'guardian_phone_number' => $request->guardian_phone_number
+                    ]
+                );
+                session()->flash('profileUpdateSuccess', 'Profil berjaya dikemas kini!');
+                return redirect()->back();
+            }elseif($request->has("password")){
+                // User's password change
+                $validated = $request->validate([
+                    'current_password' => ['required'],
+                    'new_password' => ['required'],
+                    'new_password_confirmation' => ['required'],
+                ]);
+                $currentPassword = User::select('password')->where('username', Auth::user()->username)->first()['password'];
+                $requestCurrentPassword = $request->current_password;
+                $requestNewPassword = $request->new_password;
+                $requestNewPasswordConfirmation = $request->new_password_confirmation;
+                if(Hash::check($requestCurrentPassword, $currentPassword)){
+                    if($requestNewPassword == $requestNewPasswordConfirmation){
+                        User::where('username', Auth::user()->username)->update(['password' => Hash::make($requestNewPassword)]);
+                        session()->flash('passwordUpdateSuccess', 'Kata laluan berjaya diubah!');
+                        return redirect()->back();
+                    }else{
+                        return redirect()->back()->withInput()->withErrors([
+                            'newPasswordUpdate' => 'Pengesahan kata laluan baharu gagal!'
+                        ]);
+                    }
+                }else{
+                    return redirect()->back()->withInput()->withErrors([
+                        'currentPasswordUpdate' => 'Kata laluan semasa salah!'
+                    ]);
+                }
+            }else{
+                return redirect()->back();
+            }
+        }else{
+            abort(403, 'Anda tiada akses pada laman ini!');
         }
     }
     // Only current authenticated user (their own profile), admin and their coordinator is allowed to download the profile.

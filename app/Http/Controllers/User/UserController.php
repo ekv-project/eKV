@@ -50,12 +50,12 @@ class UserController extends Controller
                 $user->save();
                 return redirect()->intended('dashboard');
             }else{
-                return back()->withErrors([
+                return back()->withInput()->withErrors([
                     'password' => 'Kata Laluan Salah.'
                 ]);
             }
         }else{
-            return back()->withErrors([
+            return back()->withInput()->withErrors([
                 'username' => 'Pengguna tidak wujud.'
             ]);
         }
