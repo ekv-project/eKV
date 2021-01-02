@@ -31,7 +31,7 @@
             @empty($settings['institute_name'])
                 Kolej Vokasional Malaysia
             @else
-                {{ $settings['institute_name'] }}
+                {{ ucwords($settings['institute_name']) }}
             @endempty        
         @else   
             Kolej Vokasional Malaysia

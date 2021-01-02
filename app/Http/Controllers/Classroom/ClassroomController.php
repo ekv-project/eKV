@@ -152,9 +152,9 @@ class ClassroomController extends Controller
                         ['id' => $classroomID],
                         [
                             'programs_code' => strtolower($request->programs_code),
-                            'admission_year' => $request->admission_year,
+                            'admission_year' => strtolower($request->admission_year),
                             'study_levels_code' => strtolower($request->study_levels_code),
-                            'study_year' => $request->study_year,
+                            'study_year' => strtolower($request->study_year)
                         ]
                     );
                     session()->flash('classroomUpdateSuccess', 'Maklumat kelas berjaya dikemas kini!');

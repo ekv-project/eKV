@@ -36,13 +36,14 @@ class SystemSettingController extends Controller
         SystemSetting::updateOrCreate(
             ['id' => 1],
             [
-                'institute_name' => $request->institute_name,
-                'institute_address' => $request->institute_address,
-                'institute_email_address' => $request->institute_email_address,
-                'institute_phone_number' => $request->institute_phone_number,
-                'institute_fax' => $request->institute_fax
+                'institute_name' => strtolower($request->institute_name),
+                'institute_address' => strtolower($request->institute_address),
+                'institute_email_address' => strtolower($request->institute_email_address),
+                'institute_phone_number' => strtolower($request->institute_phone_number),
+                'institute_fax' => strtolower($request->institute_fax)
             ]
         );
+        // value="@php if(old('study_year') !== null){echo old('study_year');}elseif(isset($classroomData['study_year'])){echo $classroomData['study_year'];}else{echo NULL;} @endphp"
         session()->flash('systemUpdateSuccess', 'Tetapan sistem berjaya dikemas kini!');
         return redirect()->back();
     }

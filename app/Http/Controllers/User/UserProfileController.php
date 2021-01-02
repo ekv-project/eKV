@@ -59,8 +59,8 @@ class UserProfileController extends Controller
         // Check if user exist. True, return view.
         if(User::where('username', '=', $username)->count() > 0){
             if(Gate::allows('authUser', $username)){
-                $profileData = UserProfile::where('users_username', $username)->first();
-                return view('dashboard.user.profile.update')->with(['settings' => $this->systemSettings, 'page' => 'Kemas Kini Profil Pengguna', 'username' => $username, 'profileData' => $profileData]);
+                $profile = UserProfile::where('users_username', $username)->first();
+                return view('dashboard.user.profile.update')->with(['settings' => $this->systemSettings, 'page' => 'Kemas Kini Profil Pengguna', 'username' => $username, 'profile' => $profile]);
             }else{
                 abort(403, 'Anda tiada akses pada laman ini!');
             }
@@ -92,14 +92,14 @@ class UserProfileController extends Controller
                 UserProfile::updateOrCreate(
                     ['users_username' => $username],
                     [
-                        'identification_number' => $request->identification_number,
-                        'phone_number' => $request->phone_number,
+                        'identification_number' => strtolower($request->identification_number),
+                        'phone_number' => strtolower($request->phone_number),
                         'date_of_birth' => $request->date_of_birth,
-                        'place_of_birth' => $request->place_of_birth,
-                        'home_address' => $request->home_address,
-                        'home_number' => $request->home_number,
-                        'guardian_name' => $request->guardian_name,
-                        'guardian_phone_number' => $request->guardian_phone_number
+                        'place_of_birth' => strtolower($request->place_of_birth),
+                        'home_address' => strtolower($request->home_address),
+                        'home_number' => strtolower($request->home_number),
+                        'guardian_name' => strtolower($request->guardian_name),
+                        'guardian_phone_number' => strtolower($request->guardian_phone_number)
                     ]
                 );
                 session()->flash('profileUpdateSuccess', 'Profil berjaya dikemas kini!');
