@@ -4,11 +4,10 @@
         No. Kad Pengenalan: {{ $profile['identification_number'] }} <br>
         No. Telefon Peribadi: {{ $profile['phone_number'] }} <br>
         Tarikh Lahir: {{ $profile['date_of_birth'] }} <br>
-        Tempat Lahir: {{ $profile['place_of_birth'] }} <br>
-        Alamat Rumah: {{ $profile['home_address'] }} <br>
-        Nama Penjaga: {{ $profile['guardian_name'] }} <br>
-        No. Telefon Penjaga: {{ $profile['guardian_phone_number'] }} <br>
-        
+        Tempat Lahir: {{ ucwords($profile['place_of_birth']) }} <br>
+        Alamat Rumah: {{ ucwords($profile['home_address']) }} <br>
+        Nama Penjaga: {{ ucwords($profile['guardian_name']) }} <br>
+        Nombor Telefon Penjaga: {{ $profile['guardian_phone_number'] }} <br>
     @else
         No. Kad Pengenalan:  <br>
         No. Telefon Peribadi:  <br>

@@ -95,13 +95,14 @@ class UserController extends Controller
             ]);
             // If validation failed, display the error
             User::create([
-                'fullname' => $request->fullname,
-                'username' => $username,
-                'email' => $request->email,
+                'fullname' => strtolower($request->fullname),
+                'username' => strtolower($username),
+                'email' => strtolower($request->email),
                 'password' => Hash::make($request->password),
-                'role' => $request->role,
+                'role' => strtolower($request->role),
             ]);
-            redirect()->back();
+            session()->flash('userAddSuccess', 'Pengguna berjaya ditambah!');
+            return redirect()->back();
         }
     }
 }

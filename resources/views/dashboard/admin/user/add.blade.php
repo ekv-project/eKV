@@ -1,10 +1,14 @@
 @extends('dashboard.layout.main')
 @section('content')
-    <form action="{{ route('admin.user_add') }}" method="post">
+    <form action="{{ route('admin.user_add') }}" method="post" class="mt-3 mb-5">
+        <h3>Tambah Pengguna</h3>
         @csrf
-            @error('userExist')
-                <div class="alert alert-danger">{{ $message }}</div>
-            @enderror
+        @error('userExist')
+            <div class="alert alert-danger">{{ $message }}</div>
+        @enderror
+        @if(session()->has('userAddSuccess'))
+            <div class="alert alert-success">{{ session('userAddSuccess') }}</div>
+        @endif
         <label for="fullname" class="form-label">Nama Penuh</label>
         <input type="text" name="fullname" id="fullname" value="{{ old('fullname') }}" class="form-control">
         <label for="username" class="form-label">Username</label>

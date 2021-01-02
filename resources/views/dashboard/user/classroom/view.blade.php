@@ -2,6 +2,6 @@
 @section('content')
 @foreach ($students as $student)
     {{ $student->user->username }}
-    {{ $student->user->fullname }} 
+    {{ ucwords($student->user->fullname) }} 
 @endforeach
 @endsection

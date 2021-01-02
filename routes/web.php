@@ -87,7 +87,7 @@ Route::get('/dashboard/admin/user', function () {
 
     // Add new user view
 Route::get('/dashboard/admin/user/add', function () {
-    return view('dashboard.admin.user.user')->with(['page' => 'Tambah Pengguna']);
+    return view('dashboard.admin.user.add')->with(['page' => 'Tambah Pengguna']);
 })->name('admin.user_add')->middleware(['auth', 'userIsSuperAdmin']);
 
     // Add new user 

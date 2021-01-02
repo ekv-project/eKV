@@ -45,7 +45,7 @@
             @foreach ($students as $student)
             <tr>
                 <td>{{ $student->user->username }}</td>
-                <td>{{ $student->user->fullname }} </td>
+                <td>{{ ucwords($student->user->fullname) }} </td>
                 <td>
                     <form action="" method="post" class="d-flex justify-content-center">
                         @csrf
