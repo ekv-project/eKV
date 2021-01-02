@@ -18,6 +18,12 @@
         Nama Penjaga:  <br>
         No. Telefon Penjaga:  <br>
     @endif
-    <img src="{{ asset('/storage/img/profile/' . $username . '.jpg') }}" alt="" class="img-fluid img-thumbnail">
-    <a href="{{ route('profile.update', ['username' => $username]) }}" class="btn btn-primary">Kemas Kini</a>
+    @if(Storage::disk('local')->exists('public/img/profile/'. Auth::user()->username . '.jpg'))
+        <img src="{{ asset('public/img/profile/'. Auth::user()->username . '.jpg') }}" alt="User Profile Picture" class="img-fluid rounded-circle" style="height: 7em">
+    @elseif(Storage::disk('local')->exists('public/img/profile/default/def-300.jpg'))
+        <img src="{{ asset('public/img/profile/default/def-300.jpg') }}" alt="Default Profile Picture" class="img-fluid rounded-circle" style="height: 7em">
+    @endif 
+    @can('authUser', $username)
+        <a href="{{ route('profile.update', ['username' => $username]) }}" class="btn btn-primary">Kemas Kini</a>  
+    @endcan 
 @endsection

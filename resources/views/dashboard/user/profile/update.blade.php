@@ -19,7 +19,7 @@
                 @error('unsupportedType')
                     <div class="alert alert-danger">{{ $message }}</div>
                 @enderror
-                <button type="submit" class="btn btn-primary w-100" name="picture">Kemas Kini</button>
+                <button type="submit" class="btn btn-primary w-100 hvr-shrink" name="picture">Kemas Kini</button>
             </form>
             {{-- Update Password --}}
             <form action="" method="post" class="mt-2 mb-2">
@@ -55,7 +55,7 @@
                         <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
                 </div>
-                <button type="submit" class="btn btn-primary w-100" name="password">Ubah</button>
+                <button type="submit" class="btn btn-primary w-100 hvr-shrink" name="password">Ubah</button>
             </form>
             @can('authStudent')
                 {{-- Update Profile --}}
@@ -133,7 +133,7 @@
                             <div class="alert alert-danger">{{ $message }}</div>
                         @enderror
                     </div>
-                    <button type="submit" class="btn btn-primary w-100" name="profile">Kemas Kini</button>
+                    <button type="submit" class="btn btn-primary w-100 hvr-shrink" name="profile">Kemas Kini</button>
                 </form>
             @endcan
         </div>

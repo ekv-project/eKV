@@ -83,7 +83,7 @@ Route::get('/dashboard/exam/transcript/download', [ExamController::class, 'trans
 // User 
     // View user list
 Route::get('/dashboard/admin/user', function () {
-})->middleware(['auth','userIsAdmin']);
+})->name('admin.user')->middleware(['auth','userIsAdmin']);
 
     // Add new user view
 Route::get('/dashboard/admin/user/add', function () {
@@ -91,7 +91,9 @@ Route::get('/dashboard/admin/user/add', function () {
 })->name('admin.user_add')->middleware(['auth', 'userIsSuperAdmin']);
 
     // Add new user 
-Route::post('/dashboard/admin/user/add',[UserController::class, 'addNewUser'])->middleware(['auth', 'userIsSuperAdmin']);
+Route::post('/dashboard/admin/user/add',[UserController::class, 'addNewUser'])->middleware(['auth', 'userIsAdmin']);
 
 // System settings
-Route::get('/dashboard/admin/system',[SystemSettingController::class, 'view'])->middleware(['auth', 'userIsSuperAdmin']);
+Route::get('/dashboard/admin/system',[SystemSettingController::class, 'view'])->name('admin.system')->middleware(['auth', 'userIsSuperAdmin']);
+Route::get('/dashboard/admin/system/update',[SystemSettingController::class, 'updateView'])->name('admin.system.update')->middleware(['auth', 'userIsSuperAdmin']);
+Route::post('/dashboard/admin/system/update',[SystemSettingController::class, 'updateSettings'])->middleware(['auth', 'userIsSuperAdmin']);

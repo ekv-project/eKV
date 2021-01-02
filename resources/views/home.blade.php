@@ -27,7 +27,7 @@
                 @error('password')
                     <div class="alert alert-danger">{{ $message }}</div>
                 @enderror
-                <button type="submit" class="btn btn-primary w-100 mt-2">Log Masuk</button>
+                <button type="submit" class="btn btn-primary w-100 mt-2 hvr-shrink">Log Masuk</button>
             </form>
         </div>
     </div>
