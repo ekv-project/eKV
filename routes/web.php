@@ -29,6 +29,8 @@ use Illuminate\Support\Facades\Auth;
 
 // If user not logged in show login page, if logged in redirect to dashboard
 
+// Test Spreadsheet
+Route::get('/spreadsheet', [UserController::class, 'bulkAddNewUser']);
 
 Route::get('/', function () {
     if(Auth::check()){

@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use App\Models\User;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class UserController extends Controller
 {
@@ -71,11 +73,7 @@ class UserController extends Controller
     }
 
     /**
-     * Add new user/users.
-     * 
-     * Either manually one by one (in progress)
-     * or bulk add (no progress)
-     * 
+     * Add a new user
      */
     public function addNewUser(Request $request){
         // Check if user already exist
@@ -104,5 +102,16 @@ class UserController extends Controller
             session()->flash('userAddSuccess', 'Pengguna berjaya ditambah!');
             return redirect()->back();
         }
+    }
+    /**
+     * Add multiple users at a time with XLSX file
+     * Handle XLSX with Phpspreadsheet library
+     */
+    public function bulkAddNewUser(){
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setCellValue('A1', 'Hello World !');
+        $writer = new Xlsx($spreadsheet);
+        $writer->save(storage_path('app/public/') . 'hello world.xlsx');
     }
 }
