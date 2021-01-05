@@ -10,8 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use App\Models\User;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 
 class UserController extends Controller
 {
@@ -76,42 +75,77 @@ class UserController extends Controller
      * Add a new user
      */
     public function addNewUser(Request $request){
-        // Check if user already exist
-        $username = strtolower($request->username);
-        if(User::where('username', $username)->first()){
-            return back()->withErrors([
-                'userExist' => 'Pengguna telah wujud!',
-            ]);
-        }else{
-        // If no user exist, add them
+        if($request->has("addOne")){
+            /**
+             * Add one user at a time
+             */
+            $username = strtolower($request->username);
+            if(User::where('username', $username)->first()){
+                return back()->withErrors([
+                    'userExist' => 'Pengguna telah wujud!',
+                ]);
+            }else{
+            // If no user exist, add them
+                $validated = $request->validate([
+                    'fullname' => ['required'],
+                    'username' => ['required'],
+                    'email' => ['required', 'email:rfc'],
+                    'password' => ['required', 'confirmed'],
+                    'role' => ['required']
+                ]);
+                // If validation failed, display the error
+                User::create([
+                    'fullname' => strtolower($request->fullname),
+                    'username' => strtolower($username),
+                    'email' => strtolower($request->email),
+                    'password' => Hash::make($request->password),
+                    'role' => strtolower($request->role),
+                ]);
+                session()->flash('userAddSuccess', 'Pengguna berjaya ditambah!');
+                return redirect()->back();
+            }
+        }elseif($request->has("addBulk")){
+            /**
+             * Add multiple users at a time with XLSX template
+             * Handle XLSX with Phpspreadsheet library
+             */
             $validated = $request->validate([
-                'fullname' => ['required'],
-                'username' => ['required'],
-                'email' => ['required', 'email:rfc'],
-                'password' => ['required', 'confirmed'],
-                'role' => ['required']
+                'user-xlsx' => ['required']
             ]);
-            // If validation failed, display the error
-            User::create([
-                'fullname' => strtolower($request->fullname),
-                'username' => strtolower($username),
-                'email' => strtolower($request->email),
-                'password' => Hash::make($request->password),
-                'role' => strtolower($request->role),
-            ]);
-            session()->flash('userAddSuccess', 'Pengguna berjaya ditambah!');
+            $userXLSX = $request->file('user-xlsx');
+            $reader = new Xlsx();
+            $reader->setReadDataOnly(true);
+            //Read XLSX file.
+            $spreadsheet = $reader->load($userXLSX);
+            $dataArray = $spreadsheet->getActiveSheet()
+                ->rangeToArray(
+                    'A6:E106',     // The worksheet range that we want to retrieve
+                    NULL,        // Value that should be returned for empty cells
+                    FALSE,        // Should formulas be calculated (the equivalent of getCalculatedValue() for each cell)
+                    FALSE,        // Should values be formatted (the equivalent of getFormattedValue() for each cell)
+                    FALSE         // Should the array be indexed by cell row and cell column
+                );
+            $userArray = array();
+            foreach ($dataArray as $row) {
+                //Check if one of the row field is empty (if yes, don't proceed that row).
+                if(!empty($row[0]) AND !empty($row[1]) AND !empty($row[2]) AND !empty($row[3]) AND !empty($row[4])){
+                    //Check if role is equal to admin, student or lecturer
+                    if(strtolower($row[4]) == 'admin' || strtolower($row[4]) == 'student' || strtolower($row[4]) == 'lecturer'){
+                        //Check if email is valid
+                        if(filter_var($row[2], FILTER_VALIDATE_EMAIL)){
+                            //If all good, insert the row into an array.
+                            $user = ['fullname' => strtolower($row[0]), 'username' => strtolower($row[1]), 'email' => strtolower($row[2]), 'password' => Hash::make($row[3]), 'role' => strtolower($row[4])];
+                            array_push($userArray, $user);
+                        }
+                    }
+                }
+            }
+            //The array will be imported into the database using Eloquent Upsert() method
+            //by checking the username. This means if there's already existed user, it'll just
+            //update it with the data from XLSX file.    
+            User::upsert($userArray, ['username'], ['fullname', 'username', 'email', 'password'], 'role');
+            session()->flash('userBulkAddSuccess', 'Pengguna berjaya ditambah!');
             return redirect()->back();
-        }
-    }
-    /**
-     * Add multiple users at a time with XLSX file
-     * Handle XLSX with Phpspreadsheet library
-     */
-    public function bulkAddNewUser(){
-        $spreadsheet = new Spreadsheet();
-        $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setCellValue('A1', 'Hello World !');
-        $writer = new Xlsx($spreadsheet);
-        $writer->save(storage_path('app/public/') . 'hello world.xlsx');
+            }
     }
 }
