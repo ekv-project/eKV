@@ -12,6 +12,9 @@
                 @error('user-xlsx')
                     <div class="alert alert-danger">{{ $message }}</div>
                 @enderror
+                @error('unsupportedType')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                @enderror
             <button type="submit" class="btn btn-primary w-100 hvr-shrink" name="addBulk">Tambah Pukal</button>
         </form>
     </div>
