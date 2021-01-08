@@ -8,8 +8,8 @@ use App\Models\ClassroomCoordinator;
 use App\Models\ClassroomStudent;
 use App\Models\Program;
 use App\Models\StudyLevel;
-use App\Models\SystemSetting;
 use App\Models\User;
+use App\Models\InstituteSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -20,12 +20,12 @@ class ClassroomController extends Controller
      * Controller Constuctor
      * Most of the properties included here is used by any of the methods below.
      **************************************************************************/
-    protected $systemSettings;
+    protected $instituteSettings;
     protected $currentUserUsername;
     protected $apiToken;
     public function __construct()
     {
-        $this->systemSettings = SystemSetting::find(1);
+        $this->instituteSettings = InstituteSetting::find(1);
         $this->middleware(function ($request, $next) {      
             $this->currentUserUsername = 'admin';
             $this->apiToken = User::where('username', $this->currentUserUsername)->select('api_token')->first();
@@ -54,11 +54,11 @@ class ClassroomController extends Controller
         if(Classroom::where('id', $classroomID)->count() < 1){
             abort(404, 'Tiada kelas dijumpai');
         }elseif(Gate::allows('authCoordinator', $classroomID) || Gate::allows('authAdmin') || Gate::allows('authSuperAdmin')){
-            return view('dashboard.user.classroom.view')->with(['settings' => $this->systemSettings, 'page' => 'Maklumat Kelas', 'students' => $students]);
+            return view('dashboard.user.classroom.view')->with(['settings' => $this->instituteSettings, 'page' => 'Maklumat Kelas', 'students' => $students]);
         }elseif(!empty(ClassroomStudent::where('users_username', Auth::user()->username)->first()->classroom)){
             $classroomStudentID = ClassroomStudent::where('users_username', Auth::user()->username)->first()->classroom->id;
             if($classroomStudentID == $classroomID){
-                return view('dashboard.user.classroom.view')->with(['settings' => $this->systemSettings, 'page' => 'Maklumat Kelas', 'students' => $students]);
+                return view('dashboard.user.classroom.view')->with(['settings' => $this->instituteSettings, 'page' => 'Maklumat Kelas', 'students' => $students]);
             }else{
                 abort(403, 'Anda tiada akses paga laman ini');
             }
@@ -73,7 +73,7 @@ class ClassroomController extends Controller
             abort(404, 'Tiada kelas dijumpai');
         }elseif(Gate::allows('authCoordinator', $classroomID) || Gate::allows('authAdmin') || Gate::allows('authSuperAdmin')){
             $students = ClassroomStudent::where('classrooms_id', $classroomID)->with('user')->get();
-            return view('dashboard.user.classroom.student')->with(['settings' => $this->systemSettings, 'apiToken' => $this->apiToken, 'page' => 'Pelajar Kelas', 'students' => $students, 'classroomID' => $classroomID]);
+            return view('dashboard.user.classroom.student')->with(['settings' => $this->instituteSettings, 'apiToken' => $this->apiToken, 'page' => 'Pelajar Kelas', 'students' => $students, 'classroomID' => $classroomID]);
         }else{
             abort(403, 'Anda tiada akses paga laman ini');
         }
@@ -83,7 +83,7 @@ class ClassroomController extends Controller
             abort(404, 'Tiada kelas dijumpai');
         }elseif(Gate::allows('authCoordinator', $classroomID) || Gate::allows('authAdmin') || Gate::allows('authSuperAdmin')){
             $classroomData = Classroom::where('id', $classroomID)->first();
-            return view('dashboard.user.classroom.update')->with(['settings' => $this->systemSettings, 'page' => 'Maklumat Kelas', 'classroomData' => $classroomData]);
+            return view('dashboard.user.classroom.update')->with(['settings' => $this->instituteSettings, 'page' => 'Maklumat Kelas', 'classroomData' => $classroomData]);
         }else{
             abort(403, 'Anda tiada akses paga laman ini');
         }

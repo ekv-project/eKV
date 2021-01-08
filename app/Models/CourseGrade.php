@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Grade extends Model
 {
     use HasFactory;
-    protected $table = 'grades';
+    protected $table = 'course_grades';
     protected $fillable = [
         'users_username',
         'courses_code',

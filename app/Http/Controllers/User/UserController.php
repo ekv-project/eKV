@@ -7,6 +7,7 @@ use App\Models\LoginActivity;
 use App\Models\SystemSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\InstituteSetting;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use App\Models\User;
@@ -18,12 +19,12 @@ class UserController extends Controller
      * Controller Constuctor
      * Most of the properties included here is used by any of the methods below.
      **************************************************************************/
-    protected $systemSettings;
+    protected $instituteSettings;
     protected $currentUserUsername;
     protected $apiToken;
     public function __construct()
     {
-        $this->systemSettings = SystemSetting::find(1);
+        $this->instituteSettings = InstituteSetting::find(1);
         $this->middleware(function ($request, $next) {      
             $this->currentUserUsername = 'admin';
             $this->apiToken = User::where('username', $this->currentUserUsername)->select('api_token')->first();
@@ -32,6 +33,21 @@ class UserController extends Controller
     }
     /***************************************************************************/
 
+    /**
+     * Handling Views
+     */
+    public function adminUserView(){
+        return view('dashboard.admin.user.user')->with(['page' => 'Tambah Pengguna']);
+    }
+    public function adminAddUserView(){
+        return view('dashboard.admin.user.add')->with(['page' => 'Tambah Pengguna']);
+    }
+    public function adminUpdateUserView(){
+        return view('dashboard.admin.user.update')->with(['page' => 'Tambah Pengguna']);
+    }
+    /**
+     * Handling POST Request
+     */
     public function login(Request $request){
         $username = strtolower($request->username);
         if(User::where('username', '=', $username)->count() > 0){
@@ -70,11 +86,7 @@ class UserController extends Controller
         $request->session()->regenerateToken();
         return redirect()->route('login');
     }
-
-    /**
-     * Add a new user
-     */
-    public function addNewUser(Request $request){
+    public function adminAddUser(Request $request){
         if($request->has("addOne")){
             /**
              * Add one user at a time
@@ -154,5 +166,8 @@ class UserController extends Controller
                 ]);
             }
         }
+    }
+    public function adminUpdateUser(Request $request){
+        // Update or delete user
     }
 }

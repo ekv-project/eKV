@@ -23,5 +23,5 @@
     {{ "Nombor Fax: "}}
     <br>   
 @endif
-<a href="{{ route('admin.system.update') }}" class="btn btn-primary hvr-shrink">Kemas Kini</a>  
+<a href="{{ route('admin.institute.update') }}" class="btn btn-primary hvr-shrink">Kemas Kini</a>  
 @endsection

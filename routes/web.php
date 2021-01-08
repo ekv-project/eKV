@@ -5,12 +5,8 @@ use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\User\UserProfileController;
 use App\Http\Controllers\Classroom\ClassroomController;
 use App\Http\Controllers\Exam\ExamController;
-use App\Http\Controllers\SystemSettingController;
-use App\Models\Classroom;
-use App\Models\ClassroomCoordinator;
-use App\Models\ClassroomStudent;
-use App\Models\User;
-use Illuminate\Support\Facades\App;
+use App\Http\Controllers\InstituteSettingController;
+use App\Models\InstituteSetting;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -24,19 +20,11 @@ use Illuminate\Support\Facades\Auth;
 |
 */
 
-
-// Don't forget to add Auth middleware for each routes that needed user to be authenticate to access
-
-// If user not logged in show login page, if logged in redirect to dashboard
-
-// Test Spreadsheet
-Route::get('/spreadsheet', [UserController::class, 'bulkAddNewUser']);
-
 Route::get('/', function () {
     if(Auth::check()){
         return redirect()->route('dashboard');
     }else{
-        return view('home');
+        return view('login');
     }
 })->name('login');
 
@@ -49,7 +37,8 @@ Route::post('/dashboard/logout', [UserController::class, 'logout'])->name('logou
  */
 
 Route::get('/dashboard', function () { 
-    return view('dashboard.dashboard')->with(['page' => 'Dashboard']);
+    $instituteSettings = InstituteSetting::find(1);
+    return view('dashboard.dashboard')->with(['page' => 'Dashboard', 'settings' => $instituteSettings]);
 })->name('dashboard')->middleware('auth');
 
 /**
@@ -74,28 +63,24 @@ Route::post('/dashboard/classroom/{classroomID}/update', [ClassroomController::c
 /**
 *   Exam Transcript  
 */
-Route::get('/dashboard/exam', [ExamController::class, 'exam'])->name('exam')->middleware('auth');
-Route::get('/dashboard/exam/transcript', [ExamController::class, 'transcriptView'])->name('transcript')->middleware('auth');
-Route::get('/dashboard/exam/transcript/download', [ExamController::class, 'transcriptDownload'])->name('transcript.download')->middleware('auth');
+Route::get('/dashboard/exam/{studentID}', [ExamController::class, 'examView'])->name('exam')->middleware('auth');
+Route::get('/dashboard/exam/{studentID}/transcript', [ExamController::class, 'transcriptView'])->name('transcript')->middleware('auth');
+Route::get('/dashboard/exam/{studentID}/transcript/download', [ExamController::class, 'transcriptDownload'])->name('transcript.download')->middleware('auth');
 
 /** 
  *  Administration Area
  */
 
-// User 
-    // View user list
-Route::get('/dashboard/admin/user', function () {
-})->name('admin.user')->middleware(['auth','userIsAdmin']);
+// View: List all users. This page have a search bar for finding user that an admin want to change (update info or delete the user)
+Route::get('/dashboard/admin/user',[UserController::class,'adminUserView'])->name('admin.user')->middleware(['auth','userIsAdmin']);
+// View: Add new users
+Route::get('/dashboard/admin/user/add',[UserController::class, 'adminAddUserView'])->name('admin.user_add')->middleware(['auth', 'userIsAdmin']);
+// View: User update (update info or delete the user)
+Route::get('/dashboard/admin/user/update',[UserController::class, 'adminUpdateUserView'])->name('admin.user_update')->middleware(['auth', 'userIsAdmin']);
+// POST requests
+Route::post('/dashboard/admin/user/add',[UserController::class, 'adminAddUser'])->middleware(['auth', 'userIsAdmin']);
+Route::post('/dashboard/admin/user/update',[UserController::class, 'adminUpdateUser'])->middleware(['auth', 'userIsAdmin']);
 
-    // Add new user view
-Route::get('/dashboard/admin/user/add', function () {
-    return view('dashboard.admin.user.add')->with(['page' => 'Tambah Pengguna']);
-})->name('admin.user_add')->middleware(['auth', 'userIsSuperAdmin']);
-
-    // Add new user 
-Route::post('/dashboard/admin/user/add',[UserController::class, 'addNewUser'])->middleware(['auth', 'userIsAdmin']);
-
-// System settings
-Route::get('/dashboard/admin/system',[SystemSettingController::class, 'view'])->name('admin.system')->middleware(['auth', 'userIsSuperAdmin']);
-Route::get('/dashboard/admin/system/update',[SystemSettingController::class, 'updateView'])->name('admin.system.update')->middleware(['auth', 'userIsSuperAdmin']);
-Route::post('/dashboard/admin/system/update',[SystemSettingController::class, 'updateSettings'])->middleware(['auth', 'userIsSuperAdmin']);
+Route::get('/dashboard/admin/institute',[InstituteSettingController::class, 'view'])->name('admin.institute')->middleware(['auth', 'userIsSuperAdmin']);
+Route::get('/dashboard/admin/institute/update',[InstituteSettingController::class, 'updateView'])->name('admin.institute.update')->middleware(['auth', 'userIsSuperAdmin']);
+Route::post('/dashboard/admin/institute/update',[InstituteSettingController::class, 'updateSettings'])->middleware(['auth', 'userIsSuperAdmin']);

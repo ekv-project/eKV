@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\UserProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\InstituteSetting;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -19,12 +20,12 @@ class UserProfileController extends Controller
      * Controller Constuctor
      * Most of the properties included here is used by any of the methods below.
      **************************************************************************/
-    protected $systemSettings;
+    protected $instituteSettings;
     protected $currentUserUsername;
     protected $apiToken;
     public function __construct()
     {
-        $this->systemSettings = SystemSetting::find(1);
+        $this->instituteSettings = InstituteSetting::find(1);
         $this->middleware(function ($request, $next) {      
             $this->currentUserUsername = 'admin';
             $this->apiToken = User::where('username', $this->currentUserUsername)->select('api_token')->first();
@@ -45,7 +46,7 @@ class UserProfileController extends Controller
         if(User::where('username', '=', $username)->count() > 0){
             if(Gate::allows('authUser', $username) || Gate::allows('authCoordinator', $username) || Gate::allows('authAdmin') || Gate::allows('authSuperAdmin')){
                 $profile = UserProfile::where('users_username', $username)->first();
-                return view('dashboard.user.profile.view')->with(['settings' => $this->systemSettings, 'page' => 'Profil Pengguna', 'username' => $username, 'profile' => $profile]);
+                return view('dashboard.user.profile.view')->with(['settings' => $this->instituteSettings, 'page' => 'Profil Pengguna', 'username' => $username, 'profile' => $profile]);
             }else{
                 abort(403, 'Anda tiada akses pada laman ini');
             }
@@ -60,7 +61,7 @@ class UserProfileController extends Controller
         if(User::where('username', '=', $username)->count() > 0){
             if(Gate::allows('authUser', $username)){
                 $profile = UserProfile::where('users_username', $username)->first();
-                return view('dashboard.user.profile.update')->with(['settings' => $this->systemSettings, 'page' => 'Kemas Kini Profil Pengguna', 'username' => $username, 'profile' => $profile]);
+                return view('dashboard.user.profile.update')->with(['settings' => $this->instituteSettings, 'page' => 'Kemas Kini Profil Pengguna', 'username' => $username, 'profile' => $profile]);
             }else{
                 abort(403, 'Anda tiada akses pada laman ini!');
             }

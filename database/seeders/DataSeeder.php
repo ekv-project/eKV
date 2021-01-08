@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Classroom;
 use App\Models\ClassroomCoordinator;
 use App\Models\ClassroomStudent;
+use App\Models\InstituteSetting;
 use App\Models\Program;
 use App\Models\StudyLevel;
 use App\Models\SystemSetting;
@@ -97,7 +98,7 @@ class DataSeeder extends Seeder
                 ]
             ], ['id'], ['id', 'programs_code', 'admission_year', 'study_year', 'study_levels_code',]
         );
-        SystemSetting::upsert(
+        InstituteSetting::upsert(
             [
                 [
                     'id' => 1,
