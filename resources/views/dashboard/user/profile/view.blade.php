@@ -17,8 +17,8 @@
         Nama Penjaga:  <br>
         No. Telefon Penjaga:  <br>
     @endif
-    @if(Storage::disk('local')->exists('public/img/profile/'. Auth::user()->username . '.jpg'))
-        <img src="{{ asset('public/img/profile/'. Auth::user()->username . '.jpg') }}" alt="User Profile Picture" class="img-fluid rounded-circle" style="height: 7em">
+    @if(Storage::disk('local')->exists('public/img/profile/'. $username . '.jpg'))
+        <img src="{{ asset('public/img/profile/'. $username . '.jpg') }}" alt="User Profile Picture" class="img-fluid rounded-circle" style="height: 7em">
     @elseif(Storage::disk('local')->exists('public/img/profile/default/def-300.jpg'))
         <img src="{{ asset('public/img/profile/default/def-300.jpg') }}" alt="Default Profile Picture" class="img-fluid rounded-circle" style="height: 7em">
     @endif 

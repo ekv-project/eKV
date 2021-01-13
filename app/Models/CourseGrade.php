@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Grade extends Model
+class CourseGrade extends Model
 {
     use HasFactory;
     protected $table = 'course_grades';
@@ -14,6 +14,17 @@ class Grade extends Model
         'courses_code',
         'study_levels_code',
         'semester',
-        'marks'
+        'credit_hour',
+        'grade_pointer'
     ];
+    // Relationships
+    public function user(){
+        return $this->hasOne(User::class, 'users_username');
+    }
+    public function course(){
+        return $this->belongsTo(Course::class, 'courses_code');
+    }
+    public function studyLevel(){
+        return $this->hasOne(StudyLevel::class, 'code');
+    }
 }

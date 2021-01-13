@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Classroom;
 use App\Models\ClassroomCoordinator;
 use App\Models\ClassroomStudent;
+use App\Models\Course;
 use App\Models\InstituteSetting;
 use App\Models\Program;
 use App\Models\StudyLevel;
@@ -71,11 +72,13 @@ class DataSeeder extends Seeder
             [
                 [
                     'code' => 'svm',
-                    'name' => 'Sijil Vokasional Malaysia'
+                    'name' => 'Sijil Vokasional Malaysia',
+                    'total_semester' => '1'
                 ],
                 [
                     'code' => 'dvm',
-                    'name' => 'Diploma Vokasional Malaysia'
+                    'name' => 'Diploma Vokasional Malaysia',
+                    'total_semester' => '1'
                 ]
                 
             ], ['code'], ['code', 'name']
@@ -133,6 +136,22 @@ class DataSeeder extends Seeder
                     'classrooms_id' => '2'
                 ]
                 ], ['id'], ['users_username', 'classrooms_id']
+        );
+        Course::upsert(
+            [
+                [
+                    'code' => 'dkb1111',
+                    'name' => 'test1'
+                ],
+                [
+                    'code' => 'dkb2222',
+                    'name' => 'test2'
+                ],
+                [
+                    'code' => 'dkb3333',
+                    'name' => 'test3'
+                ]
+                ], ['code'], ['code', 'name']
         );
     }
 }

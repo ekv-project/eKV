@@ -156,13 +156,13 @@ class UserProfileController extends Controller
         }
     }
     // Only current authenticated user (their own profile), admin and their coordinator is allowed to download the profile.
-    public function download($username){
-        if(Gate::allows('authUser', $username)){
-            dd("user");
-        }elseif(Gate::allows('authAdmin', $username)){
-            dd("admin");
-        }/*elseif(Gate::allows('authCoordinator', $username)){
-            dd("coordinator");
-        }*/
-    }
+    // public function download($username){
+    //     if(Gate::allows('authUser', $username)){
+    //         dd("user");
+    //     }elseif(Gate::allows('authAdmin', $username)){
+    //         dd("admin");
+    //     }/*elseif(Gate::allows('authCoordinator', $username)){
+    //         dd("coordinator");
+    //     }*/
+    // }
 }

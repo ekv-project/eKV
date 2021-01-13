@@ -46,26 +46,31 @@ Route::get('/dashboard', function () {
  */
 Route::get('/dashboard/profile', [UserProfileController::class, 'viewProfile'])->name('profile')->middleware('auth');
 Route::get('/dashboard/profile/{username}', [UserProfileController::class, 'view'])->name('profile.user')->middleware('auth');
-Route::get('/dashboard/profile/{username}/update', [UserProfileController::class, 'updateView'])->name('profile.update')->middleware('auth');
-Route::post('/dashboard/profile/{username}/update', [UserProfileController::class, 'update'])->middleware('auth');
-Route::get('/dashboard/profile/{username}/download', [UserProfileController::class, 'download'])->name('profile.download')->middleware('auth');
+Route::get('/dashboard/profile/update/{username}', [UserProfileController::class, 'updateView'])->name('profile.update')->middleware('auth');
+Route::post('/dashboard/profile/update/{username}', [UserProfileController::class, 'update'])->middleware('auth');
+Route::get('/dashboard/profile/download/{username}', [UserProfileController::class, 'download'])->name('profile.download')->middleware('auth');
 
 /**
  *  Student Classroom
  */
 Route::get('/dashboard/classroom', [ClassroomController::class, 'classroom'])->name('classroom')->middleware('auth');
 Route::get('/dashboard/classroom/{classroomID}', [ClassroomController::class, 'view'])->name('classroom.view')->middleware('auth');
-Route::get('/dashboard/classroom/{classroomID}/student', [ClassroomController::class, 'student'])->name('classroom.student')->middleware(['auth']);
-Route::post('/dashboard/classroom/{classroomID}/student', [ClassroomController::class, 'studentUpdate'])->middleware(['auth']);
-Route::get('/dashboard/classroom/{classroomID}/update', [ClassroomController::class, 'update'])->name('classroom.update')->middleware(['auth']);
-Route::post('/dashboard/classroom/{classroomID}/update', [ClassroomController::class, 'classroomUpdate'])->middleware(['auth']);
+Route::get('/dashboard/classroom/student/{classroomID}', [ClassroomController::class, 'student'])->name('classroom.student')->middleware(['auth']);
+Route::get('/dashboard/classroom/update/{classroomID}', [ClassroomController::class, 'update'])->name('classroom.update')->middleware(['auth']);
+Route::post('/dashboard/classroom/student/{classroomID}', [ClassroomController::class, 'studentUpdate'])->middleware(['auth']);
+Route::post('/dashboard/classroom/update/{classroomID}', [ClassroomController::class, 'classroomUpdate'])->middleware(['auth']);
 
 /**
 *   Exam Transcript  
 */
-Route::get('/dashboard/exam/{studentID}', [ExamController::class, 'examView'])->name('exam')->middleware('auth');
-Route::get('/dashboard/exam/{studentID}/transcript', [ExamController::class, 'transcriptView'])->name('transcript')->middleware('auth');
-Route::get('/dashboard/exam/{studentID}/transcript/download', [ExamController::class, 'transcriptDownload'])->name('transcript.download')->middleware('auth');
+Route::get('/dashboard/exam/transcript/{studentID}', [ExamController::class, 'semesterView'])->name('exam')->middleware('auth');
+Route::get('/dashboard/exam/transcript/{studentID}/{studyLevel}/{semester}', [ExamController::class, 'transcriptView'])->name('transcript')->middleware('auth');
+Route::get('/dashboard/exam/transcript/add/{studentID}', [ExamController::class, 'transcriptAddView'])->name('transcript.add')->middleware('auth');
+Route::get('/dashboard/exam/transcript/update/{studentID}/{studyLevel}/{semester}', [ExamController::class, 'transcriptUpdateView'])->name('transcript.update')->middleware('auth');
+Route::post('/dashboard/exam/transcript/{studentID}', [ExamController::class, 'transcriptRemove'])->middleware('auth');
+Route::post('/dashboard/exam/transcript/add/{studentID}', [ExamController::class, 'transcriptAddUpdate'])->middleware('auth');
+Route::post('/dashboard/exam/transcript/update/{studentID}/{studyLevel}/{semester}', [ExamController::class, 'transcriptAddUpdate'])->middleware('auth');
+Route::post('/dashboard/exam/transcript/{studentID}/{studyLevel}/{semester}', [ExamController::class, 'transcriptView'])->middleware('auth');
 
 /** 
  *  Administration Area

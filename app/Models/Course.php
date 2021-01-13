@@ -15,4 +15,10 @@ class Course extends Model
         'code',
         'name'
     ];
+    
+    // Relationships
+
+    public function courseGrades(){
+        return $this->hasMany(CourseGrade::class);
+    }
 }

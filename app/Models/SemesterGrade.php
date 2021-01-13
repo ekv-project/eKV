@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class SemesterGrade extends Model
 {
     use HasFactory;
-    protected $table = 'course_grades';
+    protected $table = 'semester_grades';
     protected $fillable = [
         'users_username',
         'study_levels_code',
@@ -18,4 +18,14 @@ class SemesterGrade extends Model
         'gpa',
         'cgpa'
     ];
+    // Relationships
+    public function user(){
+        return $this->hasOne(User::class, 'users_username');
+    }
+    public function course(){
+        return $this->hasOne(Course::class, 'code');
+    }
+    public function studyLevel(){
+        return $this->hasOne(StudyLevel::class, 'code');
+    }
 }

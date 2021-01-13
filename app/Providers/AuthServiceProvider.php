@@ -39,7 +39,7 @@ class AuthServiceProvider extends ServiceProvider
         });
         // Check if current user an admin
         Gate::define('authAdmin', function (User $user){
-            return $user->role === 'admin';
+            return $user->role === 'admin' || $user->role === 'superadmin';
         });
         // Check if current user allowed to view
         Gate::define('authUser', function (User $user, $id){
