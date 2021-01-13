@@ -23,6 +23,9 @@
                 @error('notStudent')
                     <div class="alert alert-danger">{{ $message }}</div>
                 @enderror
+                @error('noUser')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                @enderror
             </div>
             <div class="col-2">
                 <button class="btn btn-primary" name="add">Tambah</button>

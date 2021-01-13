@@ -74,12 +74,6 @@ class ExamController extends Controller
                         'identificationNumber' => $studentIdentificationNumber,
                         'matrixNumber' => $studentID
                     ];
-                    /**
-                     * ToDo:
-                     * 1. Course Name
-                     * 2. Semester Grades
-                     */
-
                     $courseGrades = CourseGrade::join('courses', 'course_grades.courses_code', 'courses.code')->select('course_grades.credit_hour', 'course_grades.grade_pointer', 'courses.code', 'courses.name')->where('users_username', $studentID)->where('study_levels_code', $studyLevel)->where('semester', $semester)->get();
                     return view('dashboard.exam.transcript')->with(['settings' => $this->instituteSettings, 'page' => 'Transkrip Penilaian', 'studentProgram' => $studentProgram, 'studyLevelName' => $studyLevelName, 'semester' => $semester, 'studentDetails' => $studentDetails, 'courseGrades' => $courseGrades, 'semesterGrade' => $semesterGrade]);
                 }else{

@@ -96,25 +96,31 @@ class ClassroomController extends Controller
             if($request->has("add")){
                 // If the request is to add a student from that classroom
                 if(!empty($request->studentID)){
-                    $userRole = User::where('username', $request->studentID)->first()['role'];
-                    if($userRole == 'student'){
-                        // Check if the student is already in a classroom
-                        $classroomStudent = ClassroomStudent::where('users_username', $request->studentID)->get()->count();
-                        if($classroomStudent < 1){
-                            ClassroomStudent::create([
-                                'users_username' => $request->studentID,
-                                'classrooms_id' => $classroomID
-                            ]);
-                            session()->flash('successAdd', 'Pelajar berjaya ditambah ke dalam kelas!');
-                            return redirect()->back();
-                        }elseif($classroomStudent > 0){
+                    if(User::where('username', $request->studentID)->first()){
+                        $userRole = User::where('username', $request->studentID)->first()['role'];
+                        if($userRole == 'student'){
+                            // Check if the student is already in a classroom
+                            $classroomStudent = ClassroomStudent::where('users_username', $request->studentID)->get()->count();
+                            if($classroomStudent < 1){
+                                ClassroomStudent::create([
+                                    'users_username' => $request->studentID,
+                                    'classrooms_id' => $classroomID
+                                ]);
+                                session()->flash('successAdd', 'Pelajar berjaya ditambah ke dalam kelas!');
+                                return redirect()->back();
+                            }elseif($classroomStudent > 0){
+                                return redirect()->back()->withErrors([
+                                    'existed' => 'Pelajar telah berada dalam kelas sebelum ini!'
+                                ]);
+                            }
+                        }else{
                             return redirect()->back()->withErrors([
-                                'existed' => 'Pelajar telah berada dalam kelas sebelum ini!'
+                                'notStudent' => 'Pengguna yang cuba ditambah bukannya seorang pelajar!'
                             ]);
                         }
                     }else{
                         return redirect()->back()->withErrors([
-                            'notStudent' => 'Pengguna yang cuba ditambah bukannya seorang pelajar!'
+                            'noUser' => 'Tiada pengguna dijumpai!'
                         ]);
                     }
                 }else{
