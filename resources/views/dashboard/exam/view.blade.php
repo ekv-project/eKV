@@ -16,6 +16,7 @@
                             @if(Gate::allows('authAdmin') || Gate::allows('authCoordinator', $studentID))
                                 <th class="col-2"></th>
                                 <th class="col-2"></th>
+                                <th class="col-2"></th>
                             @endif
                         </tr>
                     </thead>
@@ -28,6 +29,9 @@
                             @if(Gate::allows('authAdmin') || Gate::allows('authCoordinator', $studentID))
                             <td>
                                 <a href="{{ route('transcript.update', ['studentID' => $studentID, 'studyLevel' => $semesterGrade->study_levels_code, 'semester' => $semesterGrade->semester]) }}" class="btn btn-primary hvr-shrink">Kemas Kini</a>
+                            </td>
+                            <td>
+                                <a href="{{ route('transcript.download', ['studentID' => $studentID, 'studyLevel' => $semesterGrade->study_levels_code, 'semester' => $semesterGrade->semester]) }}" class="btn btn-primary hvr-shrink">Muat Turun</a>
                             </td>
                             <td>
                                 <form action="" method="post">

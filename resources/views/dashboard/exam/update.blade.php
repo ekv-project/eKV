@@ -31,6 +31,7 @@
                         <p class="fw-bold">Semester: <span class="fw-normal">{{ $semester }}</span></p>
                         <input type="hidden" name="semester" value="{{ $semester }}">
                     </div>
+                    <div class="col"></div>
                 </div>
                 <div class="row">
                     <h1 class="fw-bold fs-6">Purata Nilai Gred</h1>

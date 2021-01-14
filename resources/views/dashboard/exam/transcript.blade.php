@@ -54,12 +54,12 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <th class="fst-italic fw-normal">PNG SEMESTER SEMASA (PNGS)</th>
+                            <th class="fw-bold text-start">PNG SEMESTER SEMASA (PNGS)</th>
                             <td>{{ $semesterGrade->total_credit_gpa }}</td>
                             <td>{{ $semesterGrade->gpa }}</td>
                         </tr>
                         <tr>
-                            <th class="fst-italic fw-normal">PNG KUMULATIF KESELURUHAN</th>
+                            <th class="fw-bold text-start">PNG KUMULATIF KESELURUHAN (PNGKK)</th>
                             <td>{{ $semesterGrade->total_credit_cgpa }}</td>
                             <td>{{ $semesterGrade->cgpa }}</td>
                         </tr>
