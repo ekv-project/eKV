@@ -6,7 +6,7 @@ use App\Models\InstituteSetting;
 use App\Models\User;
 use Illuminate\Http\Request;
 
-class instituteSettingController extends Controller
+class InstituteSettingController extends Controller
 {
     /***************************************************************************
      * Controller Constuctor
