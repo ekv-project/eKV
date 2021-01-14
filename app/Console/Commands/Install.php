@@ -21,7 +21,7 @@ class Install extends Command
      *
      * @var string
      */
-    protected $description = 'Migrate the databases and create a new admin user with the username: admin.';
+    protected $description = 'eKV: Migrate the databases and create a new admin user with the username: admin.';
 
     /**
      * Create a new command instance.
