@@ -8,14 +8,19 @@
         Alamat Rumah: {{ ucwords($profile['home_address']) }} <br>
         Nama Penjaga: {{ ucwords($profile['guardian_name']) }} <br>
         Nombor Telefon Penjaga: {{ $profile['guardian_phone_number'] }} <br>
+        @if(Gate::allows('authUser', $username) || Gate::allows('authCoordinator', $username) || Gate::allows('authAdmin'))
+            <a href="{{ route('profile.download', ['username' => $username]) }}" class="btn btn-primary">Muat Turun</a>     
+        @endif
     @else
-        No. Kad Pengenalan:  <br>
-        No. Telefon Peribadi:  <br>
-        Tarikh Lahir:  <br>
-        Tempat Lahir:  <br>
-        Alamat Rumah:  <br>
-        Nama Penjaga:  <br>
-        No. Telefon Penjaga:  <br>
+        @can('authStudent')
+            No. Kad Pengenalan:  <br>
+            No. Telefon Peribadi:  <br>
+            Tarikh Lahir:  <br>
+            Tempat Lahir:  <br>
+            Alamat Rumah:  <br>
+            Nama Penjaga:  <br>
+            No. Telefon Penjaga:  <br>
+        @endcan
     @endif
     @if(Storage::disk('local')->exists('public/img/profile/'. $username . '.jpg'))
         <img src="{{ asset('public/img/profile/'. $username . '.jpg') }}" alt="User Profile Picture" class="img-fluid rounded-circle" style="height: 7em">

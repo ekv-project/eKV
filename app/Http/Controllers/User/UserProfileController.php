@@ -154,14 +154,124 @@ class UserProfileController extends Controller
             abort(403, 'Anda tiada akses pada laman ini!');
         }
     }
-    // Only current authenticated user (their own profile), admin and their coordinator is allowed to download the profile.
-    // public function download($username){
-    //     if(Gate::allows('authUser', $username)){
-    //         dd("user");
-    //     }elseif(Gate::allows('authAdmin', $username)){
-    //         dd("admin");
-    //     }/*elseif(Gate::allows('authCoordinator', $username)){
-    //         dd("coordinator");
-    //     }*/
-    // }
+    
+    public function download($username){
+            //Only current authenticated user (their own profile), admin and their coordinator is allowed to download the profile.
+        if(Gate::allows('authUser', $username) || Gate::allows('authCoordinator', $username) || Gate::allows('authAdmin')){
+                //Check if student updated their profile
+            if(UserProfile::where('users_username', $username)->first()){
+                $mpdf = new \Mpdf\Mpdf([
+                    'mode' => 'utf-8',
+                    'format' => 'A4',
+                    'orientation' => 'P',
+                ]);
+                $mpdf->simpleTables = true;
+                $mpdf->packTableData = true;
+                $mpdf->keep_table_proportions = TRUE;
+                $mpdf->shrink_tables_to_fit=1;
+                $title = "Test";
+                $mpdf->SetTitle($title);
+                $mpdf->imageVars['profilePicture'] = file_get_contents(storage_path('app/public/img/profile/default/def-300.jpg'));
+                $userProfile = UserProfile::where('users_username', $username)->first();
+                $user = User::where('username', $username)->first();
+                $stylesheet = '
+                    p{
+                        font-family: Arial;
+                    }
+                    .profile{
+                        width: 100%;
+                        margin: 5cm 0 0 0;
+                    }
+                    .header{
+                        text-align: center;
+                    }
+                    .footer{
+                        text-align: center;
+                    }
+                ';
+                $mpdf->WriteHTML($stylesheet,\Mpdf\HTMLParserMode::HEADER_CSS);
+                $mpdf->SetHTMLHeader('
+                            <div class="header" align="center">
+                                <h1>KOLEJ VOKASIONAL MALAYSIA</h1>
+                            </div>
+                        ');
+                $mpdf->SetHTMLFooter('
+                    <div class="footer" align="center">
+                        <p style="font-style: italic;">Slip profil ini adalah janaan komputer.</p>
+                        <p style="font-style: italic;">Tandatangan tidak diperlukan.</p>
+                    </div>
+                ');
+                $mpdf->WriteHTML('<div><br></div>');
+                $profile = "
+                    <div align='center' style='text-align: center; border: 2px solid black; border-radius: 20%; position: absolute; top: 13%; left: 40%; width: 3.5cm; height: 3.5cm; z-index: 1;'>
+                        <img width='2.3cm' src='var:profilePicture' style='margin: 17% 0;'>
+                    </div>
+                    <div class='profile' style='z-index: 2;'>
+                        <div class='row' style='width: 100%; height: 2.5%; margin: 1% 0;'>
+                            <div style='float: left; width: 20%;'>
+                                <p style='font-weight: bold;'>NAMA PENUH: </p>
+                            </div>
+                            <div style='float: right; width: 80%'>
+                                <p style='font-weight: normal; float: right;'>" . strtoupper($user->fullname) . "</p>
+                            </div>
+                        </div>
+                        <div class='row' style='width: 100%; height: 2.5%; margin: 1% 0;'>
+                            <div style='float: left; width: 50%'>
+                                <p style='font-weight: bold;'>NO. KAD PENGENALAN: <span style='font-weight: normal;'>" . strtoupper($userProfile['identification_number']) . "</span></p>
+                            </div>
+                            <div style='float: right; width: 50%'>
+                                <p style='font-weight: bold; float: right;'>NO. TELEFON PERIBADI: <span style='font-weight: normal;'>" . strtoupper($userProfile['phone_number']) . "</span></p>
+                            </div>
+                        </div>
+                        <div class='row' style='width: 100%; height: 2.5%; margin: 1% 0;'>
+                            <div style='float: left; width: 50%'>
+                                <p style='font-weight: bold;'>E-MEL: <span style='font-weight: normal;'>" . strtoupper($user->email) . "</span></p>
+                            </div>
+                            <div style='float: right; width: 50%'>
+                                <p style='font-weight: bold; float: right;'>TARIKH LAHIR: <span style='font-weight: normal;'>" . strtoupper($userProfile['date_of_birth']) . "</span></p>
+                            </div>
+                        </div>
+                        <div class='row' style='width: 100%; height: 2.5%; margin: 1% 0;'>
+                            <div style='float: left; width: 20%;'>
+                                <p style='font-weight: bold;'>TEMPAT LAHIR: </p>
+                            </div>
+                            <div style='float: right; width: 80%'>
+                                <p style='font-weight: normal; float: right;'>" . strtoupper($userProfile['place_of_birth']) . "</p>
+                            </div>
+                        </div>
+                        <div class='row' style='width: 100%; height: 2.5%; margin: 1% 0;'>
+                            <div style='float: left; width: 20%;'>
+                                <p style='font-weight: bold;'>ALAMAT RUMAH: </p>
+                            </div>
+                            <div style='float: right; width: 80%'>
+                                <p style='font-weight: normal; float: right;'>" . strtoupper($userProfile['home_address']) . "</p>
+                            </div>
+                        </div>
+                        <div class='row' style='width: 100%; height: 2.5%; margin: 1% 0;'>
+                            <div style='float: left; width: 20%;'>
+                                <p style='font-weight: bold;'>NO. TELEFON RUMAH: </p>
+                            </div>
+                            <div style='float: right; width: 80%'>
+                                <p style='font-weight: normal; float: right;'>" . strtoupper($userProfile['home_number']) . "</p>
+                            </div>
+                        </div>
+                        <div class='row' style='width: 100%; height: 2.5%; margin: 1% 0;'>
+                            <div style='float: left; width: 50%'>
+                                <p style='font-weight: bold;'>NAMA PENJAGA: <span style='font-weight: normal;'>" . strtoupper($userProfile['guardian_name']) . "</span></p>
+                            </div>
+                            <div style='float: right; width: 50%'>
+                                <p style='font-weight: bold; float: right;'>NO. TELEFON PENJAGA: <span style='font-weight: normal;'>" . strtoupper($userProfile['guardian_phone_number']) . "</span></p>
+                            </div>
+                        </div>
+                    </div>
+                ";
+                $mpdf->WriteHTML($profile);
+                $mpdf->Output('test.pdf', 'I');
+            }else{
+                abort(404, 'Profil pelajar tidak dijumpai!');
+            }
+        }else{
+            abort(403, 'Anda tiada akses pada laman ini!');
+        }
+    }
 }

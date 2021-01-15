@@ -451,7 +451,7 @@ class ExamController extends Controller
                         ');
                         $mpdf->SetHTMLFooter('
                             <div class="footer">
-                                <p style="font-style: italic;">Transkrip ini dijana menggunakan komputer.</p>
+                                <p style="font-style: italic;">Transkrip ini adalah janaan komputer.</p>
                                 <p style="font-style: italic;">Tandatangan tidak diperlukan.</p>
                             </div>
                         ');
@@ -466,6 +466,17 @@ class ExamController extends Controller
                                 <td valign="top" style="font-size: 1em;">' . $courseGrade->grade_pointer . '</td>
                             </tr>');
                         }
+                        $mpdf->SetHTMLHeader('
+                            <div class="header" align="center">
+                                <h1>KOLEJ VOKASIONAL MALAYSIA</h1>
+                            </div>
+                        ');
+                        $mpdf->SetHTMLFooter('
+                            <div class="footer">
+                                <p style="font-style: italic;">Transkrip ini dijana menggunakan komputer.</p>
+                                <p style="font-style: italic;">Tandatangan tidak diperlukan.</p>
+                            </div>
+                        ');
                         $mpdf->WriteHTML($courseGradesBottomHTML);
                         $mpdf->WriteHTML($semesterGradeHTML);
                         $mpdf->Output(ucwords($studentName) . ' - Transkrip Semester ' . $semester . ' ' . $studyLevelName, 'D');

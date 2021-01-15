@@ -47,8 +47,8 @@ Route::get('/dashboard', function () {
 Route::get('/dashboard/profile', [UserProfileController::class, 'viewProfile'])->name('profile')->middleware('auth');
 Route::get('/dashboard/profile/{username}', [UserProfileController::class, 'view'])->name('profile.user')->middleware('auth');
 Route::get('/dashboard/profile/update/{username}', [UserProfileController::class, 'updateView'])->name('profile.update')->middleware('auth');
-Route::post('/dashboard/profile/update/{username}', [UserProfileController::class, 'update'])->middleware('auth');
 Route::get('/dashboard/profile/download/{username}', [UserProfileController::class, 'download'])->name('profile.download')->middleware('auth');
+Route::post('/dashboard/profile/update/{username}', [UserProfileController::class, 'update'])->middleware('auth');
 
 /**
  *  Student Classroom
