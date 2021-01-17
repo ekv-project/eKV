@@ -14,8 +14,8 @@
     @endisset        
     ">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-    @if(Storage::disk('local')->exists('public/img/system/logo.jpg'))
-        <link rel="shortcut icon" href="{{ asset('public/img/system/logo.jpg') }}" type="image/jpeg">
+    @if(Storage::disk('local')->exists('public/img/system/logo-16.png'))
+        <link rel="shortcut icon" href="{{ asset('public/img/system/logo-16.png') }}" type="image/png">
     @elseif(Storage::disk('local')->exists('public/img/system/logo-def-16.jpg'))
         <link rel="shortcut icon" href="{{ asset('public/img/system/logo-def-16.jpg') }}" type="image/jpeg">
     @endif
@@ -32,22 +32,39 @@
     </title>
 </head>
 <body>
-    <header class="d-flex bg-primary">
-        <div class="col-2 d-flex align-items-center justify-content-center">
+    {{-- Hamburger Menu Button --}}
+    <div class="d-flex d-lg-none d-md-flex position-fixed top-0 start-0 hamburger-menu" style="z-index: 100">
+        <div class="hamburger-layer"></div>
+        <div class="hamburger-layer"></div>
+        <div class="hamburger-layer"></div>
+    </div>
+    <header class="container-fluid m-0 row d-flex align-items-center bg-primary position-fixed top-0 start-0" style="z-index: 80">
+        {{-- Desktop Navbar --}}
+        <div class="container-fluid d-flex align-items-center">
+            <div class="container-fluid d-none d-lg-flex d-sm-none justify-content-around">
+                <div class="col-md-3 d-flex justify-content-center align-content-center hvr-shrink"><a href="{{ route('dashboard') }}" class="btn button-transparent fs-5 text-light fw-normal">Dashboard</a></div>
+                <div class="col-md-3 d-flex justify-content-center align-content-center hvr-shrink"><a href="{{ route('transcript.student', ['studentID' => Auth::user()->username]) }}" class="btn button-transparent fs-5 text-light fw-normal">Transkrip</a></div>
+                <div class="col-md-3 d-flex justify-content-center align-content-center hvr-shrink"><a href="" class="btn button-transparent fs-5 text-light fw-normal">Pilihan Raya</a></div>
+                <div class="col-md-3 d-flex justify-content-center align-content-center hvr-shrink"><a href="{{ route('admin') }}" class="btn button-transparent fs-5 text-light fw-normal">Pentadbir</a></div>
+            </div>
+        </div>
+        <div class="col-md-3 m-0 d-flex align-items-center justify-content-center">
+            @if(Storage::disk('local')->exists('public/img/system/logo-300.png'))
+                <img style="width: 2.5em; height: 2.5em; margin: 1em;" src="{{ asset('public/img/system/logo-300.png') }}" alt="Insitite Logo">
+            @elseif(Storage::disk('local')->exists('public/img/system/logo-def-300.jpg'))
+                <img style="width: 2.5em; height: 2.5em; margin: 0.5em;" src="{{ asset('public/img/system/logo-def-300.jpg') }}" alt="Insitite Logo">
+            @endif
             <h3 class="text-light fw-bold">{{ env('APP_NAME') }}</h3>
         </div>
-        <div class="col-8 d-flex align-items-center justify-content-sm-around m-0">
-            <a href="{{ route('dashboard') }}" class="text-light text-decoration-none fs-6 hvr-underline-from-center">Dashboard</a>
-            <a href="{{ route('classroom') }}" class="text-light text-decoration-none fs-6 hvr-underline-from-center">Kelas</a>
-        </div>
-        <div class="col-2 d-flex align-items-center justify-content-around">
+        <div class="col-md-6 m-0 invisible"></div>
+        <div class="col-md-3 m-0 d-flex align-items-center justify-content-around">
             @if(Storage::disk('local')->exists('public/img/profile/'. Auth::user()->username . '.jpg'))
                 <a href="{{ route('profile') }}" class="">
-                    <img src="{{ asset('public/img/profile/'. Auth::user()->username . '.jpg') }}" alt="User Profile Picture" class="img-fluid mt-1 mb-1 rounded-circle img-thumbnail hvr-shrink" style="height: 3em">
+                    <img style="width: 3em; height: 3em;" src="{{ asset('public/img/profile/'. Auth::user()->username . '.jpg') }}" alt="User Profile Picture" class="img-fluid rounded-circle hvr-shrink" style="height: 3em">
                 </a>
             @elseif(Storage::disk('local')->exists('public/img/profile/default/def-300.jpg'))
                 <a href="{{ route('profile') }}" class="">
-                    <img src="{{ asset('public/img/profile/default/def-300.jpg') }}" alt="Default Profile Picture" class="img-fluid mt-1 mb-1 rounded-circle img-thumbnail hvr-grow" style="height: 3em">
+                    <img style="width: 3em; height: 3em;" src="{{ asset('public/img/profile/default/def-300.jpg') }}" alt="Default Profile Picture" class="img-fluid rounded-circle hvr-grow hvr-shrink" style="height: 3em">
                 </a>
             @endif
             <a href="{{ route('profile') }}" class="text-light fw-bold text-decoration-none hvr-grow">{{ Auth::user()->username }}</a>
@@ -57,7 +74,16 @@
             </form>
         </div>
     </header>
-    <div class="container-fluid">
+    {{-- Mobile Navbar --}}
+    <div class="d-flex flex-column d-lg-none invisible position-fixed top-0 start-0 bg-primary h-100 w-100 m-0 justify-content-center align-items-center overflow-auto hamburger-menu-list" style="z-index: 80">
+        <div class="d-flex flex-column justify-content-around align-items-center w-100 h-100">
+            <div class="col-md-5 d-flex justify-content-center align-content-center hvr-shrink"><a href="{{ route('dashboard') }}" class="btn button-transparent fs-5 text-light fw-normal">Dashboard</a></div>
+            <div class="col-md-5 d-flex justify-content-center align-content-center hvr-shrink"><a href="{{ route('transcript.student', ['studentID' => Auth::user()->username]) }}" class="btn button-transparent fs-5 text-light fw-normal">Transkrip</a></div>
+            <div class="col-md-5 d-flex justify-content-center align-content-center hvr-shrink"><a href="" class="btn button-transparent fs-5 text-light fw-normal">Pilihan Raya</a></div>
+            <div class="col-md-5 d-flex justify-content-center align-content-center hvr-shrink"><a href="{{ route('admin') }}" class="btn button-transparent fs-5 text-light fw-normal">Pentadbir</a></div>
+        </div>
+    </div>
+    <div class="container-fluid w-100 mt-6 mt-sm-6 mt-md-6 mt-lg-6">
         @yield('content')
     </div>
     <script type="module" src="{{ asset('js/app.js') }}"></script>

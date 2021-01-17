@@ -25,7 +25,7 @@
                         <tr>
                             <td>{{ strtoupper($semesterGrade->study_levels_code) }}</td>
                             <td>{{ $semesterGrade->semester }}</td>
-                            <td><a href="{{ route('transcript', ['studentID' => $studentID, 'studyLevel' => $semesterGrade->study_levels_code, 'semester' => $semesterGrade->semester]) }}" class="btn btn-primary hvr-shrink">Lihat</a></td>
+                            <td><a href="{{ route('transcript.view', ['studentID' => $studentID, 'studyLevel' => $semesterGrade->study_levels_code, 'semester' => $semesterGrade->semester]) }}" class="btn btn-primary hvr-shrink">Lihat</a></td>
                             @if(Gate::allows('authAdmin') || Gate::allows('authCoordinator', $studentID))
                             <td>
                                 <a href="{{ route('transcript.update', ['studentID' => $studentID, 'studyLevel' => $semesterGrade->study_levels_code, 'semester' => $semesterGrade->semester]) }}" class="btn btn-primary hvr-shrink">Kemas Kini</a>

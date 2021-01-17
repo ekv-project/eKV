@@ -1,7 +1,26 @@
 @extends('dashboard.layout.main')
 @section('content')
-<div class="row d-flex justify-content-center align-items-center">
-    <div class="col-5">
+<div class="container-fluid d-flex flex-column align-items-center justify-content-center m-0 p-0">
+    <div class="row">
+        <form action="" method="post" enctype="multipart/form-data" class="mt-2 mb-2">
+            @csrf
+            <h2>Kemas Kini Logo Institut</h2>
+
+            @if(session()->has('logoSuccess'))
+                <div class="alert alert-success">{{ session('logoSuccess') }}</div>
+            @endif
+            <input type="file" name="institute-logo" id="institute-logo" class="form-control mb-3">
+            <div class="form-text mb-2 text-center">Logo Mestilah Bernisbah 1:1</div>
+            @error('institute-logo')
+                <div class="alert alert-danger">{{ $message }}</div>
+            @enderror
+            @error('unsupportedType')
+                <div class="alert alert-danger">{{ $message }}</div>
+            @enderror
+            <button type="submit" class="btn btn-primary w-100 hvr-shrink" name="logo">Kemas Kini</button>
+        </form>
+    </div>
+    <div class="row">
         <form action="" method="post" class="mt-3 mb-5">
             @csrf
             <h2>Kemas Kini Maklumat Institut</h2>
@@ -43,7 +62,7 @@
                     <div class="alert alert-danger">{{ $message }}</div>
                 @enderror
             </div>
-            <button type="submit" class="btn btn-primary w-100 hvr-shrink">Kemas Kini</button>
+            <button type="submit" class="btn btn-primary w-100 hvr-shrink" name="info">Kemas Kini</button>
         </form>
     </div>
 </div>

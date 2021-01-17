@@ -20119,6 +20119,15 @@ if (document.querySelector('#searchInput') != null) {
   });
 }
 
+if (document.querySelector('.hamburger-menu') != null) {
+  var hamburgerMenu = document.querySelector('.hamburger-menu');
+  var hamburgerMenuList = document.querySelector('.hamburger-menu-list');
+  hamburgerMenu.addEventListener('click', function () {
+    hamburgerMenuList.classList.toggle('visible');
+    hamburgerMenuList.classList.toggle('invisible');
+  });
+}
+
 /***/ }),
 
 /***/ "./resources/js/bootstrap.js":
