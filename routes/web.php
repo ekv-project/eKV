@@ -115,4 +115,4 @@ Route::post('/dashboard/admin/classroom',[AdminClassroomController::class, 'remo
 
 Route::get('/dashboard/admin/institute',[InstituteSettingController::class, 'view'])->name('admin.institute')->middleware(['auth', 'userIsSuperAdmin']);
 Route::get('/dashboard/admin/institute/update',[InstituteSettingController::class, 'updateView'])->name('admin.institute.update')->middleware(['auth', 'userIsSuperAdmin']);
-Route::get('/dashboard/admin/institute/update',[InstituteSettingController::class, 'updateSettings'])->middleware(['auth', 'userIsSuperAdmin']);
+Route::post('/dashboard/admin/institute/update',[InstituteSettingController::class, 'updateSettings'])->middleware(['auth', 'userIsSuperAdmin']);

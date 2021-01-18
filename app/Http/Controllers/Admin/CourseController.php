@@ -30,8 +30,28 @@ class CourseController extends Controller
     /**
      * Handling Views
      */
-    public function view(){
-        return view('dashboard.admin.course.view')->with(['settings' => $this->instituteSettings, 'apiToken' => $this->apiToken, 'page' => 'Senarai Kursus']);
+    public function view(Request $request){
+        $pagination = 15;
+        $course = Course::paginate($pagination)->withQueryString();
+            // Check for filters and search
+        if($request->has('sort_by') AND $request->has('sort_order') AND $request->has('search')){
+            $sortBy = $request->sort_by;
+            $sortOrder = $request->sort_order;
+            $search = $request->search;
+            if($search != NULL){
+                $course = Course::where('code', 'LIKE', "%{$search}%")->orWhere('name', 'LIKE', "%{$search}%")->orderBy($sortBy, $sortOrder)->paginate($pagination)->withQueryString();
+            }else{
+                $course = Course::orderBy($sortBy, $sortOrder)->paginate($pagination)->withQueryString();
+            }
+            $filterAndSearch = [
+                'sortBy' => $sortBy,
+                'sortOrder' => $sortOrder,
+                'search' => $search
+            ];
+            return view('dashboard.admin.course.view')->with(['settings' => $this->instituteSettings, 'apiToken' => $this->apiToken, 'page' => 'Senarai Kursus', 'course' => $course, 'filterAndSearch' => $filterAndSearch]);
+        }else{
+            return view('dashboard.admin.course.view')->with(['settings' => $this->instituteSettings, 'apiToken' => $this->apiToken, 'page' => 'Senarai Kursus', 'course' => $course]);
+        }
     }
     public function addView(){
         return view('dashboard.admin.course.add')->with(['settings' => $this->instituteSettings, 'apiToken' => $this->apiToken, 'page' => 'Tambah Kursus']);
@@ -94,6 +114,13 @@ class CourseController extends Controller
         }
     }
     public function remove(Request $request){
-
+        if(isset($request->code)){
+            $code = $request->code;
+            if(Course::where('code', $code)->first()){   
+                Course::where('code', $code)->delete();
+                session()->flash('deleteSuccess', 'Kursus berjaya dibuang!');
+                return redirect()->back();
+            }
+        }
     }
 }

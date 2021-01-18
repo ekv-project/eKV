@@ -4,15 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta name="api-token" content="
-    @isset($apiToken)
-        @empty($apiToken)
-            NULL
-        @else
-            {{$apiToken['api_token']}}
-        @endempty 
-    @endisset        
-    ">
+    @if(isset(Auth::user()->api_token) AND Auth::user()->api_token != NULL))
+        <meta name="api-token" content="{{ Auth::user()->api_token }}">
+    @endif
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     @if(Storage::disk('local')->exists('public/img/system/logo-16.png'))
         <link rel="shortcut icon" href="{{ asset('public/img/system/logo-16.png') }}" type="image/png">
@@ -48,15 +42,25 @@
                 <div class="col-md-3 d-flex justify-content-center align-content-center hvr-shrink"><a href="{{ route('admin') }}" class="btn button-transparent fs-5 text-light fw-normal">Pentadbir</a></div>
             </div>
         </div>
-        <div class="col-md-3 m-0 d-flex align-items-center justify-content-center">
-            @if(Storage::disk('local')->exists('public/img/system/logo-300.png'))
-                <img style="width: 2.5em; height: 2.5em; margin: 1em;" src="{{ asset('public/img/system/logo-300.png') }}" alt="Insitite Logo">
-            @elseif(Storage::disk('local')->exists('public/img/system/logo-def-300.jpg'))
-                <img style="width: 2.5em; height: 2.5em; margin: 0.5em;" src="{{ asset('public/img/system/logo-def-300.jpg') }}" alt="Insitite Logo">
-            @endif
-            <h3 class="text-light fw-bold">{{ env('APP_NAME') }}</h3>
+        <div class="col-md-5 m-0 d-flex align-items-center justify-content-center">
+            <div class="w-100 d-flex align-items-center">
+                @if(Storage::disk('local')->exists('public/img/system/logo-300.png'))
+                    <img style="width: 2.5em; height: 2.5em; margin: 1em;" src="{{ asset('public/img/system/logo-300.png') }}" alt="Insitite Logo">
+                @elseif(Storage::disk('local')->exists('public/img/system/logo-def-300.jpg'))
+                    <img style="width: 2.5em; height: 2.5em; margin: 0.5em;" src="{{ asset('public/img/system/logo-def-300.jpg') }}" alt="Insitite Logo">
+                @endif
+                @isset($settings)
+                    @empty($settings['institute_name'])
+                        <h1 class="text-light fw-bold fs-4">Kolej Vokasional Malaysia</h1>
+                    @else
+                        <h1 class="text-light fw-bold fs-4">{{ ucwords($settings['institute_name']) }}</h1>
+                    @endempty        
+                @else
+                    <h1 class="text-light fw-bold fs-4">Kolej Vokasional Malaysia</h1>
+                @endisset  
+            </div>
         </div>
-        <div class="col-md-6 m-0 invisible"></div>
+        <div class="col-md-4 m-0 invisible"></div>
         <div class="col-md-3 m-0 d-flex align-items-center justify-content-around">
             @if(Storage::disk('local')->exists('public/img/profile/'. Auth::user()->username . '.jpg'))
                 <a href="{{ route('profile') }}" class="">
@@ -70,7 +74,7 @@
             <a href="{{ route('profile') }}" class="text-light fw-bold text-decoration-none hvr-grow">{{ Auth::user()->username }}</a>
             <form action="{{ route('logout') }}" method="post">
                 @csrf
-                <button type="submit" class="btn btn-dark hvr-shrink">Log Keluar</button>
+                <button type="submit" class="btn btn-dark  hvr-shrink">Log Keluar</button>
             </form>
         </div>
     </header>

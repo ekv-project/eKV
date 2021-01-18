@@ -2,7 +2,7 @@
 @section('content')
 <div class="container-fluid d-flex flex-column align-items-center justify-content-center m-0 p-0">
     <div class="row w-100 d-flex flex-column align-items-center justify-content-center">
-        <div class="col-5">
+        <div class="col-12 col-lg-10">
             <form action="" method="post" class="mt-3 mb-5">
                 @csrf
                 <h2 class="text-center">Kemas Kini Program</h2>
