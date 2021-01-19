@@ -8,6 +8,7 @@
         <meta name="api-token" content="{{ Auth::user()->api_token }}">
     @endif
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('bootstraps-icons/font/bootstrap-icons.css') }}">
     @if(Storage::disk('local')->exists('public/img/system/logo-16.png'))
         <link rel="shortcut icon" href="{{ asset('public/img/system/logo-16.png') }}" type="image/png">
     @elseif(Storage::disk('local')->exists('public/img/system/logo-def-16.jpg'))

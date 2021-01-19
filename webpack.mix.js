@@ -14,7 +14,5 @@ const mix = require('laravel-mix');
 mix.sass('resources/scss/app.scss', 'public/css')
     .js('resources/js/app.js', 'public/js')
     .js('resources/js/liveSearch.js', 'public/js')
-    .js('resources/js/addRemoveField.js', 'public/js');
-
-// Find a way to import Bootstrap icons and use it
-    
+    .js('resources/js/addRemoveField.js', 'public/js')
+    .copy('node_modules/bootstrap-icons', 'public/bootstraps-icons');
