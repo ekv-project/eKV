@@ -14,6 +14,7 @@
                         <div class="alert alert-success">{{ session('pictureSuccess') }}</div>
                     @endif
                     <input type="file" name="profile-picture" id="profile-picture" class="form-control mb-3">
+                    <div class="form-text mb-2 text-center">Logo Mestilah Bernisbah 1:1 <br> Resolusi Lebih Daripada 300x300 Piksel</div>
                     @error('profile-picture')
                         <div class="alert alert-danger">{{ $message }}</div>
                     @enderror

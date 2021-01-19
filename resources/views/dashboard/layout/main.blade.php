@@ -46,18 +46,22 @@
         <div class="col-md-5 m-0 d-flex align-items-center justify-content-center">
             <div class="w-100 d-flex align-items-center">
                 @if(Storage::disk('local')->exists('public/img/system/logo-300.png'))
-                    <img style="width: 2.5em; height: 2.5em; margin: 1em;" src="{{ asset('public/img/system/logo-300.png') }}" alt="Insitite Logo">
+                    <a href="{{ route('dashboard') }}">
+                        <img style="width: 2.5em; height: 2.5em; margin: 1em;" src="{{ asset('public/img/system/logo-300.png') }}" alt="Insitite Logo">
+                    </a>
                 @elseif(Storage::disk('local')->exists('public/img/system/logo-def-300.jpg'))
-                    <img style="width: 2.5em; height: 2.5em; margin: 0.5em;" src="{{ asset('public/img/system/logo-def-300.jpg') }}" alt="Insitite Logo">
+                    <a href="{{ route('dashboard') }}">
+                        <img style="width: 2.5em; height: 2.5em; margin: 0.5em;" src="{{ asset('public/img/system/logo-def-300.jpg') }}" alt="Insitite Logo">
+                    </a>
                 @endif
                 @isset($settings)
                     @empty($settings['institute_name'])
-                        <h1 class="text-light fw-bold fs-4">Kolej Vokasional Malaysia</h1>
+                        <a class="text-light fw-bold fs-4 text-decoration-none" href="{{ route('dashboard') }}">Kolej Vokasional Malaysia</a>
                     @else
-                        <h1 class="text-light fw-bold fs-4">{{ ucwords($settings['institute_name']) }}</h1>
+                        <a class="text-light fw-bold fs-4 text-decoration-none" href="{{ route('dashboard') }}">{{ ucwords($settings['institute_name']) }}</a>
                     @endempty        
                 @else
-                    <h1 class="text-light fw-bold fs-4">Kolej Vokasional Malaysia</h1>
+                    <a class="text-light fw-bold fs-4 text-decoration-none" href="{{ route('dashboard') }}">Kolej Vokasional Malaysia</a>
                 @endisset  
             </div>
         </div>
@@ -75,7 +79,7 @@
             <a href="{{ route('profile') }}" class="text-light fw-bold text-decoration-none hvr-grow">{{ Auth::user()->username }}</a>
             <form action="{{ route('logout') }}" method="post">
                 @csrf
-                <button type="submit" class="btn btn-dark  hvr-shrink">Log Keluar</button>
+                <button type="submit" class="btn btn-dark  hvr-shrink"><i class="bi bi-box-arrow-in-left"></i>Log Keluar</button>
             </form>
         </div>
     </header>

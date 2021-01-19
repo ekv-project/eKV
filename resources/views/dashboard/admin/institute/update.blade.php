@@ -5,12 +5,11 @@
         <form action="" method="post" enctype="multipart/form-data" class="mt-2 mb-2">
             @csrf
             <h2>Kemas Kini Logo Institut</h2>
-
             @if(session()->has('logoSuccess'))
                 <div class="alert alert-success">{{ session('logoSuccess') }}</div>
             @endif
             <input type="file" name="institute-logo" id="institute-logo" class="form-control mb-3">
-            <div class="form-text mb-2 text-center">Logo Mestilah Bernisbah 1:1</div>
+            <div class="form-text mb-2 text-center">Logo Mestilah Bernisbah 1:1 <br> Resolusi Lebih Daripada 300x300 Piksel</div>
             @error('institute-logo')
                 <div class="alert alert-danger">{{ $message }}</div>
             @enderror

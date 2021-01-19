@@ -33,7 +33,7 @@
                                 <input type="text" class="form-control" name="search" placeholder="Carian">
                             </div>
                             <div class="col-3 col-lg-2">
-                                <button type="submit" class="btn btn-primary hvr-shrink w-100">Cari</button>
+                                <button type="submit" class="btn btn-primary hvr-shrink w-100"><i class="bi bi-search" style="margin-right: 1rem;"></i>Cari</button>
                             </div>
                         </div>
                     </form>
@@ -96,12 +96,12 @@
                                 <tr>
                                     <td>{{ strtoupper($p->code) }}</td>
                                     <td>{{ strtoupper($p->name) }}</td>
-                                    <td><a class="btn btn-primary hvr-shrink" href="{{ route('admin.program.update', ['code' => strtolower($p->code)]) }}">Kemas Kini</a></td>
+                                    <td><a class="btn btn-primary hvr-shrink" href="{{ route('admin.program.update', ['code' => strtolower($p->code)]) }}"><i class="bi bi-pencil-square"></i></a></td>
                                     <td>
                                         <form action="" method="post" class="d-flex justify-content-center">
                                             @csrf
                                             <input type="hidden" name="code" value="{{ strtolower($p->code) }}">
-                                            <button type="submit" class="btn btn-danger hvr-shrink" name="remove">X</button>
+                                            <button type="submit" class="btn btn-danger hvr-shrink" name="remove"><i class="bi bi-x-square"></i></button>
                                         </form>
                                     </td>
                                 </tr>

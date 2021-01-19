@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('bootstraps-icons/font/bootstrap-icons.css') }}">
     <title>e-KV - Log Masuk</title>
 </head>
 <body>
@@ -27,7 +28,7 @@
                 @error('password')
                     <div class="alert alert-danger">{{ $message }}</div>
                 @enderror
-                <button type="submit" class="btn btn-primary w-100 mt-2 hvr-shrink">Log Masuk</button>
+                <button type="submit" class="btn btn-primary w-100 mt-2 hvr-shrink"><i class="bi bi-box-arrow-in-right" style="margin-right: 1em"></i>Log Masuk</button>
             </form>
         </div>
     </div>
