@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\ClassroomController as AdminClassroomController;
 use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\ProgramController;
+use App\Http\Controllers\Admin\StudyLevelController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\User\UserProfileController;
@@ -105,6 +106,13 @@ Route::get('/dashboard/admin/program/update/{code}',[ProgramController::class, '
 Route::post('/dashboard/admin/program/add',[ProgramController::class, 'add'])->middleware(['auth', 'userIsSuperAdmin']);
 Route::post('/dashboard/admin/program/update/{code}',[ProgramController::class, 'update'])->middleware(['auth', 'userIsSuperAdmin']);
 Route::post('/dashboard/admin/program',[ProgramController::class, 'remove'])->middleware(['auth', 'userIsSuperAdmin']);
+
+Route::get('/dashboard/admin/studylevel',[StudyLevelController::class, 'view'])->name('admin.studylevel')->middleware(['auth', 'userIsSuperAdmin']);
+Route::get('/dashboard/admin/studylevel/add',[StudyLevelController::class, 'addView'])->name('admin.studylevel.add')->middleware(['auth', 'userIsSuperAdmin']);
+Route::get('/dashboard/admin/studylevel/update/{code}',[StudyLevelController::class, 'updateView'])->name('admin.studylevel.update')->middleware(['auth', 'userIsSuperAdmin']);
+Route::post('/dashboard/admin/studylevel/add',[StudyLevelController::class, 'add'])->middleware(['auth', 'userIsSuperAdmin']);
+Route::post('/dashboard/admin/studylevel/update/{code}',[StudyLevelController::class, 'update'])->middleware(['auth', 'userIsSuperAdmin']);
+Route::post('/dashboard/admin/studylevel',[StudyLevelController::class, 'remove'])->middleware(['auth', 'userIsSuperAdmin']);
 
 Route::get('/dashboard/admin/classroom',[AdminClassroomController::class, 'view'])->name('admin.classroom')->middleware(['auth', 'userIsSuperAdmin']);
 Route::get('/dashboard/admin/classroom/add',[AdminClassroomController::class, 'addView'])->name('admin.classroom.add')->middleware(['auth', 'userIsSuperAdmin']);

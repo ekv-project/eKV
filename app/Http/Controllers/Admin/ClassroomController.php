@@ -14,29 +14,22 @@ class ClassroomController extends Controller
      * Most of the properties included here is used by any of the methods below.
      **************************************************************************/
     protected $instituteSettings;
-    protected $currentUserUsername;
-    protected $apiToken;
     public function __construct()
     {
         $this->instituteSettings = InstituteSetting::find(1);
-        $this->middleware(function ($request, $next) {      
-            $this->currentUserUsername = 'admin';
-            $this->apiToken = User::where('username', $this->currentUserUsername)->select('api_token')->first();
-            return $next($request);
-        });
     }
     /***************************************************************************/
     /**
      * Handling Views
      */
     public function view(){
-        return view('dashboard.admin.classroom.update')->with(['settings' => $this->instituteSettings, 'apiToken' => $this->apiToken, 'page' => 'Senarai Kelas']);
+        return view('dashboard.admin.classroom.update')->with(['settings' => $this->instituteSettings, 'page' => 'Senarai Kelas']);
     }
     public function addView(){
-        return view('dashboard.admin.classroom.update')->with(['settings' => $this->instituteSettings, 'apiToken' => $this->apiToken, 'page' => 'Tambah Kelas']);
+        return view('dashboard.admin.classroom.update')->with(['settings' => $this->instituteSettings, 'page' => 'Tambah Kelas']);
     }
     public function updateView(){
-        return view('dashboard.admin.classroom.update')->with(['settings' => $this->instituteSettings, 'apiToken' => $this->apiToken, 'page' => 'Kemas Kini Kelas']);
+        return view('dashboard.admin.classroom.update')->with(['settings' => $this->instituteSettings, 'page' => 'Kemas Kini Kelas']);
     }
     /**
      * Handling POST Request

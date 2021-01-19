@@ -21,16 +21,9 @@ class ClassroomController extends Controller
      * Most of the properties included here is used by any of the methods below.
      **************************************************************************/
     protected $instituteSettings;
-    protected $currentUserUsername;
-    protected $apiToken;
     public function __construct()
     {
         $this->instituteSettings = InstituteSetting::find(1);
-        $this->middleware(function ($request, $next) {      
-            $this->currentUserUsername = 'admin';
-            $this->apiToken = User::where('username', $this->currentUserUsername)->select('api_token')->first();
-            return $next($request);
-        });
     }
     /***************************************************************************/
 
@@ -73,7 +66,7 @@ class ClassroomController extends Controller
             abort(404, 'Tiada kelas dijumpai');
         }elseif(Gate::allows('authCoordinator', $classroomID) || Gate::allows('authAdmin') || Gate::allows('authSuperAdmin')){
             $students = ClassroomStudent::where('classrooms_id', $classroomID)->with('user')->get();
-            return view('dashboard.user.classroom.student')->with(['settings' => $this->instituteSettings, 'apiToken' => $this->apiToken, 'page' => 'Pelajar Kelas', 'students' => $students, 'classroomID' => $classroomID]);
+            return view('dashboard.user.classroom.student')->with(['settings' => $this->instituteSettings, 'page' => 'Pelajar Kelas', 'students' => $students, 'classroomID' => $classroomID]);
         }else{
             abort(403, 'Anda tiada akses paga laman ini');
         }

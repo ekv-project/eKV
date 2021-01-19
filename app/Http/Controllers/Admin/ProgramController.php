@@ -15,31 +15,44 @@ class ProgramController extends Controller
      * Most of the properties included here is used by any of the methods below.
      **************************************************************************/
     protected $instituteSettings;
-    protected $currentUserUsername;
-    protected $apiToken;
     public function __construct()
     {
         $this->instituteSettings = InstituteSetting::find(1);
-        $this->middleware(function ($request, $next) {      
-            $this->currentUserUsername = 'admin';
-            $this->apiToken = User::where('username', $this->currentUserUsername)->select('api_token')->first();
-            return $next($request);
-        });
     }
     /***************************************************************************/
     /**
      * Handling Views
      */
-    public function view(){
-        return view('dashboard.admin.program.view')->with(['settings' => $this->instituteSettings, 'apiToken' => $this->apiToken, 'page' => 'Senarai Program']);
+    public function view(Request $request){
+        $pagination = 15;
+        $program = Program::paginate($pagination)->withQueryString();
+            // Check for filters and search
+        if($request->has('sort_by') AND $request->has('sort_order') AND $request->has('search')){
+            $sortBy = $request->sort_by;
+            $sortOrder = $request->sort_order;
+            $search = $request->search;
+            if($search != NULL){
+                $program = Program::where('code', 'LIKE', "%{$search}%")->orWhere('name', 'LIKE', "%{$search}%")->orderBy($sortBy, $sortOrder)->paginate($pagination)->withQueryString();
+            }else{
+                $program = Program::orderBy($sortBy, $sortOrder)->paginate($pagination)->withQueryString();
+            }
+            $filterAndSearch = [
+                'sortBy' => $sortBy,
+                'sortOrder' => $sortOrder,
+                'search' => $search
+            ];
+            return view('dashboard.admin.program.view')->with(['settings' => $this->instituteSettings, 'page' => 'Senarai Program', 'program' => $program, 'filterAndSearch' => $filterAndSearch]);
+        }else{
+            return view('dashboard.admin.program.view')->with(['settings' => $this->instituteSettings, 'page' => 'Senarai Program', 'program' => $program]);
+        }
     }
     public function addView(){
-        return view('dashboard.admin.program.add')->with(['settings' => $this->instituteSettings, 'apiToken' => $this->apiToken, 'page' => 'Tambah Program']);
+        return view('dashboard.admin.program.add')->with(['settings' => $this->instituteSettings, 'page' => 'Tambah Program']);
     }
     public function updateView($code){
         if(Program::where('code', $code)->first()){
             $program = Program::where('code', $code)->first();
-            return view('dashboard.admin.program.update')->with(['settings' => $this->instituteSettings, 'apiToken' => $this->apiToken, 'page' => 'Kemas Kini Program', 'program' => $program]);
+            return view('dashboard.admin.program.update')->with(['settings' => $this->instituteSettings, 'page' => 'Kemas Kini Program', 'program' => $program]);
         }else{
             abort(404, 'Program tidak dijumpai');
         }
@@ -94,6 +107,13 @@ class ProgramController extends Controller
         }
     }
     public function remove(Request $request){
-
+        if(isset($request->code)){
+            $code = $request->code;
+            if(Program::where('code', $code)->first()){   
+                Program::where('code', $code)->delete();
+                session()->flash('deleteSuccess', 'Program berjaya dibuang!');
+                return redirect()->back();
+            }
+        }
     }
 }

@@ -15,16 +15,9 @@ class CourseController extends Controller
      * Most of the properties included here is used by any of the methods below.
      **************************************************************************/
     protected $instituteSettings;
-    protected $currentUserUsername;
-    protected $apiToken;
     public function __construct()
     {
         $this->instituteSettings = InstituteSetting::find(1);
-        $this->middleware(function ($request, $next) {      
-            $this->currentUserUsername = 'admin';
-            $this->apiToken = User::where('username', $this->currentUserUsername)->select('api_token')->first();
-            return $next($request);
-        });
     }
     /***************************************************************************/
     /**
@@ -48,18 +41,18 @@ class CourseController extends Controller
                 'sortOrder' => $sortOrder,
                 'search' => $search
             ];
-            return view('dashboard.admin.course.view')->with(['settings' => $this->instituteSettings, 'apiToken' => $this->apiToken, 'page' => 'Senarai Kursus', 'course' => $course, 'filterAndSearch' => $filterAndSearch]);
+            return view('dashboard.admin.course.view')->with(['settings' => $this->instituteSettings, 'page' => 'Senarai Kursus', 'course' => $course, 'filterAndSearch' => $filterAndSearch]);
         }else{
-            return view('dashboard.admin.course.view')->with(['settings' => $this->instituteSettings, 'apiToken' => $this->apiToken, 'page' => 'Senarai Kursus', 'course' => $course]);
+            return view('dashboard.admin.course.view')->with(['settings' => $this->instituteSettings, 'page' => 'Senarai Kursus', 'course' => $course]);
         }
     }
     public function addView(){
-        return view('dashboard.admin.course.add')->with(['settings' => $this->instituteSettings, 'apiToken' => $this->apiToken, 'page' => 'Tambah Kursus']);
+        return view('dashboard.admin.course.add')->with(['settings' => $this->instituteSettings, 'page' => 'Tambah Kursus']);
     }
     public function updateView($code){
         if(Course::where('code', $code)->first()){
             $course = Course::where('code', $code)->first();
-            return view('dashboard.admin.course.update')->with(['settings' => $this->instituteSettings, 'apiToken' => $this->apiToken, 'page' => 'Kemas Kini Kursus', 'course' => $course]);
+            return view('dashboard.admin.course.update')->with(['settings' => $this->instituteSettings, 'page' => 'Kemas Kini Kursus', 'course' => $course]);
         }else{
             abort(404, 'Kursus tidak dijumpai!');
         }

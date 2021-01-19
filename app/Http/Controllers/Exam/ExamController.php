@@ -24,16 +24,9 @@ class ExamController extends Controller
      * Most of the properties included here is used by any of the methods below.
      **************************************************************************/
     protected $instituteSettings;
-    protected $currentUserUsername;
-    protected $apiToken;
     public function __construct()
     {
         $this->instituteSettings = InstituteSetting::find(1);
-        $this->middleware(function ($request, $next) {
-            $this->currentUserUsername = 'admin';
-            $this->apiToken = User::where('username', $this->currentUserUsername)->select('api_token')->first();
-            return $next($request);
-        });
     }
     /***************************************************************************/
 

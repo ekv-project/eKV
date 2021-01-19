@@ -2,7 +2,7 @@
 @section('content')
     <div class="w-100 h-100">
         <div class="row text-center">
-            <h1>Senarai Kursus</h1>
+            <h1>Senarai Tahap Pengajian</h1>
         </div>
         <div class="row d-flex justify-content-center align-items-center">
             <div class="row d-flex justify-content-center align-items-center table-responsive col-12 col-lg-10">
@@ -12,8 +12,9 @@
                             <div class="col-6">
                                 <div class="form-floating">
                                     <select class="form-select" id="sort_by" name="sort_by" aria-label="sortby">
-                                        <option value="code">Kod Kursus</option>
-                                        <option value="name">Nama Kursus</option>
+                                        <option value="code">Kod Tahap Pengajian</option>
+                                        <option value="name">Nama Tahap Pengajian</option>
+                                        <option value="total_semester">Jumlah Semester</option>
                                     </select>
                                     <label for="sort_by">Susun Mengikut:</label>
                                 </div>
@@ -48,8 +49,10 @@
                                 <div class="col-6">
                                     @if($filterAndSearch['sortBy'] == 'code')
                                         <p>Susun Mengikut: <span class="fst-italic">Kod Kursus</span></p>
-                                    @elseif($filterAndSearch['sortBy'] == 'nama')
+                                    @elseif($filterAndSearch['sortBy'] == 'name')
                                         <p>Susun Mengikut: <span class="fst-italic">Nama Kursus</span></p>
+                                    @elseif($filterAndSearch['sortBy'] == 'total_semester')
+                                        <p>Susun Mengikut: <span class="fst-italic">Jumlah Semester</span></p>
                                     @endif
                                 </div>
                                 <div class="col-6">
@@ -73,7 +76,7 @@
                         <div class="col-11 col-lg-11 alert alert-success">{{ session('deleteSuccess') }}</div>
                     </div>
                 @endif
-                @if($course->count() < 1)
+                @if($studyLevel->count() < 1)
                     <div class="row d-flex justify-content-center align-content-center mt-3">
                         <p class="text-center mt-3 fs-5">Tiada rekod dijumpai.</p>
                     </div>
@@ -85,22 +88,24 @@
                                     <div class="alert alert-success">{{ session('successRemove') }}</div>
                                 @endif
                                 <tr>
-                                <th class="col-2">KOD KURSUS</th>
-                                <th class="col-3">NAMA KURSUS</th>
+                                <th class="col-2">KOD TAHAP PENGAJIAN</th>
+                                <th class="col-3">NAMA TAHAP PENGAJIAN</th>
+                                <th class="col-3">JUMLAH SEMESTER</th>
                                 <th class="col-1"></th>
                                 <th class="col-1"></th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($course as $c)
+                            @foreach ($studyLevel as $sl)
                                 <tr>
-                                    <td>{{ strtoupper($c->code) }}</td>
-                                    <td>{{ strtoupper($c->name) }}</td>
-                                    <td><a class="btn btn-primary hvr-shrink" href="{{ route('admin.course.update', ['code' => strtolower($c->code)]) }}">Kemas Kini</a></td>
+                                    <td>{{ strtoupper($sl->code) }}</td>
+                                    <td>{{ strtoupper($sl->name) }}</td>
+                                    <td>{{ strtoupper($sl->total_semester) }}</td>
+                                    <td><a class="btn btn-primary hvr-shrink" href="{{ route('admin.studylevel.update', ['code' => strtolower($sl->code)]) }}">Kemas Kini</a></td>
                                     <td>
                                         <form action="" method="post" class="d-flex justify-content-center">
                                             @csrf
-                                            <input type="hidden" name="code" value="{{ strtolower($c->code) }}">
+                                            <input type="hidden" name="study_level_code" value="{{ strtolower($sl->code) }}">
                                             <button type="submit" class="btn btn-danger hvr-shrink" name="remove">X</button>
                                         </form>
                                     </td>
@@ -108,7 +113,7 @@
                             @endforeach
                         </tbody>
                     </table>
-                    {{ $course->links() }}
+                    {{ $studyLevel->links() }}
                 @endif
             </div>
         </div>
