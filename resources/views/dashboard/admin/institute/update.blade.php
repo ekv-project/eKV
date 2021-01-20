@@ -1,7 +1,7 @@
-@extends('dashboard.layout.main')
+@extends('dashboard.layout.admin')
 @section('content')
-<div class="container-fluid d-flex flex-column align-items-center justify-content-center m-0 p-0">
-    <div class="row">
+<div class="row d-flex justify-content-center h-100 w-100">
+    <div class="col-12 col-lg-10">
         <form action="" method="post" enctype="multipart/form-data" class="mt-2 mb-2">
             @csrf
             <h2>Kemas Kini Logo Institut</h2>
@@ -19,7 +19,7 @@
             <button type="submit" class="btn btn-primary w-100 hvr-shrink" name="logo">Kemas Kini</button>
         </form>
     </div>
-    <div class="row">
+    <div class="col-12 col-lg-10">
         <form action="" method="post" class="mt-3 mb-5">
             @csrf
             <h2>Kemas Kini Maklumat Institut</h2>

@@ -1,6 +1,6 @@
 @extends('dashboard.layout.main')
 @section('content')
-    <h1>Dashboard</h1>
+    <h1 class="mt-5">Dashboard</h1>
     {{ 'NAMA PENUH: ' . strtoupper(Auth::user()->fullname) }}
     <br>
     {{ 'E-MEL: ' . strtoupper(Auth::user()->email) }}

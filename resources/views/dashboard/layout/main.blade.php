@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    @if(isset(Auth::user()->api_token) AND Auth::user()->api_token != NULL))
+    @if(isset(Auth::user()->api_token) AND Auth::user()->api_token != NULL)
         <meta name="api-token" content="{{ Auth::user()->api_token }}">
     @endif
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
@@ -56,12 +56,12 @@
                 @endif
                 @isset($settings)
                     @empty($settings['institute_name'])
-                        <a class="text-light fw-bold fs-4 text-decoration-none" href="{{ route('dashboard') }}">Kolej Vokasional Malaysia</a>
+                        <a class="text-light text-center fw-bold fs-4 text-decoration-none" href="{{ route('dashboard') }}">Kolej Vokasional Malaysia</a>
                     @else
-                        <a class="text-light fw-bold fs-4 text-decoration-none" href="{{ route('dashboard') }}">{{ ucwords($settings['institute_name']) }}</a>
+                        <a class="text-light text-center fw-bold fs-4 text-decoration-none" href="{{ route('dashboard') }}">{{ ucwords($settings['institute_name']) }}</a>
                     @endempty        
                 @else
-                    <a class="text-light fw-bold fs-4 text-decoration-none" href="{{ route('dashboard') }}">Kolej Vokasional Malaysia</a>
+                    <a class="text-light text-center fw-bold fs-4 text-decoration-none" href="{{ route('dashboard') }}">Kolej Vokasional Malaysia</a>
                 @endisset  
             </div>
         </div>
@@ -96,8 +96,5 @@
         @yield('content')
     </div>
     <script type="module" src="{{ asset('js/app.js') }}"></script>
-    {{-- <footer class="d-flex flex-row align-content-center row bg-primary">
-        <p>Hak Cipta &copy; Muhammad Hanis Irfan dan Muhammad Firdaus 2020</p>
-    </footer> --}}
 </body>
 </html>

@@ -2,7 +2,7 @@
 @section('content')
     <div class="w-100 h-100 mt-3">
         <div class="row text-center">
-            <h1>Senarai Kursus</h1>
+            <h1>Senarai Pengguna</h1>
         </div>
         <div class="row d-flex justify-content-center align-items-center mb-5">
             <div class="row d-flex justify-content-center align-items-center table-responsive col-12 col-lg-10">
@@ -12,8 +12,10 @@
                             <div class="col-6">
                                 <div class="form-floating">
                                     <select class="form-select" id="sort_by" name="sort_by" aria-label="sortby">
-                                        <option value="code">Kod Kursus</option>
-                                        <option value="name">Nama Kursus</option>
+                                        <option value="fullname">Nama Penuh</option>
+                                        <option value="username">ID Pengguna</option>
+                                        <option value="email">Alamat E-Mel</option>
+                                        <option value="role">Peranan</option>
                                     </select>
                                     <label for="sort_by">Susun Mengikut:</label>
                                 </div>
@@ -46,10 +48,14 @@
                         <div class="row">
                             @if($filterAndSearch['sortBy'] != NULL AND $filterAndSearch['sortOrder'] != NULL)
                                 <div class="col-6">
-                                    @if($filterAndSearch['sortBy'] == 'code')
-                                        <p>Susun Mengikut: <span class="fst-italic">Kod Kursus</span></p>
-                                    @elseif($filterAndSearch['sortBy'] == 'nama')
-                                        <p>Susun Mengikut: <span class="fst-italic">Nama Kursus</span></p>
+                                    @if($filterAndSearch['sortBy'] == 'fullname')
+                                        <p>Susun Mengikut: <span class="fst-italic">Nama Penuh</span></p>
+                                    @elseif($filterAndSearch['sortBy'] == 'username')
+                                        <p>Susun Mengikut: <span class="fst-italic">ID Pengguna</span></p>
+                                    @elseif($filterAndSearch['sortBy'] == 'email')
+                                        <p>Susun Mengikut: <span class="fst-italic">Alamat E-mel</span></p>
+                                    @elseif($filterAndSearch['sortBy'] == 'role')
+                                        <p>Susun Mengikut: <span class="fst-italic">Peranan</span></p>
                                     @endif
                                 </div>
                                 <div class="col-6">
@@ -73,7 +79,12 @@
                         <div class="col-11 col-lg-11 alert alert-success">{{ session('deleteSuccess') }}</div>
                     </div>
                 @endif
-                @if($course->count() < 1)
+                @if(session()->has('deleteError'))
+                    <div class="row d-flex justify-content-center align-content-center mt-3">
+                        <div class="col-11 col-lg-11 alert alert-danger">{{ session('deleteError') }}</div>
+                    </div>
+                @endif
+                @if($user->count() < 1)
                     <div class="row d-flex justify-content-center align-content-center mt-3">
                         <p class="text-center mt-3 fs-5">Tiada rekod dijumpai.</p>
                     </div>
@@ -84,31 +95,44 @@
                                 @if(session()->has('successRemove'))
                                     <div class="alert alert-success">{{ session('successRemove') }}</div>
                                 @endif
-                                <tr>
-                                <th class="col-2">KOD KURSUS</th>
-                                <th class="col-3">NAMA KURSUS</th>
+                                <th class="col-2">NAMA PENUH</th>
+                                <th class="col-3">ID PENGGUNA</th>
+                                <th class="col-3">ALAMAT E-MEL</th>
+                                <th class="col-3">PERANAN</th>
                                 <th class="col-1"></th>
                                 <th class="col-1"></th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($course as $c)
+                            @foreach ($user as $u)
                                 <tr>
-                                    <td>{{ strtoupper($c->code) }}</td>
-                                    <td>{{ strtoupper($c->name) }}</td>
-                                    <td><a class="btn btn-primary hvr-shrink" href="{{ route('admin.course.update', ['code' => strtolower($c->code)]) }}"><i class="bi bi-pencil-square"></i></a></td>
+                                    <td>{{ strtoupper($u->fullname) }}</td>
+                                    <td>{{ strtoupper($u->username) }}</td>
+                                    <td>{{ strtoupper($u->email) }}</td>
+                                    <td>{{ strtoupper($u->role) }}</td>
                                     <td>
-                                        <form action="" method="post" class="d-flex justify-content-center">
-                                            @csrf
-                                            <input type="hidden" name="code" value="{{ strtolower($c->code) }}">
-                                            <button type="submit" class="btn btn-danger hvr-shrink" name="remove"><i class="bi bi-x-square"></i></button>
-                                        </form>
+                                        @if($u->username == "admin")
+                                            
+                                        @else
+                                            <a class="btn btn-primary hvr-shrink" href="{{ route('admin.user.update', ['username' => strtolower($u->username)]) }}"><i class="bi bi-pencil-square"></i></a>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if($u->username == "admin")
+                                            
+                                        @else
+                                            <form action="" method="post" class="d-flex justify-content-center">
+                                                @csrf
+                                                <input type="hidden" name="username" value="{{ strtolower($u->username) }}">
+                                                <button type="submit" class="btn btn-danger hvr-shrink" name="remove"><i class="bi bi-x-square"></i></button>
+                                            </form>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
-                    {{ $course->links() }}
+                    {{ $user->links() }}
                 @endif
             </div>
         </div>

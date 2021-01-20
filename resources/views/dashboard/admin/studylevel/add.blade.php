@@ -1,6 +1,6 @@
-@extends('dashboard.layout.main')
+@extends('dashboard.layout.admin')
 @section('content')
-    <div class="w-100 h-100">
+    <div class="w-100 h-100 mt-3">
         <div class="row d-flex justify-content-center align-items-center">
             <div class="col-12 col-lg-10">
                 <form action="" method="post" class="mt-3 mb-5">

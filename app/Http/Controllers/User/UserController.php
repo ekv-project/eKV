@@ -28,14 +28,39 @@ class UserController extends Controller
     /**
      * Handling Views
      */
-    public function adminUserView(){
-        return view('dashboard.admin.user.user')->with(['page' => 'Tambah Pengguna']);
+    public function adminUserView(Request $request){
+        $pagination = 15;
+        $user = User::paginate($pagination)->withQueryString();
+            // Check for filters and search
+        if($request->has('sort_by') AND $request->has('sort_order') AND $request->has('search')){
+            $sortBy = $request->sort_by;
+            $sortOrder = $request->sort_order;
+            $search = $request->search;
+            if($search != NULL){
+                $user = User::where('username', 'LIKE', "%{$search}%")->orWhere('fullname', 'LIKE', "%{$search}%")->orWhere('email', 'LIKE', "%{$search}%")->orWhere('role', 'LIKE', "%{$search}%")->orderBy($sortBy, $sortOrder)->paginate($pagination)->withQueryString();
+            }else{
+                $user = User::orderBy($sortBy, $sortOrder)->paginate($pagination)->withQueryString();
+            }
+            $filterAndSearch = [
+                'sortBy' => $sortBy,
+                'sortOrder' => $sortOrder,
+                'search' => $search
+            ];
+            return view('dashboard.admin.user.view')->with(['settings' => $this->instituteSettings, 'page' => 'Senarai Pengguna', 'user' => $user, 'filterAndSearch' => $filterAndSearch]);
+        }else{
+            return view('dashboard.admin.user.view')->with(['settings' => $this->instituteSettings, 'page' => 'Senarai Pengguna', 'user' => $user]);
+        }
     }
     public function adminAddUserView(){
         return view('dashboard.admin.user.add')->with(['page' => 'Tambah Pengguna']);
     }
-    public function adminUpdateUserView(){
-        return view('dashboard.admin.user.update')->with(['page' => 'Tambah Pengguna']);
+    public function adminUpdateUserView($username){
+        if(User::where('username', $username)->first()){
+            $user = User::where('username', $username)->first();
+            return view('dashboard.admin.user.update')->with(['settings' => $this->instituteSettings, 'page' => 'Kemas Kini Pengguna', 'user' => $user]);
+        }else{
+            abort(404, 'Pengguna tidak dijumpai!');
+        }
     }
     /**
      * Handling POST Request
@@ -160,6 +185,42 @@ class UserController extends Controller
         }
     }
     public function adminUpdateUser(Request $request){
-        // Update or delete user
+        $validated = $request->validate([
+            'username' => ['required'],
+            'fullname' => ['required'],
+            'email' => ['required']
+        ]);
+        $username = $request->username;
+        $fullname = $request->fullname;
+        $email = $request->email;
+        // Check if user existed
+        if(User::where('username', $username)->first()){
+            User::where('username', $username)->update([
+                'username' => strtolower($username),
+                'fullname' => strtolower($fullname),
+                'email' => strtolower($email)
+            ]);
+            session()->flash('userUpdateSuccess', 'Pengguna berjaya dikemas kini!');
+            return redirect()->back();
+        }else{
+            return redirect()->back()->withInput()->withErrors([
+                'notExisted' => 'Pengguna tidak wujud!'
+            ]);
+        }
+    }
+    public function remove(Request $request){
+        if(isset($request->username)){
+            $username = $request->username;
+            if($username == 'admin'){
+                session()->flash('deleteError', 'Pengguna ini tidak boleh dibuang!');
+                return redirect()->back();
+            }else{
+                if(User::where('username', $username)->first()){   
+                    User::where('username', $username)->delete();
+                    session()->flash('deleteSuccess', 'Pengguna berjaya dibuang!');
+                    return redirect()->back();
+                }
+            }
+        }
     }
 }

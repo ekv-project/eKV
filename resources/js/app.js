@@ -1,7 +1,8 @@
 // Don't forget to execute npm run prod for production instead of
 // npm run dev/watch to reduce CSS and JS size
 
-require('./bootstrap');
+require('../../node_modules/@popperjs/core/dist/esm/popper');
+require('../bootstrap/js/index.esm');
 import { search } from "./liveSearch.js";
 
 if(document.querySelector('#searchInput') != null){

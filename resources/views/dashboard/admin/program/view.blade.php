@@ -1,10 +1,10 @@
-@extends('dashboard.layout.main')
+@extends('dashboard.layout.admin')
 @section('content')
-    <div class="w-100 h-100">
+    <div class="w-100 h-100 mt-3">
         <div class="row text-center">
             <h1>Senarai Program</h1>
         </div>
-        <div class="row d-flex justify-content-center align-items-center">
+        <div class="row d-flex justify-content-center align-items-center mb-5">
             <div class="row d-flex justify-content-center align-items-center table-responsive col-12 col-lg-10">
                 <div class="row d-flex justify-content-center align-content-center mt-3">
                     <form action="" method="get" class="row">

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\ClassroomController as AdminClassroomController;
 use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\ProgramController;
@@ -81,46 +82,43 @@ Route::post('/dashboard/exam/transcript/{studentID}/{studyLevel}/{semester}', [E
  *  Administration Area
  */
 
-Route::get('/dashboard/admin', function() {
-    return redirect()->route('dashboard');
-})->name('admin')->middleware(['auth','userIsAdmin']);
-// View: List all users. This page have a search bar for finding user that an admin want to change (update info or delete the user)
-Route::get('/dashboard/admin/user',[UserController::class,'adminUserView'])->name('admin.user')->middleware(['auth','userIsAdmin']);
-// View: Add new users
-Route::get('/dashboard/admin/user/add',[UserController::class, 'adminAddUserView'])->name('admin.user_add')->middleware(['auth', 'userIsAdmin']);
-// View: User update (update info or delete the user)
-Route::get('/dashboard/admin/user/update',[UserController::class, 'adminUpdateUserView'])->name('admin.user_update')->middleware(['auth', 'userIsAdmin']);
+Route::get('/dashboard/admin', [AdminController::class, 'view'])->name('admin')->middleware(['auth','userIsAdmin']);
+
+Route::get('/dashboard/admin/user',[UserController::class, 'adminUserView'])->name('admin.user')->middleware(['auth','userIsAdmin']);
+Route::get('/dashboard/admin/user/add',[UserController::class, 'adminAddUserView'])->name('admin.user.add')->middleware(['auth', 'userIsAdmin']);
+Route::get('/dashboard/admin/user/update/{username}',[UserController::class, 'adminUpdateUserView'])->name('admin.user.update')->middleware(['auth', 'userIsAdmin']);
+Route::post('/dashboard/admin/user',[UserController::class, 'remove'])->middleware(['auth','userIsAdmin']);
 Route::post('/dashboard/admin/user/add',[UserController::class, 'adminAddUser'])->middleware(['auth', 'userIsAdmin']);
-Route::post('/dashboard/admin/user/update',[UserController::class, 'adminUpdateUser'])->middleware(['auth', 'userIsAdmin']);
+Route::post('/dashboard/admin/user/update/{username}',[UserController::class, 'adminUpdateUser'])->middleware(['auth', 'userIsAdmin']);
 
-Route::get('/dashboard/admin/course',[CourseController::class, 'view'])->name('admin.course')->middleware(['auth', 'userIsSuperAdmin']);
-Route::get('/dashboard/admin/course/add',[CourseController::class, 'addView'])->name('admin.course.add')->middleware(['auth', 'userIsSuperAdmin']);
-Route::get('/dashboard/admin/course/update/{code}',[CourseController::class, 'updateView'])->name('admin.course.update')->middleware(['auth', 'userIsSuperAdmin']);
-Route::post('/dashboard/admin/course/add',[CourseController::class, 'add'])->middleware(['auth', 'userIsSuperAdmin']);
-Route::post('/dashboard/admin/course/update/{code}',[CourseController::class, 'update'])->middleware(['auth', 'userIsSuperAdmin']);
-Route::post('/dashboard/admin/course',[CourseController::class, 'remove'])->middleware(['auth', 'userIsSuperAdmin']);
+Route::get('/dashboard/admin/course',[CourseController::class, 'view'])->name('admin.course')->middleware(['auth', 'userIsAdmin']);
+Route::get('/dashboard/admin/course/add',[CourseController::class, 'addView'])->name('admin.course.add')->middleware(['auth', 'userIsAdmin']);
+Route::get('/dashboard/admin/course/update/{code}',[CourseController::class, 'updateView'])->name('admin.course.update')->middleware(['auth', 'userIsAdmin']);
+Route::post('/dashboard/admin/course/add',[CourseController::class, 'add'])->middleware(['auth', 'userIsAdmin']);
+Route::post('/dashboard/admin/course/update/{code}',[CourseController::class, 'update'])->middleware(['auth', 'userIsAdmin']);
+Route::post('/dashboard/admin/course',[CourseController::class, 'remove'])->middleware(['auth', 'userIsAdmin']);
 
-Route::get('/dashboard/admin/program',[ProgramController::class, 'view'])->name('admin.program')->middleware(['auth', 'userIsSuperAdmin']);
-Route::get('/dashboard/admin/program/add',[ProgramController::class, 'addView'])->name('admin.program.add')->middleware(['auth', 'userIsSuperAdmin']);
-Route::get('/dashboard/admin/program/update/{code}',[ProgramController::class, 'updateView'])->name('admin.program.update')->middleware(['auth', 'userIsSuperAdmin']);
-Route::post('/dashboard/admin/program/add',[ProgramController::class, 'add'])->middleware(['auth', 'userIsSuperAdmin']);
-Route::post('/dashboard/admin/program/update/{code}',[ProgramController::class, 'update'])->middleware(['auth', 'userIsSuperAdmin']);
-Route::post('/dashboard/admin/program',[ProgramController::class, 'remove'])->middleware(['auth', 'userIsSuperAdmin']);
+Route::get('/dashboard/admin/program',[ProgramController::class, 'view'])->name('admin.program')->middleware(['auth', 'userIsAdmin']);
+Route::get('/dashboard/admin/program/add',[ProgramController::class, 'addView'])->name('admin.program.add')->middleware(['auth', 'userIsAdmin']);
+Route::get('/dashboard/admin/program/update/{code}',[ProgramController::class, 'updateView'])->name('admin.program.update')->middleware(['auth', 'userIsAdmin']);
+Route::post('/dashboard/admin/program/add',[ProgramController::class, 'add'])->middleware(['auth', 'userIsAdmin']);
+Route::post('/dashboard/admin/program/update/{code}',[ProgramController::class, 'update'])->middleware(['auth', 'userIsAdmin']);
+Route::post('/dashboard/admin/program',[ProgramController::class, 'remove'])->middleware(['auth', 'userIsAdmin']);
 
-Route::get('/dashboard/admin/studylevel',[StudyLevelController::class, 'view'])->name('admin.studylevel')->middleware(['auth', 'userIsSuperAdmin']);
-Route::get('/dashboard/admin/studylevel/add',[StudyLevelController::class, 'addView'])->name('admin.studylevel.add')->middleware(['auth', 'userIsSuperAdmin']);
-Route::get('/dashboard/admin/studylevel/update/{code}',[StudyLevelController::class, 'updateView'])->name('admin.studylevel.update')->middleware(['auth', 'userIsSuperAdmin']);
-Route::post('/dashboard/admin/studylevel/add',[StudyLevelController::class, 'add'])->middleware(['auth', 'userIsSuperAdmin']);
-Route::post('/dashboard/admin/studylevel/update/{code}',[StudyLevelController::class, 'update'])->middleware(['auth', 'userIsSuperAdmin']);
-Route::post('/dashboard/admin/studylevel',[StudyLevelController::class, 'remove'])->middleware(['auth', 'userIsSuperAdmin']);
+Route::get('/dashboard/admin/studylevel',[StudyLevelController::class, 'view'])->name('admin.studylevel')->middleware(['auth', 'userIsAdmin']);
+Route::get('/dashboard/admin/studylevel/add',[StudyLevelController::class, 'addView'])->name('admin.studylevel.add')->middleware(['auth', 'userIsAdmin']);
+Route::get('/dashboard/admin/studylevel/update/{code}',[StudyLevelController::class, 'updateView'])->name('admin.studylevel.update')->middleware(['auth', 'userIsAdmin']);
+Route::post('/dashboard/admin/studylevel/add',[StudyLevelController::class, 'add'])->middleware(['auth', 'userIsAdmin']);
+Route::post('/dashboard/admin/studylevel/update/{code}',[StudyLevelController::class, 'update'])->middleware(['auth', 'userIsAdmin']);
+Route::post('/dashboard/admin/studylevel',[StudyLevelController::class, 'remove'])->middleware(['auth', 'userIsAdmin']);
 
-Route::get('/dashboard/admin/classroom',[AdminClassroomController::class, 'view'])->name('admin.classroom')->middleware(['auth', 'userIsSuperAdmin']);
-Route::get('/dashboard/admin/classroom/add',[AdminClassroomController::class, 'addView'])->name('admin.classroom.add')->middleware(['auth', 'userIsSuperAdmin']);
-Route::get('/dashboard/admin/classroom/update',[AdminClassroomController::class, 'updateView'])->name('admin.classroom.update')->middleware(['auth', 'userIsSuperAdmin']);
-Route::post('/dashboard/admin/classroom/add',[AdminClassroomController::class, 'add'])->middleware(['auth', 'userIsSuperAdmin']);
-Route::post('/dashboard/admin/classroom/update',[AdminClassroomController::class, 'update'])->middleware(['auth', 'userIsSuperAdmin']);
-Route::post('/dashboard/admin/classroom',[AdminClassroomController::class, 'remove'])->middleware(['auth', 'userIsSuperAdmin']);
+Route::get('/dashboard/admin/classroom',[AdminClassroomController::class, 'view'])->name('admin.classroom')->middleware(['auth', 'userIsAdmin']);
+Route::get('/dashboard/admin/classroom/add',[AdminClassroomController::class, 'addView'])->name('admin.classroom.add')->middleware(['auth', 'userIsAdmin']);
+Route::get('/dashboard/admin/classroom/update',[AdminClassroomController::class, 'updateView'])->name('admin.classroom.update')->middleware(['auth', 'userIsAdmin']);
+Route::post('/dashboard/admin/classroom/add',[AdminClassroomController::class, 'add'])->middleware(['auth', 'userIsAdmin']);
+Route::post('/dashboard/admin/classroom/update',[AdminClassroomController::class, 'update'])->middleware(['auth', 'userIsAdmin']);
+Route::post('/dashboard/admin/classroom',[AdminClassroomController::class, 'remove'])->middleware(['auth', 'userIsAdmin']);
 
-Route::get('/dashboard/admin/institute',[InstituteSettingController::class, 'view'])->name('admin.institute')->middleware(['auth', 'userIsSuperAdmin']);
-Route::get('/dashboard/admin/institute/update',[InstituteSettingController::class, 'updateView'])->name('admin.institute.update')->middleware(['auth', 'userIsSuperAdmin']);
-Route::post('/dashboard/admin/institute/update',[InstituteSettingController::class, 'updateSettings'])->middleware(['auth', 'userIsSuperAdmin']);
+Route::get('/dashboard/admin/institute',[InstituteSettingController::class, 'view'])->name('admin.institute')->middleware(['auth', 'userIsAdmin']);
+Route::get('/dashboard/admin/institute/update',[InstituteSettingController::class, 'updateView'])->name('admin.institute.update')->middleware(['auth', 'userIsAdmin']);
+Route::post('/dashboard/admin/institute/update',[InstituteSettingController::class, 'updateSettings'])->middleware(['auth', 'userIsAdmin']);
