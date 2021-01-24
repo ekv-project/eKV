@@ -6,7 +6,7 @@ Sistem Pengurusan Maklumat Pelajar untuk Kolej Vokasional Malaysia
 2.  Lakukan konfigurasi yang diperlukan bagi web server.
 3.  Konfigurasi fail `.env` bagi database.
 4.  Jalankan arahan `composer install` pada program shell.
-5.  Jalankan arahan `npm run prod` pada program shell.
+5.  Jalankan arahan `npm install` dan `npm run prod` pada program shell.
 6.  Jalankan arahan `php artisan install {password} {fullname=admin} {email=admin@site.local}` untuk melakukan pemasangan sistem ini. Untuk penerangan, jalankan arahan `php artisan help install`.
 7.  Pemasangan sistem selesai!
 
