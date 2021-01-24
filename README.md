@@ -11,6 +11,7 @@ Sistem Pengurusan Maklumat Pelajar untuk Kolej Vokasional Malaysia
 
 ## Keperluan
 1. Akses kepada terminal / SSH
+2. Web server (Apache2, NGINX)
 2. MySQL / MongoDB
 3. NodeJS (untuk NPM)
 
