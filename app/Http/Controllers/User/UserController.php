@@ -188,7 +188,7 @@ class UserController extends Controller
         $validated = $request->validate([
             'username' => ['required'],
             'fullname' => ['required'],
-            'email' => ['required']
+            'email' => ['required', 'email:rfc']
         ]);
         $username = $request->username;
         $fullname = $request->fullname;

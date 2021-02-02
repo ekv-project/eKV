@@ -39,6 +39,8 @@ class ExamController extends Controller
             if(Gate::allows('authUser', $studentID) || Gate::allows('authCoordinator', $studentID) || Gate::allows('authAdmin')){
                 $semesterGrades = SemesterGrade::select('study_levels_code', 'semester')->where('users_username', $studentID)->get();
                 return view('dashboard.exam.view')->with(['settings' => $this->instituteSettings, 'page' => 'Senarai Transkrip', 'semesterGrades' => $semesterGrades, 'studentID' => $studentID]);
+            }else{
+                abort(403, 'Anda tiada akses pada laman ini!');
             }
         }else{
             abort(404, 'Pelajar tidak dijumpai!');
@@ -50,24 +52,28 @@ class ExamController extends Controller
             if(Gate::allows('authUser', $studentID) || Gate::allows('authCoordinator', $studentID) || Gate::allows('authAdmin')){
                 // Check if transcript exist
                 if(SemesterGrade::where('users_username', $studentID)->where('study_levels_code', $studyLevel)->where('semester', $semester)->first()){
-                    $studentClassroom = ClassroomStudent::where('users_username', $studentID)->first()->classroom;
-                    $studentProgram = Program::where('code', $studentClassroom->programs_code)->first()->name;
-                    $studyLevelName = StudyLevel::where('code', $studyLevel)->first()->name;
-                    $semesterGrade = SemesterGrade::where('users_username', $studentID)->where('study_levels_code', $studyLevel)->where('semester', $semester)->first();
-                    // Student Details
-                    $studentName = User::select('fullname')->where('username', $studentID)->first()->fullname;
-                    if(UserProfile::select('identification_number')->where('users_username', $studentID)->first() != null){
-                        $studentIdentificationNumber = UserProfile::select('identification_number')->where('users_username', $studentID)->first()->identification_number;
+                    if(ClassroomStudent::where('users_username', $studentID)->first()){
+                        $studentClassroom = ClassroomStudent::where('users_username', $studentID)->first()->classroom;
+                        $studentProgram = Program::where('code', $studentClassroom->programs_code)->first()->name;
+                        $studyLevelName = StudyLevel::where('code', $studyLevel)->first()->name;
+                        $semesterGrade = SemesterGrade::where('users_username', $studentID)->where('study_levels_code', $studyLevel)->where('semester', $semester)->first();
+                        // Student Details
+                        $studentName = User::select('fullname')->where('username', $studentID)->first()->fullname;
+                        if(UserProfile::select('identification_number')->where('users_username', $studentID)->first() != null){
+                            $studentIdentificationNumber = UserProfile::select('identification_number')->where('users_username', $studentID)->first()->identification_number;
+                        }else{
+                            $studentIdentificationNumber = "NaN";
+                        }
+                        $studentDetails = [
+                            'name' => $studentName,
+                            'identificationNumber' => $studentIdentificationNumber,
+                            'matrixNumber' => $studentID
+                        ];
+                        $courseGrades = CourseGrade::join('courses', 'course_grades.courses_code', 'courses.code')->select('course_grades.credit_hour', 'course_grades.grade_pointer', 'courses.code', 'courses.name')->where('users_username', $studentID)->where('study_levels_code', $studyLevel)->where('semester', $semester)->get();
+                        return view('dashboard.exam.transcript')->with(['settings' => $this->instituteSettings, 'page' => 'Transkrip Penilaian', 'studentProgram' => $studentProgram, 'studyLevelName' => $studyLevelName, 'semester' => $semester, 'studentDetails' => $studentDetails, 'courseGrades' => $courseGrades, 'semesterGrade' => $semesterGrade]);
                     }else{
-                        $studentIdentificationNumber = "NaN";
+                        abort(404, 'Pelajar tidak diletakkan dalam kelas!');
                     }
-                    $studentDetails = [
-                        'name' => $studentName,
-                        'identificationNumber' => $studentIdentificationNumber,
-                        'matrixNumber' => $studentID
-                    ];
-                    $courseGrades = CourseGrade::join('courses', 'course_grades.courses_code', 'courses.code')->select('course_grades.credit_hour', 'course_grades.grade_pointer', 'courses.code', 'courses.name')->where('users_username', $studentID)->where('study_levels_code', $studyLevel)->where('semester', $semester)->get();
-                    return view('dashboard.exam.transcript')->with(['settings' => $this->instituteSettings, 'page' => 'Transkrip Penilaian', 'studentProgram' => $studentProgram, 'studyLevelName' => $studyLevelName, 'semester' => $semester, 'studentDetails' => $studentDetails, 'courseGrades' => $courseGrades, 'semesterGrade' => $semesterGrade]);
                 }else{
                     abort(404, 'Transkrip tidak dijumpai!');
                 }

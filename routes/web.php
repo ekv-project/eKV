@@ -68,7 +68,6 @@ Route::post('/dashboard/classroom/update/{classroomID}', [ClassroomController::c
 /**
 *   Exam Transcript  
 */
-// /dashboard/exam/transcript/student1
 Route::get('/dashboard/exam/transcript/{studentID}', [ExamController::class, 'semesterView'])->name('transcript.student')->middleware('auth');
 Route::get('/dashboard/exam/transcript/{studentID}/{studyLevel}/{semester}', [ExamController::class, 'transcriptView'])->name('transcript.view')->middleware('auth');
 Route::get('/dashboard/exam/transcript/add/{studentID}', [ExamController::class, 'transcriptAddView'])->name('transcript.add')->middleware('auth');
@@ -77,6 +76,7 @@ Route::get('/dashboard/exam/transcript/download/{studentID}/{studyLevel}/{semest
 Route::post('/dashboard/exam/transcript/{studentID}', [ExamController::class, 'transcriptRemove'])->middleware('auth');
 Route::post('/dashboard/exam/transcript/add/{studentID}', [ExamController::class, 'transcriptAddUpdate'])->middleware('auth');
 Route::post('/dashboard/exam/transcript/{studentID}/{studyLevel}/{semester}', [ExamController::class, 'transcriptView'])->middleware('auth');
+Route::post('/dashboard/exam/transcript/update/{studentID}/{studyLevel}/{semester}', [ExamController::class, 'transcriptAddUpdate'])->middleware('auth');
 
 /** 
  *  Administration Area
