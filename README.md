@@ -19,6 +19,7 @@ Sistem Pengurusan Maklumat Pelajar untuk Kolej Vokasional Malaysia
 3. Composer
 4. NodeJS (untuk NPM)
 5. PHP Extensions (perlu ubah di fail php.ini)
+
 `ext-dom
 ext-zip
 ext-gd
