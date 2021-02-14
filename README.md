@@ -18,6 +18,13 @@ Sistem Pengurusan Maklumat Pelajar untuk Kolej Vokasional Malaysia
 2. MySQL / MongoDB
 3. Composer
 4. NodeJS (untuk NPM)
+5. PHP Extensions (perlu ubah di fail php.ini)
+`ext-dom
+ext-zip
+ext-gd
+
+Dan sebagainya.
+`
 
 ## Lesen
 Sistem ini dilesenkan menggunakan [GNU GPLv3](https://www.gnu.org/licenses/gpl-3.0.txt). Sebarang sumbangan kepada sumber kod akan dilesenkan pada terma yang sama. Setiap sumbangan disenaraikan dalam fail [CREDITS](CREDITS).
