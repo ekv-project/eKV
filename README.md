@@ -22,6 +22,7 @@ Sistem Pengurusan Maklumat Pelajar untuk Kolej Vokasional Malaysia
    1. ext-dom
    2. ext-zip
    3. ext-gd
+   4. ext-mysql
    4. Dan sebagainya.
 6. Akses pengguna web server kepada folder.
 
