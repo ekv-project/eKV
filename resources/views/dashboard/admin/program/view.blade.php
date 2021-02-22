@@ -86,9 +86,9 @@
                                         <div class="alert alert-success">{{ session('successRemove') }}</div>
                                     @endif
                                     <tr>
-                                    <th class="col-5 align-middle">KOD PROGRAM</th>
+                                    <th class="col-4 align-middle">KOD PROGRAM</th>
                                     <th class="col-5 align-middle">NAMA PROGRAM</th>
-                                    <th class="col-1 align-middle">LIHAT</th>
+                                    <th class="col-2 align-middle">KEMAS KINI</th>
                                     <th class="col-1 align-middle">BUANG</th>
                                 </tr>
                             </thead>

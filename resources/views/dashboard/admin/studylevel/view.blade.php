@@ -90,9 +90,9 @@
                                     @endif
                                     <tr>
                                     <th class="col-3 align-middle">KOD TAHAP PENGAJIAN</th>
-                                    <th class="col-4 align-middle">NAMA TAHAP PENGAJIAN</th>
+                                    <th class="col-3 align-middle">NAMA TAHAP PENGAJIAN</th>
                                     <th class="col-3 align-middle">JUMLAH SEMESTER</th>
-                                    <th class="col-1 align-middle">LIHAT</th>
+                                    <th class="col-2 align-middle">KEMAS KINI</th>
                                     <th class="col-1 align-middle">BUANG</th>
                                 </tr>
                             </thead>
