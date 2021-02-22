@@ -94,7 +94,6 @@
                                 @if(session()->has('successRemove'))
                                     <div class="alert alert-success">{{ session('successRemove') }}</div>
                                 @endif
-                                <tr>
                                 <th class="col-1 align-middle fst-normal">ID KELAS</th>
                                 <th class="col-1 align-middle">NAMA KELAS</th>
                                 <th class="col-1 align-middle">KOD PROGRAM</th>
@@ -123,7 +122,7 @@
                                         <form action="" method="post" class="d-flex justify-content-center">
                                             @csrf
                                             <input type="hidden" name="id" value="{{ strtolower($c->id) }}">
-                                            <button type="submit" class="btn btn-danger hvr-shrink" name="remove"><i class="bi bi-x-square"></i></button>
+                                            <button type="submit" class="btn btn-danger hvr-shrink" name="remove"><i class="bi bi-trash"></i></button>
                                         </form>
                                     </td>
                                 </tr>

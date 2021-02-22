@@ -33,7 +33,7 @@
         </div>
     </form>
     <table class="table table-hover table-bordered border-secondary text-center mt-3">
-        <thead>
+        <thead class="table-dark">
             <tr>
                 @if(session()->has('successRemove'))
                     <div class="alert alert-success">{{ session('successRemove') }}</div>
@@ -53,7 +53,7 @@
                     <form action="" method="post" class="d-flex justify-content-center">
                         @csrf
                         <input type="hidden" name="username" value="{{ $student->user->username }}">
-                        <button type="submit" class="btn btn-danger" name="remove">X</button>
+                        <button type="submit" class="btn btn-danger" name="remove"><i class="bi bi-trash"></i></button>
                     </form>
                 </td>
             </tr>

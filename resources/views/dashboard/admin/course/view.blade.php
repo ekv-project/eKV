@@ -102,7 +102,7 @@
                                             <form action="" method="post" class="d-flex justify-content-center">
                                                 @csrf
                                                 <input type="hidden" name="code" value="{{ strtolower($c->code) }}">
-                                                <button type="submit" class="btn btn-danger hvr-shrink" name="remove"><i class="bi bi-x-square"></i></button>
+                                                <button type="submit" class="btn btn-danger hvr-shrink" name="remove"><i class="bi bi-trash"></i></i></button>
                                             </form>
                                         </td>
                                     </tr>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use ID;
 use App\Models\User;
 use App\Models\Course;
 use App\Models\Program;
@@ -11,6 +12,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\InstituteSetting;
 use App\Http\Controllers\Controller;
+use App\Models\ClassroomCoordinator;
 
 class ClassroomController extends Controller
 {
@@ -55,8 +57,13 @@ class ClassroomController extends Controller
     }
     public function updateView($id){
         if(Classroom::where('id', $id)->first()){
+            if(ClassroomCoordinator::where('classrooms_id', $id)->first()){
+                $classroomCoordinator = ClassroomCoordinator::join('users', 'classroom_coordinators.users_username', 'users.username')->select('users.username', 'users.fullname', 'users.email')->first();
+            }else{
+                $classroomCoordinator = NULL;
+            }
             $classroom = Classroom::where('id', $id)->first();
-            return view('dashboard.admin.classroom.update')->with(['settings' => $this->instituteSettings, 'page' => 'Kemas Kini Kelas', 'classroom' => $classroom]);
+            return view('dashboard.admin.classroom.update')->with(['settings' => $this->instituteSettings, 'page' => 'Kemas Kini Kelas', 'classroom' => $classroom, 'classroomCoordinator' => $classroomCoordinator]);
         }else{
             abort(404, 'Kelas tidak dijumpai!');
         }
@@ -110,43 +117,92 @@ class ClassroomController extends Controller
             ]);
         }
     }
-    public function update(Request $request){
+    public function update(Request $request, $id){
         /**
          * WIP:
-         * - Classroom Coordinator add and remove
+         * - Classroom Coordinator add and remove in update page
          */
         // Updating the classroom info
-        $validated = $request->validate([
-            'name' => ['required'],
-            'programs_code' => ['required'],
-            'admission_year' => ['required', 'date_format:Y'],
-            'study_year' => ['required', 'date_format:Y'],
-            'study_levels_code' => ['required']
-        ]);
-        $classroomID = $request->id;
-        $name = strtolower($request->name);
-        $programs_code = strtolower($request->programs_code);
-        $admission_year = strtolower($request->admission_year);
-        $study_year = strtolower($request->study_year);
-        $study_levels_code = strtolower($request->study_levels_code);
-        // Check if classroom existed
-        if(Classroom::where('id', $classroomID)->first()){
-            Classroom::upsert([
-                [
-                    'id' => $classroomID,
-                    'name' => $name,
-                    'programs_code' => strtolower($programs_code),
-                    'admission_year' => strtolower($admission_year),
-                    'study_year' => strtolower($study_year),
-                    'study_levels_code' => strtolower($study_levels_code)
-                ]
-            ], ['id'], ['name', 'programs_code', 'admission_year', 'study_year', 'study_levels_code']);
-            session()->flash('classroomUpdateSuccess', 'Kelas berjaya dikemas kini!');
-            return redirect()->back();
-        }else{
-            return redirect()->back()->withInput()->withErrors([
-                'notExisted' => 'Kelas tidak wujud!'
+        if($request->has("classroom_update")){
+            $validated = $request->validate([
+                'name' => ['required'],
+                'programs_code' => ['required'],
+                'admission_year' => ['required', 'date_format:Y'],
+                'study_year' => ['required', 'date_format:Y'],
+                'study_levels_code' => ['required']
             ]);
+            $classroomID = $request->id;
+            $name = strtolower($request->name);
+            $programs_code = strtolower($request->programs_code);
+            $admission_year = strtolower($request->admission_year);
+            $study_year = strtolower($request->study_year);
+            $study_levels_code = strtolower($request->study_levels_code);
+            // Check if classroom existed
+            if(Classroom::where('id', $classroomID)->first()){
+                Classroom::upsert([
+                    [
+                        'id' => $classroomID,
+                        'name' => $name,
+                        'programs_code' => strtolower($programs_code),
+                        'admission_year' => strtolower($admission_year),
+                        'study_year' => strtolower($study_year),
+                        'study_levels_code' => strtolower($study_levels_code)
+                    ]
+                ], ['id'], ['name', 'programs_code', 'admission_year', 'study_year', 'study_levels_code']);
+                session()->flash('classroomUpdateSuccess', 'Kelas berjaya dikemas kini!');
+                return redirect()->back();
+            }else{
+                return redirect()->back()->withInput()->withErrors([
+                    'notExisted' => 'Kelas tidak wujud!'
+                ]);
+            }
+        }elseif($request->has("add_coordinator")){
+            /**
+             * Classroom Coordinator Update
+             * - A lecturer could be added as a coordinator in multiple classrooms at a time.
+             * - A classroom could only have ONE lecturer as the coordinator.
+             */
+            // If the request is to add a coordinator to that classroom
+            $validated = $request->validate([
+                'coordinator_username' => ['required']
+            ]);
+            $coordinatorUsername = $request->coordinator_username;
+            if(User::where('username', $coordinatorUsername)->first()){
+                // Check if the classroom already have a coordinator.
+                if(ClassroomCoordinator::where('classrooms_id', $id)->first()){
+                    return redirect()->back();
+                }else{
+                    $userRole = User::where('username', $coordinatorUsername)->first()['role'];
+                    // Only users with the lecturer can be a coordinator for a classroom.
+                    if($userRole == 'lecturer'){
+                        ClassroomCoordinator::create([
+                            'users_username' => $coordinatorUsername,
+                            'classrooms_id' => $id
+                        ]);
+                        session()->flash('successAdd', 'Pensyarah berjaya ditambah ke dalam kelas!');
+                        return redirect()->back();
+                    }else{
+                        return redirect()->back()->withErrors([
+                            'notALecturer' => 'Pengguna yang cuba ditambah bukannya seorang pensyarah!'
+                        ]);
+                    }
+                }
+            }else{
+                return redirect()->back()->withErrors([
+                    'noUser' => 'Tiada pengguna dijumpai!'
+                ]);
+            }
+        }elseif($request->has("remove_coordinator")){
+            // If the request is to remove coordinator from that classroom
+            if(!empty($request->coordinator_username)){
+                ClassroomCoordinator::where('users_username', $request->coordinator_username)->delete();
+                session()->flash('successRemove', 'Pensyarah berjaya dibuang dari kelas!');
+                return redirect()->back();
+            }else{
+                return redirect()->back();
+            }
+        }else{
+            return redirect()->back();
         }
     }
     public function remove(Request $request){

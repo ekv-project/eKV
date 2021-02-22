@@ -123,7 +123,7 @@
                                                 <form action="" method="post" class="d-flex justify-content-center">
                                                     @csrf
                                                     <input type="hidden" name="username" value="{{ strtolower($u->username) }}">
-                                                    <button type="submit" class="btn btn-danger hvr-shrink" name="remove"><i class="bi bi-x-square"></i></button>
+                                                    <button type="submit" class="btn btn-danger hvr-shrink" name="remove"><i class="bi bi-trash"></i></button>
                                                 </form>
                                             </td>
                                         @endif

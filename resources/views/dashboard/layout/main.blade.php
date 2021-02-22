@@ -114,7 +114,7 @@
                                     eKV
                                 </div>
                                 <div class="col-6">
-                                    <p>Oleh: Muhammad Hanis Irfan & Muhammad Firdaus.</p>
+                                    <p>Oleh: Muhammad Hanis Irfan bin Mohd Zaid & Muhammad Firdaus bin Nazri.</p>
                                     <p>Lesen: Belum ditentukan.</p>
                                 </div>
                             </div>

@@ -87,7 +87,7 @@ class ClassroomController extends Controller
     public function studentUpdate(Request $request, $classroomID){
         if(Gate::allows('authCoordinator', $classroomID) || Gate::allows('authAdmin') || Gate::allows('authSuperAdmin')){
             if($request->has("add")){
-                // If the request is to add a student from that classroom
+                // If the request is to add a student to that classroom
                 if(!empty($request->studentID)){
                     if(User::where('username', $request->studentID)->first()){
                         $userRole = User::where('username', $request->studentID)->first()['role'];

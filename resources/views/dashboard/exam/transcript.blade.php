@@ -1,7 +1,7 @@
 @extends('dashboard.layout.main')
 @section('content')
-    <div class="container-fluid d-flex align-items-center m-0 flex-column">
-        <div class="col-10 m-3">
+    <div class="container-fluid mt-5 d-flex align-items-center flex-column">
+        <div class="col-12 col-md-10 m-3">
             <div class="row m-0 text-center">
                 <h2>Transkrip Penilaian Semester</h2>
             </div>
@@ -18,9 +18,9 @@
                 </div>
             </div>
             @if($courseGrades->count() > 0)
-                <div class="row m-0">
+                <div class="row m-0 table-responsive">
                     <table class="table table-hover table-bordered border-secondary text-center">
-                        <thead>
+                        <thead class="table-dark">
                             <tr>
                                 <th class="col-2">KOD KURSUS</th>
                                 <th class="col">NAMA KURSUS</th>
@@ -45,9 +45,9 @@
                     <p class="fw-bold fst-italic fs-6">Tiada rekod kursus dijumpai.</p>
                 </div>
             @endif
-            <div class="row m-0">
+            <div class="row m-0 table-responsive">
                 <table class="table table-hover table-bordered border-secondary text-center">
-                    <thead>
+                    <thead class="table-dark">
                         <th>KOMPONEN</th>
                         <th>JUMLAH NILAI KREDIT</th>
                         <th>PURATA NILAI GRED</th>

@@ -57,8 +57,62 @@
                             <div class="alert alert-danger">{{ $message }}</div>
                         @enderror
                     </div>
-                    <button type="submit" class="btn btn-primary w-100 hvr-shrink" name="info">Kemas Kini</button>
+                    <button type="submit" class="btn btn-primary w-100 hvr-shrink" name="classroom_update">Kemas Kini</button>
                 </form>
+                <h2 class="text-center">Koordinator</h2>
+                    @if(session()->has('successRemove'))
+                        <div class="alert alert-success">{{ session('successRemove') }}</div>
+                    @endif
+                    @if(session()->has('successAdd'))
+                        <div class="alert alert-success">{{ session('successAdd') }}</div>
+                    @endif
+                @if($classroomCoordinator != NULL)
+                    <div class="table-responsive my-4">
+                        <table class="table table-hover table-striped table-bordered border-secondary text-center">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th class="col-3 align-middle fst-normal">Username</th>
+                                    <th class="col-5 align-middle fst-normal">Nama Penuh</th>
+                                    <th class="col-3 align-middle fst-normal">Alamat E-mel</th>
+                                    <th class="col-1 align-middle fst-normal">Buang</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>{{ strtoupper($classroomCoordinator->username) }}</td>
+                                    <td>{{ strtoupper($classroomCoordinator->fullname) }}</td>
+                                    <td>{{ strtoupper($classroomCoordinator->email) }}</td>
+                                    <td>
+                                        <form action="" method="post" class="d-flex justify-content-center">
+                                            @csrf
+                                            <input type="hidden" name="coordinator_username" value="{{ $classroomCoordinator->username }}">
+                                            <button type="submit" class="btn btn-danger hvr-shrink" name="remove_coordinator"><i class="bi bi-x-square"></i></button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                @else
+                    <form action="" method="post" class="mt-3 mb-5">
+                        @csrf
+                        <h4>Tambah</h4>
+                        @error('noUser')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
+                        @error('notALecturer')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
+                        <div class="form-floating mb-3">
+                            <input type="text" name="coordinator_username" id="coordinator_username" class="form-control" placeholder="coordinator_username" value="@php if(old('coordinator_username') !== null){echo old('coordinator_username');}else{echo NULL;} @endphp">
+                            <label for="coordinator_username" class="form-label">Username</label>
+                            @error('coordinator_username')
+                                <div class="alert alert-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 hvr-shrink" name="add_coordinator">Tambah</button>
+                    </form>
+                @endif
             </div>
         </div>
     </div>
