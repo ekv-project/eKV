@@ -2,14 +2,14 @@
 @section('content')
 <div class="row d-flex justify-content-center h-100 w-100">
     <div class="col-12 col-lg-10">
-        <form action="" method="post" enctype="multipart/form-data" class="mt-2 mb-2">
+        <form action="" method="post" enctype="multipart/form-data" class="mt-4 mb-2">
             @csrf
-            <h2>Kemas Kini Logo Institut</h2>
+            <h2 class="text-left">Kemas Kini Logo Institut</h2>
             @if(session()->has('logoSuccess'))
                 <div class="alert alert-success">{{ session('logoSuccess') }}</div>
             @endif
             <input type="file" name="institute-logo" id="institute-logo" class="form-control mb-3">
-            <div class="form-text mb-2 text-center">Logo Mestilah Bernisbah 1:1 <br> Resolusi Lebih Daripada 300x300 Piksel</div>
+            <div class="form-text mb-2 text-left">Logo Mestilah Bernisbah 1:1 <br> Resolusi Lebih Daripada 300x300 <span class="fst-italic">Pixel</span></div>
             @error('institute-logo')
                 <div class="alert alert-danger">{{ $message }}</div>
             @enderror
@@ -20,9 +20,9 @@
         </form>
     </div>
     <div class="col-12 col-lg-10">
-        <form action="" method="post" class="mt-3 mb-5">
+        <form action="" method="post" class="mt-5 mb-5">
             @csrf
-            <h2>Kemas Kini Maklumat Institut</h2>
+            <h2 class="text-left">Kemas Kini Maklumat Institut</h2>
             @if(session()->has('instituteUpdateSuccess'))
                 <div class="alert alert-success">{{ session('instituteUpdateSuccess') }}</div>
             @endif

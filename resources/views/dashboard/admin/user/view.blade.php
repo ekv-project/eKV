@@ -5,7 +5,7 @@
             <h1>Senarai Pengguna</h1>
         </div>
         <div class="row d-flex justify-content-center align-items-center mb-5">
-            <div class="row d-flex justify-content-center align-items-center table-responsive col-12 col-lg-10">
+            <div class="row d-flex justify-content-center align-items-center col-12 col-lg-10">
                 <div class="row d-flex justify-content-center align-content-center mt-3">
                     <form action="" method="get" class="row">
                         <div class="row">
@@ -89,49 +89,49 @@
                         <p class="text-center mt-3 fs-5">Tiada rekod dijumpai.</p>
                     </div>
                 @else
-                    <table class="table table-hover table-striped table-bordered border-secondary text-center mt-3">
-                        <thead>
-                            <tr>
-                                @if(session()->has('successRemove'))
-                                    <div class="alert alert-success">{{ session('successRemove') }}</div>
-                                @endif
-                                <th class="col-2">NAMA PENUH</th>
-                                <th class="col-3">ID PENGGUNA</th>
-                                <th class="col-3">ALAMAT E-MEL</th>
-                                <th class="col-3">PERANAN</th>
-                                <th class="col-1"></th>
-                                <th class="col-1"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($user as $u)
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped table-bordered border-secondary text-center mt-3">
+                            <thead class="table-dark">
                                 <tr>
-                                    <td>{{ strtoupper($u->fullname) }}</td>
-                                    <td>{{ strtoupper($u->username) }}</td>
-                                    <td>{{ strtoupper($u->email) }}</td>
-                                    <td>{{ strtoupper($u->role) }}</td>
-                                    <td>
-                                        @if($u->username == "admin")
-                                            
-                                        @else
-                                            <a class="btn btn-primary hvr-shrink" href="{{ route('admin.user.update', ['username' => strtolower($u->username)]) }}"><i class="bi bi-pencil-square"></i></a>
-                                        @endif
-                                    </td>
-                                    <td>
-                                        @if($u->username == "admin")
-                                            
-                                        @else
-                                            <form action="" method="post" class="d-flex justify-content-center">
-                                                @csrf
-                                                <input type="hidden" name="username" value="{{ strtolower($u->username) }}">
-                                                <button type="submit" class="btn btn-danger hvr-shrink" name="remove"><i class="bi bi-x-square"></i></button>
-                                            </form>
-                                        @endif
-                                    </td>
+                                    @if(session()->has('successRemove'))
+                                        <div class="alert alert-success">{{ session('successRemove') }}</div>
+                                    @endif
+                                    <th class="col-2 align-middle">NAMA PENUH</th>
+                                    <th class="col-2 align-middle">ID PENGGUNA</th>
+                                    <th class="col-2 align-middle">ALAMAT E-MEL</th>
+                                    <th class="col-2 align-middle">PERANAN</th>
+                                    <th class="col-1 align-middle">PROFIL</th>
+                                    <th class="col-2 align-middle">KEMAS KINI</th>
+                                    <th class="col-1 align-middle">BUANG</th>
                                 </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                @foreach ($user as $u)
+                                    <tr>
+                                        <td>{{ strtoupper($u->fullname) }}</td>
+                                        <td>{{ strtoupper($u->username) }}</td>
+                                        <td>{{ strtoupper($u->email) }}</td>
+                                        <td>{{ strtoupper($u->role) }}</td>
+                                        @if($u->username == "admin")  
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        @else
+                                            <td><a href="{{ route('profile.user', [$u->username]) }}" target="_blank" class="btn btn-primary hvr-shrink"><i class="bi bi-eye"></i></a></td>
+                                            <td><a class="btn btn-primary hvr-shrink" href="{{ route('admin.user.update', ['username' => strtolower($u->username)]) }}"><i class="bi bi-pencil-square"></i></a></td>
+                                            <td>
+                                                <form action="" method="post" class="d-flex justify-content-center">
+                                                    @csrf
+                                                    <input type="hidden" name="username" value="{{ strtolower($u->username) }}">
+                                                    <button type="submit" class="btn btn-danger hvr-shrink" name="remove"><i class="bi bi-x-square"></i></button>
+                                                </form>
+                                            </td>
+                                        @endif
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                     {{ $user->links() }}
                 @endif
             </div>

@@ -9,10 +9,11 @@ class Classroom extends Model
 {
     use HasFactory;
     protected $table = 'classrooms';
+    public $incrementing = false;
     protected $fillable = [
+        'id',
         'programs_code',
         'admission_year',
-        'coordinators_id',
         'study_year',
         'study_levels_code'
     ];

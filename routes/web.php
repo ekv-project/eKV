@@ -114,9 +114,9 @@ Route::post('/dashboard/admin/studylevel',[StudyLevelController::class, 'remove'
 
 Route::get('/dashboard/admin/classroom',[AdminClassroomController::class, 'view'])->name('admin.classroom')->middleware(['auth', 'userIsAdmin']);
 Route::get('/dashboard/admin/classroom/add',[AdminClassroomController::class, 'addView'])->name('admin.classroom.add')->middleware(['auth', 'userIsAdmin']);
-Route::get('/dashboard/admin/classroom/update',[AdminClassroomController::class, 'updateView'])->name('admin.classroom.update')->middleware(['auth', 'userIsAdmin']);
+Route::get('/dashboard/admin/classroom/update/{id}',[AdminClassroomController::class, 'updateView'])->name('admin.classroom.update')->middleware(['auth', 'userIsAdmin']);
 Route::post('/dashboard/admin/classroom/add',[AdminClassroomController::class, 'add'])->middleware(['auth', 'userIsAdmin']);
-Route::post('/dashboard/admin/classroom/update',[AdminClassroomController::class, 'update'])->middleware(['auth', 'userIsAdmin']);
+Route::post('/dashboard/admin/classroom/update/{id}',[AdminClassroomController::class, 'update'])->middleware(['auth', 'userIsAdmin']);
 Route::post('/dashboard/admin/classroom',[AdminClassroomController::class, 'remove'])->middleware(['auth', 'userIsAdmin']);
 
 Route::get('/dashboard/admin/institute',[InstituteSettingController::class, 'view'])->name('admin.institute')->middleware(['auth', 'userIsAdmin']);

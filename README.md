@@ -27,4 +27,6 @@ Sistem Pengurusan Maklumat Pelajar untuk Kolej Vokasional Malaysia
 6. Akses pengguna web server kepada folder.
 
 ## Lesen
-Sistem ini dilesenkan menggunakan [GNU GPLv3](https://www.gnu.org/licenses/gpl-3.0.txt). Sebarang sumbangan kepada sumber kod akan dilesenkan pada terma yang sama. Setiap sumbangan disenaraikan dalam fail [CREDITS](CREDITS).
+
+Tiada lesen setakat ini. Akan difikirkan apabila telah *release*.
+<!-- Sistem ini dilesenkan menggunakan [GNU GPLv3](https://www.gnu.org/licenses/gpl-3.0.txt). Sebarang sumbangan kepada sumber kod akan dilesenkan pada terma yang sama. Setiap sumbangan disenaraikan dalam fail [CREDITS](CREDITS). -->

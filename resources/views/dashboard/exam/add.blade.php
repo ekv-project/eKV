@@ -53,7 +53,7 @@
                         @enderror
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" id="total_credit_gpa" name="total_credit_gpa" placeholder="total_credit_gpa" value="{{ old('total_credit_gpa') }}" required>
-                            <label for="total_credit_gpa">Jumlah Jam Kredit</label>
+                            <label for="total_credit_gpa">Jumlah Jam Kredit Semasa</label>
                         </div>
                         @error('total_credit_gpa')
                             <div class="alert alert-danger">{{ $message }}</div>
@@ -69,7 +69,7 @@
                         @enderror
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" id="total_credit_cgpa" name="total_credit_cgpa" placeholder="total_credit_cgpa" value="{{ old('total_credit_cgpa') }}" required>
-                            <label for="total_credit_cgpa">Jumlah Jam Kredit</label>
+                            <label for="total_credit_cgpa">Jumlah Jam Kredit Kumulatif</label>
                         </div>
                         @error('total_credit_cgpa')
                             <div class="alert alert-danger">{{ $message }}</div>

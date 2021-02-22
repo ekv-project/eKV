@@ -5,7 +5,7 @@
         <div class="col-11 col-lg-10">
             <form action="" method="post" enctype="multipart/form-data" class="mt-2 mb-2">
                 @csrf
-                <h1 class="text-center fs-2">Tambah Pengguna Secara Pukal</h1>
+                <h2 class="text-left">Tambah Pengguna Secara Pukal</h2>
                 @if(session()->has('userBulkAddSuccess'))
                     <div class="alert alert-success">{{ session('userBulkAddSuccess') }}</div>
                 @endif
@@ -21,7 +21,7 @@
         </div>
         <div class="col-11 col-lg-10">
             <form action="{{ route('admin.user.add') }}" method="post" class="mt-3 mb-5">
-                <h3>Tambah Pengguna</h3>
+                <h2 class="text-left">Tambah Pengguna</h2>
                 @csrf
                 @error('userExist')
                     <div class="alert alert-danger">{{ $message }}</div>

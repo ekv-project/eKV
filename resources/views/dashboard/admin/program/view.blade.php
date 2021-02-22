@@ -5,7 +5,7 @@
             <h1>Senarai Program</h1>
         </div>
         <div class="row d-flex justify-content-center align-items-center mb-5">
-            <div class="row d-flex justify-content-center align-items-center table-responsive col-12 col-lg-10">
+            <div class="row d-flex justify-content-center align-items-center col-12 col-lg-10">
                 <div class="row d-flex justify-content-center align-content-center mt-3">
                     <form action="" method="get" class="row">
                         <div class="row">
@@ -78,36 +78,38 @@
                         <p class="text-center mt-3 fs-5">Tiada rekod dijumpai.</p>
                     </div>
                 @else
-                    <table class="table table-hover table-striped table-bordered border-secondary text-center mt-3">
-                        <thead>
-                            <tr>
-                                @if(session()->has('successRemove'))
-                                    <div class="alert alert-success">{{ session('successRemove') }}</div>
-                                @endif
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped table-bordered border-secondary text-center mt-3">
+                            <thead class="table-dark">
                                 <tr>
-                                <th class="col-2">KOD PROGRAM</th>
-                                <th class="col-3">NAMA PROGRAM</th>
-                                <th class="col-1"></th>
-                                <th class="col-1"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($program as $p)
-                                <tr>
-                                    <td>{{ strtoupper($p->code) }}</td>
-                                    <td>{{ strtoupper($p->name) }}</td>
-                                    <td><a class="btn btn-primary hvr-shrink" href="{{ route('admin.program.update', ['code' => strtolower($p->code)]) }}"><i class="bi bi-pencil-square"></i></a></td>
-                                    <td>
-                                        <form action="" method="post" class="d-flex justify-content-center">
-                                            @csrf
-                                            <input type="hidden" name="code" value="{{ strtolower($p->code) }}">
-                                            <button type="submit" class="btn btn-danger hvr-shrink" name="remove"><i class="bi bi-x-square"></i></button>
-                                        </form>
-                                    </td>
+                                    @if(session()->has('successRemove'))
+                                        <div class="alert alert-success">{{ session('successRemove') }}</div>
+                                    @endif
+                                    <tr>
+                                    <th class="col-5 align-middle">KOD PROGRAM</th>
+                                    <th class="col-5 align-middle">NAMA PROGRAM</th>
+                                    <th class="col-1 align-middle">LIHAT</th>
+                                    <th class="col-1 align-middle">BUANG</th>
                                 </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                @foreach ($program as $p)
+                                    <tr>
+                                        <td>{{ strtoupper($p->code) }}</td>
+                                        <td>{{ strtoupper($p->name) }}</td>
+                                        <td><a class="btn btn-primary hvr-shrink" href="{{ route('admin.program.update', ['code' => strtolower($p->code)]) }}"><i class="bi bi-pencil-square"></i></a></td>
+                                        <td>
+                                            <form action="" method="post" class="d-flex justify-content-center">
+                                                @csrf
+                                                <input type="hidden" name="code" value="{{ strtolower($p->code) }}">
+                                                <button type="submit" class="btn btn-danger hvr-shrink" name="remove"><i class="bi bi-x-square"></i></button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                     {{ $program->links() }}
                 @endif
             </div>
