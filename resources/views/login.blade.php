@@ -6,18 +6,40 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <link rel="stylesheet" href="{{ asset('bootstraps-icons/font/bootstrap-icons.css') }}">
-    <title>e-KV - Log Masuk</title>
+    @if(Storage::disk('local')->exists('public/img/system/logo-16.png'))
+        <link rel="shortcut icon" href="{{ asset('public/img/system/logo-16.png') }}" type="image/png">
+    @elseif(Storage::disk('local')->exists('public/img/system/logo-def-16.jpg'))
+        <link rel="shortcut icon" href="{{ asset('public/img/system/logo-def-16.jpg') }}" type="image/jpeg">
+    @endif
+    <title>{{ $page }} - {{ env('APP_NAME') }} | 
+        @isset($settings)
+            @empty($settings['institute_name'])
+                Kolej Vokasional Malaysia
+            @else
+                {{ ucwords($settings['institute_name']) }}
+            @endempty        
+        @else   
+            Kolej Vokasional Malaysia
+        @endisset   
+    </title>
 </head>
 <body>
     <div class="container-fluid d-flex flex-column justify-content-center p-0 m-0 vh-100">
         <div class="container-fluid row">
             <div class="d-flex flex-column justify-content-center col-sm">
                 <h1>Sistem Maklumat Pelajar</h1>
-                <h1>Kolej Vokasional</h1>
+                @isset($settings)
+                    @empty($settings['institute_name'])
+                        <h2>Kolej Vokasional Malaysia</h2>
+                    @else
+                        <h2>{{ ucwords($settings['institute_name']) }}</h2>
+                    @endempty        
+                @else   
+                    <h2>Kolej Vokasional Malaysia</h2>
+                @endisset  
             </div>
             <form action="{{ route('login') }}" method="post" class="col-lg">
                 @csrf
-                <h1>Log Masuk</h1>
                 <label for="username" class="form-label">Username</label>
                 <input type="text" name="username" id="username" value="{{ old('username') }}" class="form-control">
                 @error('username')

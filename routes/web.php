@@ -29,7 +29,8 @@ Route::get('/', function () {
     if(Auth::check()){
         return redirect()->route('dashboard');
     }else{
-        return view('login');
+        $instituteSettings = InstituteSetting::find(1);
+        return view('login')->with(['page' => 'Log Masuk', 'settings' => $instituteSettings]);
     }
 })->name('login');
 
