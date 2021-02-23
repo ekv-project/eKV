@@ -1,18 +1,19 @@
 <?php
 
+use App\Models\InstituteSetting;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Exam\ExamController;
+use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Admin\AdminController;
-use App\Http\Controllers\Admin\ClassroomController as AdminClassroomController;
 use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\ProgramController;
 use App\Http\Controllers\Admin\StudyLevelController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\User\UserController;
+use App\Http\Controllers\InstituteSettingController;
 use App\Http\Controllers\User\UserProfileController;
 use App\Http\Controllers\Classroom\ClassroomController;
-use App\Http\Controllers\Exam\ExamController;
-use App\Http\Controllers\InstituteSettingController;
-use App\Models\InstituteSetting;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\LiveSearch\LiveSearchController;
+use App\Http\Controllers\Admin\ClassroomController as AdminClassroomController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +26,19 @@ use Illuminate\Support\Facades\Auth;
 |
 */
 
+/**
+ * API Routes
+ * 
+ * API routes is added here to be able to authorize API request using CSRF Tokens from Authorization header.
+ * I know this is not the right way to do it, but for my implementation, it should be enough.
+ * I'm trying my best to follow RFC7235 or any other specs but my knowledge and time is limited.
+ */
+Route::get('/api/search/{data}/{dataType}', [LiveSearchController::class, 'search']);
+
+
+/**
+ * Other Routes
+ */
 Route::get('/', function () {
     if(Auth::check()){
         return redirect()->route('dashboard');
@@ -37,6 +51,14 @@ Route::get('/', function () {
 // User Login and Logout
 Route::post('/', [UserController::class, 'login']);
 Route::post('/dashboard/logout', [UserController::class, 'logout'])->name('logout')->middleware('auth');
+
+
+Route::get('/test', function(Request $request) {
+
+    $token = csrf_token();
+
+    dd($token);
+});
 
 /**
  * Dashboard

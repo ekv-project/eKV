@@ -10,7 +10,9 @@ if(document.querySelector('#searchInput') != null){
     let dataType = searchInput.getAttribute('data-type');
     searchInput.addEventListener("input", () => {
         let token = document.querySelector('meta[name="api-token"]').content;
-        search(searchInput.value, dataType, token);
+        if(searchInput.value != ""){
+            search(searchInput.value, dataType, token);
+        }
     }); 
 }
 if(document.querySelector('.hamburger-menu') != null){

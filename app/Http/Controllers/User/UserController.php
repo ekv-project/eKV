@@ -80,7 +80,7 @@ class UserController extends Controller
                     'user_agent' => $request->server('HTTP_USER_AGENT')
                 ]);
                 $user = User::find($username);
-                $user->api_token = Str::random(60);
+                $user->api_token = csrf_token();
                 $user->save();
                 return redirect()->intended('dashboard');
             }else{

@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    @if(isset(Auth::user()->api_token) AND Auth::user()->api_token != NULL)
-        <meta name="api-token" content="{{ Auth::user()->api_token }}">
-    @endif
+    <meta name="api-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <link rel="stylesheet" href="{{ asset('bootstraps-icons/font/bootstrap-icons.css') }}">
     @if(Storage::disk('local')->exists('public/img/system/logo-16.png'))
@@ -92,7 +90,7 @@
             <div class="col-md-5 d-flex justify-content-center align-content-center hvr-shrink"><a href="{{ route('admin') }}" class="btn button-transparent fs-5 text-light fw-normal">Pentadbir</a></div>
         </div>
     </div>
-    <div class="container-fluid mt-6 mt-sm-6 mt-md-4 mt-lg-5 border-top border-5 w-100 min-vh-100">
+    <div class="container-fluid mt-6 mt-sm-6 mt-md-4 mt-lg-5 mx-0 w-100 min-vh-100">
         @yield('content')
     </div>
     <footer class="footer mt-auto py-3 bg-dark">
@@ -200,9 +198,9 @@
             </div>
         </div>
         <div class="d-flex align-items-center justify-content-center">
-            <div class="mx-2"><a href="" class="text-light" data-bs-toggle="modal" data-bs-target="#licenseModal">Lesen dan Kredit</a></div>
-            <div class="mx-2"><a href="#" class="text-light">Laman Sesawang</a></div>
-            <div class="mx-2"><a href="#" class="text-light">Dokumentasi</a></div>
+            <div class="mx-2"><a href="" class="text-light text-center" data-bs-toggle="modal" data-bs-target="#licenseModal">Lesen dan Kredit</a></div>
+            <div class="mx-2"><a href="#" class="text-light text-center">Laman Sesawang</a></div>
+            <div class="mx-2"><a href="#" class="text-light text-center">Dokumentasi</a></div>
         </div>
         <p class="text-center text-secondary p-3 text-light">Hak Cipta Terpelihara &copy; Muhammad Hanis Irfan bin Mohd Zaid & Muhammad Firdaus bin Nazri 2020</p>
     </footer>

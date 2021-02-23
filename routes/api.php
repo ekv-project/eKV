@@ -17,4 +17,4 @@ use Illuminate\Support\Facades\Route;
 
 //Route::middleware('auth:api')->get('/search', [LiveSearchController::class, 'search']);
 //Route::middleware('auth:api')->get('/search', [LiveSearchController::class, 'search']);
-Route::get('/search', [LiveSearchController::class, 'search']);
+// Route::get('/search', [LiveSearchController::class, 'search']);

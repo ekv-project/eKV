@@ -104,7 +104,9 @@
                             <div class="alert alert-danger">{{ $message }}</div>
                         @enderror
                         <div class="form-floating mb-3">
-                            <input type="text" name="coordinator_username" id="coordinator_username" class="form-control" placeholder="coordinator_username" value="@php if(old('coordinator_username') !== null){echo old('coordinator_username');}else{echo NULL;} @endphp">
+                            {{-- Both input and ul element is used for live search --}}
+                            <input type="text" name="coordinator_username" id="searchInput" data-type="lecturer" class="form-control" placeholder="coordinator_username" value="@php if(old('coordinator_username') !== null){echo old('coordinator_username');}else{echo NULL;} @endphp">
+                            <ul class="list-group hover" id="searchResult"></ul>
                             <label for="coordinator_username" class="form-label">Username</label>
                             @error('coordinator_username')
                                 <div class="alert alert-danger">{{ $message }}</div>
