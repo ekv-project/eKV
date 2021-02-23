@@ -43,15 +43,32 @@ class ClassroomController extends Controller
         }
     }
     public function view($classroomID){
-        $students = ClassroomStudent::where('classrooms_id', $classroomID)->with('user')->get();
+        if(ClassroomStudent::where('classrooms_id', $classroomID)->first()){
+            $students = ClassroomStudent::select('users.username', 'users.fullname', 'users.email')->join('users', 'users.username', 'classroom_students.users_username')->get();
+        }else{
+            $students = NULL;
+        }
+        if(Classroom::where('id', $classroomID)->first()){
+            $classroomInfo = Classroom::where('id', $classroomID)->first();
+        }else{
+            $classroomInfo = NULL;
+        }
+        if(ClassroomCoordinator::select('users_username')->where('classrooms_id', $classroomID)->first()){
+            $classroomCoordinator = ClassroomCoordinator::select('users_username')->where('classrooms_id', $classroomID)->first();
+        }else{
+            $classroomCoordinator = NULL;
+        }
         if(Classroom::where('id', $classroomID)->count() < 1){
             abort(404, 'Tiada kelas dijumpai');
         }elseif(Gate::allows('authCoordinator', $classroomID) || Gate::allows('authAdmin') || Gate::allows('authSuperAdmin')){
-            return view('dashboard.user.classroom.view')->with(['settings' => $this->instituteSettings, 'page' => 'Maklumat Kelas', 'students' => $students]);
+            // Check if user is a coordinator for the classroom or an admin
+            return view('dashboard.user.classroom.view')->with(['settings' => $this->instituteSettings, 'page' => 'Maklumat Kelas', 'students' => $students, 'classroomInfo' => $classroomInfo, 'classroomCoordinator' => $classroomCoordinator]);
         }elseif(!empty(ClassroomStudent::where('users_username', Auth::user()->username)->first()->classroom)){
+            // Check if student in a classroom
             $classroomStudentID = ClassroomStudent::where('users_username', Auth::user()->username)->first()->classroom->id;
             if($classroomStudentID == $classroomID){
-                return view('dashboard.user.classroom.view')->with(['settings' => $this->instituteSettings, 'page' => 'Maklumat Kelas', 'students' => $students]);
+                // Check if the student classroom is the one they trying to access
+                return view('dashboard.user.classroom.view')->with(['settings' => $this->instituteSettings, 'page' => 'Maklumat Kelas', 'students' => $students, 'classroomInfo' => $classroomInfo, 'classroomCoordinator' => $classroomCoordinator]);
             }else{
                 abort(403, 'Anda tiada akses paga laman ini');
             }
@@ -66,7 +83,8 @@ class ClassroomController extends Controller
             abort(404, 'Tiada kelas dijumpai');
         }elseif(Gate::allows('authCoordinator', $classroomID) || Gate::allows('authAdmin') || Gate::allows('authSuperAdmin')){
             $students = ClassroomStudent::where('classrooms_id', $classroomID)->with('user')->get();
-            return view('dashboard.user.classroom.student')->with(['settings' => $this->instituteSettings, 'page' => 'Pelajar Kelas', 'students' => $students, 'classroomID' => $classroomID]);
+            $classroomData = Classroom::select('id', 'name', 'programs_code', 'admission_year', 'study_year')->where('id', $classroomID)->first();
+            return view('dashboard.user.classroom.student')->with(['settings' => $this->instituteSettings, 'page' => 'Pelajar Kelas', 'students' => $students, 'classroomData' => $classroomData]);
         }else{
             abort(403, 'Anda tiada akses paga laman ini');
         }
@@ -75,7 +93,7 @@ class ClassroomController extends Controller
         if(Classroom::where('id', $classroomID)->count() < 1){
             abort(404, 'Tiada kelas dijumpai');
         }elseif(Gate::allows('authCoordinator', $classroomID) || Gate::allows('authAdmin') || Gate::allows('authSuperAdmin')){
-            $classroomData = Classroom::where('id', $classroomID)->first();
+            $classroomData = Classroom::select('id', 'name', 'programs_code', 'admission_year', 'study_year')->where('id', $classroomID)->first();
             return view('dashboard.user.classroom.update')->with(['settings' => $this->instituteSettings, 'page' => 'Maklumat Kelas', 'classroomData' => $classroomData]);
         }else{
             abort(403, 'Anda tiada akses paga laman ini');
@@ -138,10 +156,11 @@ class ClassroomController extends Controller
     public function classroomUpdate(Request $request, $classroomID){
         if(Gate::allows('authCoordinator', $classroomID) || Gate::allows('authAdmin') || Gate::allows('authSuperAdmin')){
             $validated = $request->validate([
+                'name' => ['required'],
                 'programs_code' => ['required'],
-                'admission_year' => ['required'],
-                'study_levels_code' => ['required'],
-                'study_year' => ['required'],
+                'admission_year' => ['required', 'date_format:Y'],
+                'study_year' => ['required', 'date_format:Y'],
+                'study_levels_code' => ['required']
             ]);
             $program = Program::where('code', $request->programs_code)->get()->count();
             $studyLevel = StudyLevel::where('code', $request->study_levels_code)->get()->count();
@@ -150,6 +169,7 @@ class ClassroomController extends Controller
                     Classroom::updateOrCreate(
                         ['id' => $classroomID],
                         [
+                            'name' => strtolower($request->programs_code),
                             'programs_code' => strtolower($request->programs_code),
                             'admission_year' => strtolower($request->admission_year),
                             'study_levels_code' => strtolower($request->study_levels_code),

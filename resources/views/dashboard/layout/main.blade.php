@@ -90,7 +90,7 @@
             <div class="col-md-5 d-flex justify-content-center align-content-center hvr-shrink"><a href="{{ route('admin') }}" class="btn button-transparent fs-5 text-light fw-normal">Pentadbir</a></div>
         </div>
     </div>
-    <div class="container-fluid mt-6 mt-sm-6 mt-md-4 mt-lg-5 mx-0 w-100 min-vh-100">
+    <div class="mt-6 mt-sm-6 mt-md-4 mt-lg-5 mx-0 w-100 min-vh-100">
         @yield('content')
     </div>
     <footer class="footer mt-auto py-3 bg-dark">

@@ -1,8 +1,8 @@
 @extends('dashboard.layout.main')
 @section('content')
-    <div class="container-fluid d-flex align-items-center m-0 flex-column">
+    <div class="container-fluid d-flex align-items-center mt-6 flex-column">
         <div class="col-10 mt-3 mb-3">
-            <h2>Tambah Transkrip Semester</h2>
+            <h2 class="text-center">Tambah Transkrip Semester</h2>
             @if(session()->has('transcriptSuccess'))
                 <div class="alert alert-success">{{ session('transcriptSuccess') }}</div>
             @endif
@@ -87,7 +87,7 @@
                     <div class="row row-cols-3" id="courseGrade"></div>
                 </div>
                 <div class="row">
-                    <button type="submit" class="btn btn-primary mt-2 mb-2">Tambah Transkrip</button>
+                    <button type="submit" class="btn btn-primary my-4 hvr-shrink">Tambah Transkrip</button>
                 </div>
             </form>
         </div>

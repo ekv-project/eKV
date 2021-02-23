@@ -107,7 +107,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($classroom as $c)
+                            @foreach($classroom as $c)
                                 <tr>
                                     <td>{{ $c->id }} </td>
                                     <td>{{ strtoupper($c->name) }}</td>
@@ -115,7 +115,13 @@
                                     <td>{{ strtoupper($c->admission_year) }}</td>
                                     <td>{{ strtoupper($c->study_year) }}</td>
                                     <td>{{ strtoupper($c->study_levels_code) }}</td>
-                                    <td></td>
+                                    <td>
+                                        @foreach ($classroomCoordinator as $cc)
+                                            @if($cc->classrooms_id == $c->id)
+                                                <a href="{{ route('profile.user', [$cc->users_username]) }}" target="_blank" class="text-decoration-none text-dark hvr-underline-reveal">{{ strtoupper($cc->users_username) }}</a> 
+                                            @endif
+                                        @endforeach
+                                    </td>
                                     <td><a href="{{ route('classroom.view', [$c->id]) }}" target="_blank" class="btn btn-primary hvr-shrink"><i class="bi bi-eye"></i></a></td>
                                     <td><a class="btn btn-primary hvr-shrink" href="{{ route('admin.classroom.update', ['id' => $c->id]) }}"><i class="bi bi-pencil-square"></i></a></td>
                                     <td>

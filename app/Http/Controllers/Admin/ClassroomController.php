@@ -32,7 +32,12 @@ class ClassroomController extends Controller
     public function view(Request $request){
         $pagination = 15;
         $classroom = Classroom::paginate($pagination)->withQueryString();
-            // Check for filters and search
+        if(ClassroomCoordinator::all()->count() > 0){
+            $classroomCoordinator = ClassroomCoordinator::all();
+        }else{
+            $classroomCoordinator = [];
+        }
+        // Check for filters and search
         if($request->has('sort_by') AND $request->has('sort_order') AND $request->has('search')){
             $sortBy = $request->sort_by;
             $sortOrder = $request->sort_order;
@@ -47,9 +52,9 @@ class ClassroomController extends Controller
                 'sortOrder' => $sortOrder,
                 'search' => $search
             ];
-            return view('dashboard.admin.classroom.view')->with(['settings' => $this->instituteSettings, 'page' => 'Senarai Kelas', 'classroom' => $classroom, 'filterAndSearch' => $filterAndSearch]);
+            return view('dashboard.admin.classroom.view')->with(['settings' => $this->instituteSettings, 'page' => 'Senarai Kelas', 'classroom' => $classroom, 'classroomCoordinator' => $classroomCoordinator,'filterAndSearch' => $filterAndSearch]);
         }else{
-            return view('dashboard.admin.classroom.view')->with(['settings' => $this->instituteSettings, 'page' => 'Senarai Kelas', 'classroom' => $classroom]);
+            return view('dashboard.admin.classroom.view')->with(['settings' => $this->instituteSettings, 'page' => 'Senarai Kelas', 'classroom' => $classroom, 'classroomCoordinator' => $classroomCoordinator]);
         }
     }
     public function addView(){
