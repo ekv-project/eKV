@@ -40,18 +40,8 @@
             @else
                 <div class="row mt-1 mb-4">
                     <div class="row row-cols-1 row-cols-lg-2">
-                        <p class="col fw-bold my-4">NAMA PENUH: <span class="fw-normal">N/A</span></p>
-                        <p class="col fw-bold my-4">NO. KAD PENGENALAN: <span class="fw-normal">N/A</span></p>
-                        <p class="col fw-bold my-4">ALAMAT E-MEL: <span class="fw-normal">N/A</span></p>
-                        <p class="col fw-bold my-4">NO. TELEFON PERIBADI: <span class="fw-normal">N/A</span></p>
-                        <p class="col fw-bold my-4">TARIKH LAHIR: <span class="fw-normal">N/A</span></p>
-                        <p class="col fw-bold my-4">TEMPAT LAHIR: <span class="fw-normal">N/A</span></p>
-                    </div>
-                    <div class="row row-cols-1 row-cols-lg-2">
-                        <p class="col fw-bold my-4">ALAMAT RUMAH: <span class="fw-normal">N/A</span></p>
-                        <p class="col fw-bold my-4">NO. TELEFON RUMAH: <span class="fw-normal">N/A</span></p>
-                        <p class="col fw-bold my-4">NAMA PENJAGA: <span class="fw-normal">N/A</span></p>
-                        <p class="col fw-bold my-4">NO. TELEFON PENJAGA: <span class="fw-normal">N/A</span></p>
+                        <p class="col fw-bold my-4">NAMA PENUH: <span class="fw-normal">{{ strtoupper($noProfile->fullname) }}</span></p>
+                        <p class="col fw-bold my-4">ALAMAT E-MEL: <span class="fw-normal">{{ strtoupper($noProfile->email) }}</span></p>
                     </div>
                 </div>
             @endif
