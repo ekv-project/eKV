@@ -8,8 +8,8 @@
             <div class="col-6 my-3 text-end">
                 {{-- Only coordinator and admin can view these buttons --}}
                 @if(Gate::allows('authAdmin') || Gate::allows('authCoordinator', $classroomInfo->id))
-                    <a href="{{ route('classroom.update', [$classroomInfo->id]) }}" class="btn btn-primary"><i class="bi bi-pencil-square"></i>Maklumat Kelas</a>
-                    <a href="{{ route('classroom.student', [$classroomInfo->id]) }}" class="btn btn-primary"><i class="bi bi-pencil-square"></i>Senarai Pelajar</a>
+                    <a href="{{ route('classroom.update', [$classroomInfo->id]) }}" class="btn btn-primary"><i class="bi bi-pencil-square"></i>Kelas</a>
+                    <a href="{{ route('classroom.student', [$classroomInfo->id]) }}" class="btn btn-primary"><i class="bi bi-pencil-square"></i>Pelajar</a>
                 @endif
             </div>
         </div>

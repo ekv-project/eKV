@@ -32,7 +32,7 @@
             <a href="{{ route('dashboard') }}" class="btn btn-primary"><i class="bi bi-arrow-return-left"></i> Kembali Ke Laman Utama</a>
         </div>
         <div class="col-11 col-lg-10 rounded-3 shadow-lg mt-3 mb-0 ml-0 mr-0 bg-primary">
-            <nav class="navbar navbar-expand-md navbar-dark bg-primary">
+            <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
                 <div class="container-fluid">
                     <a class="navbar-brand" href="{{ route('admin') }}">Pusat Pentadbir</a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">

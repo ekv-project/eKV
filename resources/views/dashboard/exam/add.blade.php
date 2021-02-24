@@ -1,8 +1,15 @@
 @extends('dashboard.layout.main')
 @section('content')
-    <div class="container-fluid d-flex align-items-center mt-6 flex-column">
-        <div class="col-10 mt-3 mb-3">
-            <h2 class="text-center">Tambah Transkrip Semester</h2>
+<div class="container-fluid mt-6 w-100 h-100 d-flex flex-column align-items-center">
+        <div class="row rounded-3 shadow-lg mt-5 w-100">
+            <div class="col-6 my-3 text-start">
+                <a href="{{ route('transcript.student', [$studentDetails['matrixNumber']]) }}" class="btn btn-primary"><i class="bi bi-arrow-return-left"></i>Senarai Transkrip</a>
+            </div>
+            <div class="col-6 my-3 text-end">
+            </div>
+        </div>
+        <div class="row rounded-3 shadow-lg mt-2 mb-2 w-100">
+            <h2 class="text-center my-3">Tambah Transkrip Semester</h2>
             @if(session()->has('transcriptSuccess'))
                 <div class="alert alert-success">{{ session('transcriptSuccess') }}</div>
             @endif
@@ -84,10 +91,10 @@
                         </div>
                         <div class="col"></div>
                     </div>
-                    <div class="row row-cols-3" id="courseGrade"></div>
+                    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3" id="courseGrade"></div>
                 </div>
-                <div class="row">
-                    <button type="submit" class="btn btn-primary my-4 hvr-shrink">Tambah Transkrip</button>
+                <div class="row d-flex flex-column align-items-center justify-content-center">
+                    <button type="submit" class="btn btn-primary my-6 hvr-shrink w-25">Tambah Transkrip</button>
                 </div>
             </form>
         </div>

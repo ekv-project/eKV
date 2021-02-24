@@ -8,7 +8,7 @@
             <div class="col-6 my-3">
             </div>
         </div>
-        <div class="row rounded-3 shadow-lg mt-2 mb-2 w-100">
+        <div class="row rounded-3 shadow-lg mt-2 mb-2 d-flex flex-column align-items-center justify-content-center w-100">
             <div class="row my-3 d-flex flex-column align-items-center justify-content-center w-100">
                 <form action="" method="post">
                     @csrf

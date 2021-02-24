@@ -1,13 +1,24 @@
 @extends('dashboard.layout.main')
 @section('content')
-    <div class="container-fluid col-11 mt-5">
-        <div class="row mt-3">
-            <h1 class="text-center">Senarai Transkrip Semester</h1>
+    <div class="container-fluid mt-6 w-100 h-100 d-flex flex-column align-items-center">
+        <div class="row rounded-3 shadow-lg mt-5 w-100">
+            <div class="col-6 my-3 text-start">
+                <a href="{{ route('dashboard') }}" class="btn btn-primary"><i class="bi bi-arrow-return-left"></i>Dashboard</a>
+            </div>
+            <div class="col-6 my-3 text-end">
+                {{-- Only coordinator and admin can view these buttons --}}
+                @if(Gate::allows('authAdmin') || Gate::allows('authCoordinator', $studentID))
+                    <a href="{{ route('transcript.add', ['studentID' => $studentID]) }}" class="btn btn-primary"><i class="bi bi-plus"></i>Tambah</a>
+                @endif
+            </div>
+        </div>
+        <div class="row rounded-3 shadow-lg mt-2 mb-2 w-100">
+            <h1 class="text-center mt-2">Senarai Transkrip Semester</h1>
             @if(session()->has('transcriptDeleteSuccess'))
                 <div class="alert alert-success">{{ session('transcriptDeleteSuccess') }}</div>
             @endif
             @if(count($semesterGrades) > 0)
-                <div class="table-responsive">
+                <div class="table-responsive my-3">
                     <table class="table table-hover table-bordered border-secondary text-center">  
                         <thead class="table-dark">
                             <tr>
@@ -50,10 +61,7 @@
                     </table> 
                 </div>
             @else
-                <p class="fst-italic fw-bold text-center mt-3">Tiada transkrip dijumpai untuk pelajar ini!</p>
-                @if(Gate::allows('authAdmin') || Gate::allows('authCoordinator', $studentID))
-                    <a href="{{ route('transcript.add', ['studentID' => $studentID]) }}" class="btn btn-primary hvr-shrink">Tambah</a>
-                @endif 
+                <p class="fst-italic fw-bold text-center my-4">Tiada transkrip dijumpai untuk pelajar ini!</p> 
             @endif
         </div>
     </div>

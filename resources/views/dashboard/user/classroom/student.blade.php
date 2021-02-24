@@ -53,16 +53,16 @@
                                 <thead class="table-dark">
                                     <tr>
                                         <tr>
-                                        <th class="col-2">ID Pelajar</th>
-                                        <th class="col-3">Nama Pelajar</th>
-                                        <th class="col-1">Buang</th>
+                                        <th class="col-2">ID PELAJAR</th>
+                                        <th class="col-3">NAMA PELAJAR</th>
+                                        <th class="col-1">BUANG</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($students as $student)
                                     <tr>
-                                        <td>{{ $student->user->username }}</td>
-                                        <td>{{ ucwords($student->user->fullname) }} </td>
+                                        <td>{{ strtoupper($student->user->username) }}</td>
+                                        <td>{{ strtoupper($student->user->fullname) }} </td>
                                         <td>
                                             <form action="" method="post" class="d-flex justify-content-center">
                                                 @csrf

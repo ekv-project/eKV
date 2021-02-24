@@ -1,11 +1,18 @@
 @extends('dashboard.layout.main')
 @section('content')
-    <div class="container-fluid mt-5 d-flex align-items-center flex-column">
-        <div class="col-12 col-md-10 m-3">
-            <div class="row m-0 text-center">
-                <h2>Transkrip Penilaian Semester</h2>
+    <div class="container-fluid mt-6 w-100 h-100 d-flex flex-column align-items-center">
+        <div class="row rounded-3 shadow-lg mt-5 w-100">
+            <div class="col-6 my-3 text-start">
+                <a href="{{ route('transcript.student', [$studentDetails['matrixNumber']]) }}" class="btn btn-primary"><i class="bi bi-arrow-return-left"></i>Senarai Transkrip</a>
             </div>
-            <div class="row m-0">
+            <div class="col-6 my-3 text-end">
+            </div>
+        </div>
+        <div class="row rounded-3 shadow-lg mt-2 mb-2 w-100 d-flex flex-column align-items-center justify-content-center">
+            <div class="row text-center">
+                <h2 class="my-4">Transkrip Penilaian Semester</h2>
+            </div>
+            <div class="row">
                 <div class="col-6">
                     <p><strong>Nama: </strong>{{ ucwords($studentDetails['name']) }}</p>
                     <p><strong>No. Kad Pengenalan: </strong>{{ $studentDetails['identificationNumber'] }}</p>
@@ -18,7 +25,7 @@
                 </div>
             </div>
             @if($courseGrades->count() > 0)
-                <div class="row m-0 table-responsive">
+                <div class="row table-responsive my-3">
                     <table class="table table-hover table-bordered border-secondary text-center">
                         <thead class="table-dark">
                             <tr>
@@ -41,11 +48,11 @@
                     </table> 
                 </div>
             @else
-                <div class="row m-0">
+                <div class="row my-5 ">
                     <p class="fw-bold fst-italic fs-6">Tiada rekod kursus dijumpai.</p>
                 </div>
             @endif
-            <div class="row m-0 table-responsive">
+            <div class="row table-responsive my-3">
                 <table class="table table-hover table-bordered border-secondary text-center">
                     <thead class="table-dark">
                         <th>KOMPONEN</th>

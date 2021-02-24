@@ -74,7 +74,7 @@
                     <img style="width: 3em; height: 3em;" src="{{ asset('public/img/profile/default/def-300.jpg') }}" alt="Default Profile Picture" class="img-fluid rounded-circle hvr-grow hvr-shrink" style="height: 3em">
                 </a>
             @endif
-            <a href="{{ route('profile') }}" class="text-light fw-bold text-decoration-none hvr-grow">{{ Auth::user()->username }}</a>
+            <a href="{{ route('profile') }}" class="text-light fw-bold text-decoration-none hvr-grow">{{ strtoupper(Auth::user()->username) }}</a>
             <form action="{{ route('logout') }}" method="post">
                 @csrf
                 <button type="submit" class="btn btn-secondary hvr-shrink"><i class="bi bi-box-arrow-in-left"></i>Log Keluar</button>
@@ -90,7 +90,7 @@
             <div class="col-md-5 d-flex justify-content-center align-content-center hvr-shrink"><a href="{{ route('admin') }}" class="btn button-transparent fs-5 text-light fw-normal">Pentadbir</a></div>
         </div>
     </div>
-    <div class="mt-6 mt-sm-6 mt-md-4 mt-lg-5 mx-0 w-100 min-vh-100">
+    <div class="mt-5 mt-sm-6 mt-md-4 mt-lg-5 mx-0 w-100 min-vh-100">
         @yield('content')
     </div>
     <footer class="footer mt-auto py-3 bg-dark">

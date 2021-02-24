@@ -1,14 +1,23 @@
 @extends('dashboard.layout.main')
 @section('content')
-    <div class="container-fluid d-flex align-items-center m-0 flex-column">
-        <div class="col-10 mt-3 mb-3">
-            <h1 class="fs-2 text-center">Kemas Kini Transkrip Semester</h1>
-            @if(session()->has('transcriptSuccess'))
-                <div class="alert alert-success">{{ session('transcriptSuccess') }}</div>
-            @endif
-            @error('noCourseInserted')
-                <div class="alert alert-danger">{{ $message }}</div>
-            @enderror
+    <div class="container-fluid mt-6 w-100 h-100 d-flex flex-column align-items-center">
+        <div class="row rounded-3 shadow-lg mt-5 w-100">
+            <div class="col-6 my-3 text-start">
+                <a href="{{ route('transcript.student', [$studentDetails['matrixNumber']]) }}" class="btn btn-primary"><i class="bi bi-arrow-return-left"></i>Senarai Transkrip</a>
+            </div>
+            <div class="col-6 my-3 text-end">
+            </div>
+        </div>
+        <div class="row rounded-3 shadow-lg mt-2 mb-5 w-100">
+            <h1 class="fs-2 text-center my-3">Kemas Kini Transkrip Semester</h1>
+            <div class="d-flex flex-column align-items-center justify-content-center">
+                @if(session()->has('transcriptSuccess'))
+                    <div class="alert alert-success w-75">{{ session('transcriptSuccess') }}</div>
+                @endif
+                @error('noCourseInserted')
+                    <div class="alert alert-danger w-75">{{ $message }}</div>
+                @enderror
+            </div>
             <form action="" method="post" class="mt-3">
                 @csrf
                 <div class="row">
@@ -76,7 +85,7 @@
                         </div>
                         <div class="col"></div>
                     </div>
-                    <div class="row row-cols-3" id="courseGrade">
+                    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3" id="courseGrade">
                         @foreach ($courseGrades as $courseGrade)
                         <div>
                             <div class="col border border-dark mt-1 d-flex flex-column justify-content-center align-items-center">
@@ -98,8 +107,8 @@
                         @endforeach
                     </div>
                 </div>
-                <div class="row">
-                    <button type="submit" class="btn btn-primary mt-2 mb-2">Kemas Kini Transkrip</button>
+                <div class="row d-flex flex-column align-items-center justify-content-center">
+                    <button type="submit" class="btn btn-primary my-6 w-25 hvr-shrink">Kemas Kini Transkrip</button>
                 </div>
             </form>
         </div>

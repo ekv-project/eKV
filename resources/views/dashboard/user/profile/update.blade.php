@@ -1,34 +1,40 @@
 @extends('dashboard.layout.main')
 @section('content')
     {{-- Only allows current authenticated user to update their own profile --}} 
-    
-    <div class="container-fluid d-flex align-items-center justify-content-center m-0 p-0">
-        <div class="d-flex flex-column">
+    <div class="container-fluid d-flex flex-column align-items-center justify-content-center mt-6 mb-4">
+        <div class="row rounded-3 shadow-lg mt-5 w-100">
+            <div class="col-6 my-3 text-start">
+                <a href="{{ route('profile.user', [$username]) }}" class="btn btn-primary"><i class="bi bi-arrow-return-left"></i>Profil</a>
+            </div>
+            <div class="col-6 my-3 text-end">
+            </div>
+        </div>
+        <div class="row rounded-3 shadow-lg mt-2 mb-2 w-100 d-flex flex-column justify-content-center align-items-center">
             {{-- Only student can update their profile while others can only update their profile picture and password --}}
             {{-- Update Profile Picture --}}
-            <div class="row">
+            <div class="col-12 col-md-11 col-lg-9">
                 <form action="" method="post" enctype="multipart/form-data" class="mt-2 mb-2">
                     @csrf
-                    <h2>Kemas Kini Gambar Profil</h2>
+                    <h2 class="text-center">Kemas Kini Gambar Profil</h2>
                     @if(session()->has('pictureSuccess'))
                         <div class="alert alert-success">{{ session('pictureSuccess') }}</div>
                     @endif
                     <input type="file" name="profile-picture" id="profile-picture" class="form-control mb-3">
-                    <div class="form-text mb-2 text-center">Logo Mestilah Bernisbah 1:1 <br> Resolusi Lebih Daripada 300x300 Piksel</div>
+                    <div class="form-text mb-2 text-left">Logo Mestilah Bernisbah 1:1 <br> Resolusi Lebih Daripada 300x300 Piksel</div>
                     @error('profile-picture')
                         <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
                     @error('unsupportedType')
                         <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
-                    <button type="submit" class="btn btn-primary w-100 hvr-shrink" name="picture">Kemas Kini</button>
+                    <button type="submit" class="btn btn-primary w-100 mb-5 hvr-shrink" name="picture">Kemas Kini</button>
                 </form>
             </div>
             {{-- Update Password --}}
-            <div class="row">
+            <div class="col-12 col-md-11 col-lg-9">
                 <form action="" method="post" class="mt-2 mb-2">
                     @csrf
-                    <h2>Ubah Kata Laluan</h2>
+                    <h2 class="text-center">Ubah Kata Laluan</h2>
                     @if(session()->has('passwordUpdateSuccess'))
                         <div class="alert alert-success">{{ session('passwordUpdateSuccess') }}</div>
                     @endif
@@ -59,15 +65,15 @@
                             <div class="alert alert-danger">{{ $message }}</div>
                         @enderror
                     </div>
-                    <button type="submit" class="btn btn-primary w-100 hvr-shrink" name="password">Ubah</button>
+                    <button type="submit" class="btn btn-primary w-100 mb-5 hvr-shrink" name="password">Ubah</button>
                 </form> 
             </div> 
             @can('authStudent')
                 {{-- Update Profile --}}
-                <div class="row">
+                <div class="col-12 col-md-11 col-lg-9">
                     <form action="" method="post" class="mt-2 mb-2">
                         @csrf
-                        <h2>Kemas Kini Profil</h2>
+                        <h2 class="text-center">Kemas Kini Profil</h2>
                         @if (session()->has('profileUpdateSuccess'))
                             <div class="alert alert-success">{{ session('profileUpdateSuccess') }}</div>
                         @endif
@@ -139,7 +145,7 @@
                                 <div class="alert alert-danger">{{ $message }}</div>
                             @enderror
                         </div>
-                        <button type="submit" class="btn btn-primary w-100 hvr-shrink" name="profile">Kemas Kini</button>
+                        <button type="submit" class="btn btn-primary w-100 mb-5 hvr-shrink" name="profile">Kemas Kini</button>
                     </form>
                 </div>       
             @endcan

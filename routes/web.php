@@ -48,14 +48,6 @@ Route::get('/', function () {
 Route::post('/', [UserController::class, 'login']);
 Route::post('/dashboard/logout', [UserController::class, 'logout'])->name('logout')->middleware('auth');
 
-
-Route::get('/test', function(Request $request) {
-
-    $token = csrf_token();
-
-    dd($token);
-});
-
 /**
  * Dashboard
  */

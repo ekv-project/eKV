@@ -29,10 +29,10 @@
                             </div>
                         </div>
                         <div class="row mt-3">
-                            <div class="col-9 col-lg-10">
+                            <div class="col-7 col-md-10">
                                 <input type="text" class="form-control" name="search" placeholder="Carian">
                             </div>
-                            <div class="col-3 col-lg-2">
+                            <div class="col-5 col-md-2">
                                 <button type="submit" class="btn btn-primary hvr-shrink w-100"><i class="bi bi-search" style="margin-right: 1rem;"></i>Cari</button>
                             </div>
                         </div>

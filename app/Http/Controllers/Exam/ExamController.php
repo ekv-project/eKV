@@ -164,10 +164,10 @@ class ExamController extends Controller
                     $validated = $request->validate([
                         'studyLevel' => ['required'],
                         'semester' => ['required'],
-                        'total_credit_gpa' => ['required'],
-                        'total_credit_cgpa' => ['required'],
-                        'gpa' => ['required'],
-                        'cgpa' => ['required']
+                        'total_credit_gpa' => ['required', 'numeric'],
+                        'total_credit_cgpa' => ['required', 'numeric'],
+                        'gpa' => ['required', 'numeric'],
+                        'cgpa' => ['required', 'numeric']
                     ]);
                     $studyLevel = $request->studyLevel;
                     $semester = $request->semester;
