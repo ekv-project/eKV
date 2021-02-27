@@ -8,8 +8,8 @@
             <div class="row d-flex justify-content-center align-items-center col-12 col-lg-10">
                 <div class="row d-flex justify-content-center align-content-center mt-3">
                     <form action="" method="get" class="row">
-                        <div class="row">
-                            <div class="col-6">
+                        <div class="row row-cols-1 row-cols-md-2">
+                            <div class="col mb-2">
                                 <div class="form-floating">
                                     <select class="form-select" id="sort_by" name="sort_by" aria-label="sortby">
                                         <option value="fullname">Nama Penuh</option>
@@ -20,7 +20,7 @@
                                     <label for="sort_by">Susun Mengikut:</label>
                                 </div>
                             </div>
-                            <div class="col-6">
+                            <div class="col">
                                 <div class="form-floating">
                                     <select class="form-select" id="sort_order" name="sort_order" aria-label="sortorder">
                                         <option value="asc">Meningkat</option>

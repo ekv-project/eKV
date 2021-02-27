@@ -31,14 +31,16 @@
         <div class="hamburger-layer"></div>
         <div class="hamburger-layer"></div>
     </div>
-    <header class="container-fluid m-0 row d-flex align-items-center bg-primary position-fixed top-0 start-0" style="z-index: 80">
+    <header class="container-fluid m-0 row d-flex align-items-center bg-primary" style="z-index: 80">
         {{-- Desktop Navbar --}}
         <div class="container-fluid d-flex align-items-center">
-            <div class="container-fluid d-none d-lg-flex d-sm-none justify-content-around">
-                <div class="col-md-3 d-flex justify-content-center align-content-center hvr-shrink"><a href="{{ route('dashboard') }}" class="btn button-transparent fs-5 text-light fw-normal">Dashboard</a></div>
-                <div class="col-md-3 d-flex justify-content-center align-content-center hvr-shrink"><a href="{{ route('transcript.student', ['studentID' => Auth::user()->username]) }}" class="btn button-transparent fs-5 text-light fw-normal">Transkrip</a></div>
-                <div class="col-md-3 d-flex justify-content-center align-content-center hvr-shrink"><a href="" class="btn button-transparent fs-5 text-light fw-normal">Pilihan Raya</a></div>
-                <div class="col-md-3 d-flex justify-content-center align-content-center hvr-shrink"><a href="{{ route('admin') }}" class="btn button-transparent fs-5 text-light fw-normal">Pentadbir</a></div>
+            <div class="container-fluid row d-none d-lg-flex d-sm-none justify-content-around">
+                <div class="col-md-3 d-flex justify-content-center align-content-center"><a href="{{ route('dashboard') }}" class="btn button-transparent fs-5 text-light fw-normal">Dashboard</a></div>
+                <div class="col-md-3 d-flex justify-content-center align-content-center"><a href="{{ route('transcript') }}" class="btn button-transparent fs-5 text-light fw-normal">Transkrip</a></div>
+                <div class="col-md-3 d-flex justify-content-center align-content-center"><a href="{{ route('classroom') }}" class="btn button-transparent fs-5 text-light fw-normal">Kelas</a></div>
+                @can('authAdmin')
+                    <div class="col-md-3 d-flex justify-content-center align-content-center"><a href="{{ route('admin') }}" class="btn button-transparent fs-5 text-light fw-normal">Pentadbir</a></div>
+                @endcan
             </div>
         </div>
         <div class="col-md-5 m-0 d-flex align-items-center justify-content-center">
@@ -82,15 +84,16 @@
         </div>
     </header>
     {{-- Mobile Navbar --}}
-    <div class="d-flex flex-column d-lg-none invisible position-fixed top-0 start-0 bg-primary h-100 w-100 m-0 justify-content-center align-items-center overflow-auto hamburger-menu-list" style="z-index: 80">
-        <div class="d-flex flex-column justify-content-around align-items-center w-100 h-100">
-            <div class="col-md-5 d-flex justify-content-center align-content-center hvr-shrink"><a href="{{ route('dashboard') }}" class="btn button-transparent fs-5 text-light fw-normal">Dashboard</a></div>
-            <div class="col-md-5 d-flex justify-content-center align-content-center hvr-shrink"><a href="{{ route('transcript.student', ['studentID' => Auth::user()->username]) }}" class="btn button-transparent fs-5 text-light fw-normal">Transkrip</a></div>
-            <div class="col-md-5 d-flex justify-content-center align-content-center hvr-shrink"><a href="" class="btn button-transparent fs-5 text-light fw-normal">Pilihan Raya</a></div>
-            <div class="col-md-5 d-flex justify-content-center align-content-center hvr-shrink"><a href="{{ route('admin') }}" class="btn button-transparent fs-5 text-light fw-normal">Pentadbir</a></div>
-        </div>
+    <div class="d-flex flex-column d-lg-none invisible position-fixed top-0 start-0 bg-primary vh-100 w-100 m-0 justify-content-around align-items-center overflow-auto hamburger-menu-list" style="z-index: 80">
+        <div class="col-md-3 d-flex justify-content-center align-content-center"><a href="{{ route('dashboard') }}" class="btn button-transparent fs-5 text-light fw-normal">Dashboard</a></div>
+        <div class="col-md-3 d-flex justify-content-center align-content-center"><a href="{{ route('transcript') }}" class="btn button-transparent fs-5 text-light fw-normal">Transkrip</a></div>
+        <div class="col-md-3 d-flex justify-content-center align-content-center"><a href="{{ route('classroom') }}" class="btn button-transparent fs-5 text-light fw-normal">Kelas</a></div>
+        @can('authAdmin')
+            <div class="col-md-3 d-flex justify-content-center align-content-center"><a href="{{ route('admin') }}" class="btn button-transparent fs-5 text-light fw-normal">Pentadbir</a></div>
+        @endcan
     </div>
-    <div class="mt-5 mt-sm-6 mt-md-4 mt-lg-5 mx-0 w-100 min-vh-100">
+    {{-- mt-5 mt-sm-6 mt-md-4 mt-lg-5 --}}
+    <div class="mt-1 mx-0 w-100 min-vh-100">
         @yield('content')
     </div>
     <footer class="footer mt-auto py-3 bg-dark">

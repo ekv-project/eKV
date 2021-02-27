@@ -1,6 +1,6 @@
 @extends('dashboard.layout.main')
 @section('content')
-<div class="container-fluid mt-6 w-100 h-100 d-flex flex-column align-items-center">
+    <div class="container-fluid mt-1 w-100 h-100 d-flex flex-column align-items-center">
         <div class="row rounded-3 shadow-lg mt-5 w-100">
             <div class="col-6 my-3 text-start">
                 <a href="{{ route('transcript.student', [$studentDetails['matrixNumber']]) }}" class="btn btn-primary"><i class="bi bi-arrow-return-left"></i>Senarai Transkrip</a>

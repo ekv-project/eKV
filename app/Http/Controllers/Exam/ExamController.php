@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers\Exam;
 
-use App\Http\Controllers\Controller;
-use App\Models\Classroom;
-use App\Models\ClassroomStudent;
-use App\Models\Course;
-use App\Models\CourseGrade;
-use App\Models\SystemSetting;
 use App\Models\User;
-use App\Models\InstituteSetting;
+use App\Models\Course;
 use App\Models\Program;
-use App\Models\SemesterGrade;
+use App\Models\Classroom;
 use App\Models\StudyLevel;
+use App\Models\CourseGrade;
 use App\Models\UserProfile;
 use Illuminate\Http\Request;
+use App\Models\SemesterGrade;
+use App\Models\SystemSetting;
+use App\Models\ClassroomStudent;
+use App\Models\InstituteSetting;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
 class ExamController extends Controller
@@ -33,6 +34,19 @@ class ExamController extends Controller
     /**
      * Handling Views
      */
+    public function transcript(Request $request){
+        // If authenticated user is a student.
+        if(Auth::user()->role == 'student'){
+            // Check if student is associated with a class
+            if(ClassroomStudent::where('users_username', Auth::user()->username)){
+                return redirect()->route('transcript.student', [Auth::user()->username]);
+            }else{
+                abort(404, 'Pelajar tidak berada dalam mana-mana kelas!');
+            }
+        }else{
+            return redirect()->route('dashboard');
+        }
+    }
     public function semesterView($studentID){
         if(User::where('username', $studentID)->where('role', 'student')->first()){
             // Only student itself, coordinators and admin can view

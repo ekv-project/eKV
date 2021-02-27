@@ -1,7 +1,7 @@
 @extends('dashboard.layout.main')
 @section('content')
     {{-- Only allows current authenticated user to update their own profile --}} 
-    <div class="container-fluid d-flex flex-column align-items-center justify-content-center mt-6 mb-4">
+    <div class="container-fluid mt-1 w-100 h-100 d-flex flex-column align-items-center">
         <div class="row rounded-3 shadow-lg mt-5 w-100">
             <div class="col-6 my-3 text-start">
                 <a href="{{ route('profile.user', [$username]) }}" class="btn btn-primary"><i class="bi bi-arrow-return-left"></i>Profil</a>
@@ -30,6 +30,8 @@
                     <button type="submit" class="btn btn-primary w-100 mb-5 hvr-shrink" name="picture">Kemas Kini</button>
                 </form>
             </div>
+        </div>
+        <div class="row rounded-3 shadow-lg mt-2 mb-2 w-100 d-flex flex-column justify-content-center align-items-center">
             {{-- Update Password --}}
             <div class="col-12 col-md-11 col-lg-9">
                 <form action="" method="post" class="mt-2 mb-2">
@@ -68,7 +70,9 @@
                     <button type="submit" class="btn btn-primary w-100 mb-5 hvr-shrink" name="password">Ubah</button>
                 </form> 
             </div> 
-            @can('authStudent')
+        </div>
+        @can('authStudent')
+            <div class="row rounded-3 shadow-lg mt-2 mb-5 w-100 d-flex flex-column justify-content-center align-items-center">
                 {{-- Update Profile --}}
                 <div class="col-12 col-md-11 col-lg-9">
                     <form action="" method="post" class="mt-2 mb-2">
@@ -148,7 +152,7 @@
                         <button type="submit" class="btn btn-primary w-100 mb-5 hvr-shrink" name="profile">Kemas Kini</button>
                     </form>
                 </div>       
-            @endcan
-        </div>
+            </div>
+        @endcan
     </div>
 @endsection
