@@ -115,7 +115,7 @@
                                     eKV
                                 </div>
                                 <div class="col-6">
-                                    <p>Oleh: Muhammad Hanis Irfan bin Mohd Zaid & Muhammad Firdaus bin Nazri.</p>
+                                    <p>Oleh: Muhammad Hanis Irfan bin Mohd Zaid.</p>
                                     <p>Lesen: Belum ditentukan.</p>
                                 </div>
                             </div>
@@ -205,7 +205,7 @@
             <div class="mx-2"><a href="#" class="text-light text-center">Laman Sesawang</a></div>
             <div class="mx-2"><a href="#" class="text-light text-center">Dokumentasi</a></div>
         </div>
-        <p class="text-center text-secondary p-3 text-light">Hak Cipta Terpelihara &copy; Muhammad Hanis Irfan bin Mohd Zaid & Muhammad Firdaus bin Nazri 2020</p>
+        <p class="text-center text-secondary p-3 text-light">Hak Cipta Terpelihara &copy; Muhammad Hanis Irfan bin Mohd Zaid 2020</p>
     </footer>
     <script type="module" src="{{ asset('js/app.js') }}"></script>
 </body>

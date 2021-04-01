@@ -165,6 +165,14 @@ class UserProfileController extends Controller
                 $mpdf->shrink_tables_to_fit=1;
                 $title = "Test";
                 $mpdf->SetTitle($title);
+                if(Storage::disk('local')->exists('public/img/system/logo-300.png')){
+                    $collegeImageUrl = 'public/img/system/logo-300.png';
+                }elseif(Storage::disk('local')->exists('public/img/system/logo-def-300.jpg')){
+                    $collegeImageUrl = 'public/img/system/logo-def-300.jpg';
+                }else{
+                    $collegeImageUrl = '';  
+                }
+                $mpdf->imageVars['collegeImage'] = file_get_contents(storage_path('app/' . $collegeImageUrl));
                 $mpdf->imageVars['profilePicture'] = file_get_contents(storage_path('app/public/img/profile/default/def-300.jpg'));
                 $userProfile = UserProfile::where('users_username', $username)->first();
                 $user = User::where('username', $username)->first();
@@ -178,15 +186,39 @@ class UserProfileController extends Controller
                     }
                     .header{
                         text-align: center;
+                        font-family: Arial;
                     }
                     .footer{
                         text-align: center;
                     }
+                    .col6{
+                        width:50%;
+                        float:left;
+                    }
+                    .col12{
+                        width:100%;
+                        float:left;
+                    }
                 ';
                 $mpdf->WriteHTML($stylesheet,\Mpdf\HTMLParserMode::HEADER_CSS);
+                $settings = $this->instituteSettings;
+                if(isset($settings)){
+                    if(empty($settings['institute_name'])){
+                        $instituteName = "Kolej Vokasional Malaysia";
+                    }else{
+                        $instituteName = ucwords($settings['institute_name']);
+                    }
+                }else{
+                    $instituteName = "Kolej Vokasional Malaysia";
+                }
                 $mpdf->SetHTMLHeader('
-                            <div class="header" align="center">
-                                <h1>KOLEJ VOKASIONAL MALAYSIA</h1>
+                            <div class="header col12" align="center">
+                                <div class="col6">
+                                    <img width="2.3cm" src="var:collegeImage">
+                                </div>
+                                <div class="col6">
+                                    <h1>' . $instituteName . '</h1>
+                                </div>
                             </div>
                         ');
                 $mpdf->SetHTMLFooter('
@@ -197,7 +229,7 @@ class UserProfileController extends Controller
                 ');
                 $mpdf->WriteHTML('<div><br></div>');
                 $profile = "
-                    <div align='center' style='text-align: center; border: 2px solid black; border-radius: 20%; position: absolute; top: 13%; left: 40%; width: 3.5cm; height: 3.5cm; z-index: 1;'>
+                    <div align='center' style='text-align: center; border-radius: 20%; position: absolute; top: 13%; left: 40%; width: 3.5cm; height: 3.5cm; z-index: 1;'>
                         <img width='2.3cm' src='var:profilePicture' style='margin: 17% 0;'>
                     </div>
                     <div class='profile' style='z-index: 2;'>

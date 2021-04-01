@@ -17,6 +17,7 @@ use App\Models\InstituteSetting;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 
 class ExamController extends Controller
 {
@@ -340,6 +341,14 @@ class ExamController extends Controller
                             $title = ucwords($studentName) . " - Transkrip Semester {$semester}  {$studyLevelName}";
                             $mpdf->SetTitle($title);
                             $studentClassroom = ClassroomStudent::where('users_username', $studentID)->first()->classroom;
+                            if(Storage::disk('local')->exists('public/img/system/logo-300.png')){
+                                $collegeImageUrl = 'public/img/system/logo-300.png';
+                            }elseif(Storage::disk('local')->exists('public/img/system/logo-def-300.jpg')){
+                                $collegeImageUrl = 'public/img/system/logo-def-300.jpg';
+                            }else{
+                                $collegeImageUrl = '';  
+                            }
+                            $mpdf->imageVars['collegeImage'] = file_get_contents(storage_path('app/' . $collegeImageUrl));
                             $studentProgram = Program::where('code', $studentClassroom->programs_code)->first()->name;
                             $studyLevelName = StudyLevel::where('code', $studyLevel)->first()->name;
                             $semesterGrade = SemesterGrade::where('users_username', $studentID)->where('study_levels_code', $studyLevel)->where('semester', $semester)->first();
@@ -367,19 +376,19 @@ class ExamController extends Controller
                                 }
                                 .studentDetails{
                                     position: absolute;
-                                    top: 8%;
+                                    top: 12%;
                                     left: 0%;
                                     width: 100%;
                                 }
                                 .courseGrades{
                                     position: absolute;
-                                    top: 18%;
+                                    top: 22%;
                                     left: 0%;
                                     width: 100%;
                                 }
                                 .semesterGrade{
                                     position: absolute;
-                                    top: 75%;
+                                    top: 85%;
                                     left: 0%;
                                     width: 100%;
                                 }
@@ -458,10 +467,21 @@ class ExamController extends Controller
                                     </table>
                                 </div>
                             ';
+                            $settings = $this->instituteSettings;
+                            if(isset($settings)){
+                                if(empty($settings['institute_name'])){
+                                    $instituteName = "Kolej Vokasional Malaysia";
+                                }else{
+                                    $instituteName = ucwords($settings['institute_name']);
+                                }
+                            }else{
+                                $instituteName = "Kolej Vokasional Malaysia";
+                            }
                             $mpdf->WriteHTML($stylesheet,\Mpdf\HTMLParserMode::HEADER_CSS);
                             $mpdf->SetHTMLHeader('
                                 <div class="header" align="center">
-                                    <h1>KOLEJ VOKASIONAL MALAYSIA</h1>
+                                    <img width="2.3cm" src="var:collegeImage">
+                                    <h1>' . $instituteName . '</h1>
                                 </div>
                             ');
                             $mpdf->SetHTMLFooter('
@@ -494,7 +514,7 @@ class ExamController extends Controller
                             ');
                             $mpdf->WriteHTML($courseGradesBottomHTML);
                             $mpdf->WriteHTML($semesterGradeHTML);
-                            $mpdf->Output(ucwords($studentName) . ' - Transkrip Semester ' . $semester . ' ' . $studyLevelName, 'D');
+                            $mpdf->Output(ucwords($studentName) . ' - Transkrip Semester ' . $semester . ' ' . $studyLevelName, 'I');
                         }else{
                             abort(404, 'Transkrip untuk pelajar ini tidak dijumpai!');
                         }

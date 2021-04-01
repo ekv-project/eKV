@@ -103,7 +103,7 @@
             @yield('content')
         </div>
         <div class="col-11 col-lg-10 rounded-3 shadow-lg mt-2 mb-3 bg-primary">
-            <p class="text-center text-secondary m-3 text-light">Hak Cipta Terpelihara &copy; Muhammad Hanis Irfan bin Mohd Zaid & Muhammad Firdaus bin Nazri 2020</p>
+            <p class="text-center text-secondary m-3 text-light">Hak Cipta Terpelihara &copy; Muhammad Hanis Irfan bin Mohd Zaid 2020</p>
         </div>
     </div>
     <script type="module" src="{{ asset('js/app.js') }}"></script>
