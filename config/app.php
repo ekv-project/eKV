@@ -175,7 +175,8 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         // Packages
-        Intervention\Image\ImageServiceProvider::class
+        Intervention\Image\ImageServiceProvider::class,
+        Elibyy\TCPDF\ServiceProvider::class,
     ],
 
     /*
@@ -229,7 +230,8 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
         // Packages
-        'Image' => Intervention\Image\Facades\Image::class
+        'Image' => Intervention\Image\Facades\Image::class,
+        'PDF' => Elibyy\TCPDF\Facades\TCPDF::class
     ],
 
 ];

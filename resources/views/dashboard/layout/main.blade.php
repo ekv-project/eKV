@@ -115,8 +115,8 @@
                                     eKV
                                 </div>
                                 <div class="col-6">
-                                    <p>Oleh: Muhammad Hanis Irfan bin Mohd Zaid.</p>
-                                    <p>Lesen: Belum ditentukan.</p>
+                                    <p>Oleh: Muhammad Hanis Irfan bin Mohd Zaid & Amirah Hadirah Aina binti Ramlan Jafery</p>
+                                    <p>Lesen: GPLv3</p>
                                 </div>
                             </div>
                         </div>
@@ -184,12 +184,12 @@
                             </div>
                             <div class="row border-bottom border-3">
                                 <div class="col-6">
-                                    mPDF
+                                    Laravel TCPDF
                                 </div>
                                 <div class="col-6">
-                                    <p>Oleh: Ian Back</p>
-                                    <p>Laman Sesawang: <a href="https://mpdf.github.io/">https://mpdf.github.io/</a></p>
-                                    <p>Lesen: <a href="https://mpdf.github.io/about-mpdf/license.html">GPL 2.0</a></p>
+                                    <p>Oleh: elibyy </p>
+                                    <p>Laman Sesawang: <a href="https://github.com/elibyy/tcpdf-laravel">https://github.com/elibyy/tcpdf-laravel</a></p>
+                                    <p>Lesen: <a href="https://github.com/elibyy/tcpdf-laravel/blob/master/LICENSE">MIT</a></p>
                                 </div>
                             </div>
                         </div>

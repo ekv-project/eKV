@@ -1,32 +1,32 @@
 # e-KV
-Sistem Pengurusan Maklumat Pelajar untuk Kolej Vokasional Malaysia
+Student Information Management System for Malaysian Vocational Colleges.
 
-## Pemasangan
-1.  Muat turun sumber kod sistem ini.
-2.  Lakukan konfigurasi yang diperlukan bagi web server.
-3.  Konfigurasi fail `.env` bagi database.
-4.  Jalankan arahan `composer install` pada program shell.
-5.  Jalankan arahan `npm install` dan `npm run prod` pada program shell.
-6.  Jalankan arahan `composer update` pada program shell.
-7.  Jalankan arahan `php artisan key:generate` pada program shell.
-7.  Jalankan arahan `php artisan install {password} {fullname=admin} {email=admin@site.local}` untuk melakukan pemasangan sistem ini. Untuk penerangan, jalankan arahan `php artisan help install`.
-8.  Pemasangan sistem selesai!
 
-## Keperluan
-1. Akses kepada terminal / SSH
+## Requirements
+1. Access to terminal / SSH
 2. Web server (Apache2, NGINX)
 2. MySQL / MongoDB
 3. Composer
-4. NodeJS (untuk NPM)
-5. PHP Extensions (perlu ubah di fail php.ini)
+4. NodeJS (for NPM)
+5. PHP Extensions (enabled in php.ini)
    1. ext-dom
    2. ext-zip
    3. ext-gd
    4. ext-mysql
-   4. Dan sebagainya.
-6. Akses pengguna web server kepada folder.
+   4. etc
+6. Appropriate access to web folder.
 
-## Lesen
+## Installation
+1. Download the source code of this system.
+2. Setup your web server.
+3. Configure `.env` file for database.
+4. Run `composer install`, `npm install`, `npm run prod`, `composer update` command on your shell.
+5. Run `php artisan key:generate` command to generate the application key.
+6. Run `php artisan install {password} {fullname=admin} {email=admin@site.local}` to install this system. For explanation,
+   run `php artisan help install`.
+7. System installation is completed!
 
-Tiada lesen setakat ini. Akan difikirkan apabila telah *release*.
-<!-- Sistem ini dilesenkan menggunakan [GNU GPLv3](https://www.gnu.org/licenses/gpl-3.0.txt). Sebarang sumbangan kepada sumber kod akan dilesenkan pada terma yang sama. Setiap sumbangan disenaraikan dalam fail [CREDITS](CREDITS). -->
+## License
+
+This system/project is licensed under [GNU GPLv3](COPYING). Each contributions to this system will
+be licensed under the same terms. Contributions are listed in [CREDITS](CREDITS) and eKV website in the future.
