@@ -372,9 +372,9 @@ class ExamController extends Controller
                                 $instituteName = "Kolej Vokasional Malaysia";
                             }
                             if(Storage::disk('local')->exists('public/img/system/logo-300.png')){
-                                $logo = asset('public/img/system/logo-300.png');
+                                $logo = '.' . Storage::disk('local')->url('public/img/system/logo-300.png');
                             }elseif(Storage::disk('local')->exists('public/img/system/logo-def-300.jpg')){
-                                $logo = asset('public/img/system/logo-def-300.jpg');
+                                $logo = '.' . Storage::disk('local')->url('public/img/system/logo-def-300.jpg');
                             }
                             // Header
                             PDF::Image($logo, 15, 10, 26, 26);
@@ -402,6 +402,7 @@ class ExamController extends Controller
                             PDF::MultiCell(95, 13, 'ANGKA GILIRAN: ' . strtoupper($studentDetails['matrixNumber']), 0, 'L', 0, 0, '', '', true);
                             PDF::MultiCell(95, 13, 'SEMESTER: ' . $semester, 0, 'L', 0, 0, '', '', true);
                             // Course Grade List
+                            // Maximum: 15 courses
                             PDF::SetXY(10, 87);
                             PDF::writeHTML("<hr>", true, false, false, false, '');
                             PDF::SetXY(10, 88);
