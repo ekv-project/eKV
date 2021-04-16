@@ -326,21 +326,12 @@ class ExamController extends Controller
                 if(User::where('username', $studentID)->first()->role == 'student'){
                     // Check if student is added into a classroom.
                     if(ClassroomStudent::where('users_username', $studentID)->first()){
+                        error_reporting(E_ERROR);
                         // Check if transcript exist based on semester grade table.
                         if(SemesterGrade::where('users_username', $studentID)->where('study_levels_code', $studyLevel)->where('semester', $semester)->first()){
                             $studyLevelName = StudyLevel::where('code', $studyLevel)->first()->name;
                             $studentName = User::where('username', $studentID)->first()->fullname;
-                            $mpdf = new \Mpdf\Mpdf([
-                                'mode' => 'utf-8',
-                                'format' => 'A4',
-                                'orientation' => 'P',
-                            ]);
-                            $mpdf->simpleTables = true;
-                            $mpdf->packTableData = true;
-                            $mpdf->keep_table_proportions = TRUE;
-                            $mpdf->shrink_tables_to_fit=1;
                             $title = ucwords($studentName) . " - Transkrip Semester {$semester}  {$studyLevelName}";
-                            $mpdf->SetTitle($title);
                             $studentClassroom = ClassroomStudent::where('users_username', $studentID)->first()->classroom;
                             if(Storage::disk('local')->exists('public/img/system/logo-300.png')){
                                 $collegeImageUrl = 'public/img/system/logo-300.png';
@@ -349,7 +340,6 @@ class ExamController extends Controller
                             }else{
                                 $collegeImageUrl = '';  
                             }
-                            $mpdf->imageVars['collegeImage'] = file_get_contents(storage_path('app/' . $collegeImageUrl));
                             $studentProgram = Program::where('code', $studentClassroom->programs_code)->first()->name;
                             $studyLevelName = StudyLevel::where('code', $studyLevel)->first()->name;
                             $semesterGrade = SemesterGrade::where('users_username', $studentID)->where('study_levels_code', $studyLevel)->where('semester', $semester)->first();
@@ -366,108 +356,11 @@ class ExamController extends Controller
                                 'matrixNumber' => $studentID
                             ];
                             $courseGrades = CourseGrade::join('courses', 'course_grades.courses_code', 'courses.code')->select('course_grades.credit_hour', 'course_grades.grade_pointer', 'courses.code', 'courses.name')->where('users_username', $studentID)->where('study_levels_code', $studyLevel)->where('semester', $semester)->get();
-                            $stylesheet = '
-                                .header{
-                                    text-align: center;
-                                    font-family: Arial;
-                                    width: 100%;
-                                }
-                                .footer{
-                                    text-align: center;
-                                }
-                                .studentDetails{
-                                    position: absolute;
-                                    top: 12%;
-                                    left: 0%;
-                                    width: 100%;
-                                }
-                                .courseGrades{
-                                    position: absolute;
-                                    top: 22%;
-                                    left: 0%;
-                                    width: 100%;
-                                }
-                                .semesterGrade{
-                                    position: absolute;
-                                    top: 85%;
-                                    left: 0%;
-                                    width: 100%;
-                                }
-                                table{
-                                    border-spacing: 1%;
-                                }
-                                table th, table td{
-                                    font-family: Arial;
-                                }
-                            ';
-                            $studentDetailsHTML = '
-                                <div class="studentDetails">
-                                    <table style="width: 80%;" align="center" autosize="1" >
-                                        <tbody>
-                                            <tr>
-                                                <th valign="top" style="font-size: 0.9em; text-align: left; width: 15%;">NAMA: </th>
-                                                <td valign="top" style="font-size: 0.9em; width: 35%;">' . strtoupper($studentDetails['name']) . '</td>
-                                                <th valign="top" style="font-size: 0.9em; text-align: left; width: 25%;">PERINGKAT PENGAJIAN: </th>
-                                                <td valign="top" style="font-size: 0.9em; width: 35%;">' . strtoupper($studyLevelName) . '</td>
-                                            </tr>
-                                            <tr>
-                                                <th valign="top" style="font-size: 0.9em; text-align: left; width: 15%;">NO. K/P:</th>
-                                                <td valign="top" style="font-size: 0.9em; width: 35%;">' . $studentDetails['identificationNumber'] . '</td>
-                                                <th valign="top" style="font-size: 0.9em; text-align: left; width: 25%;">PROGRAM: </th>
-                                                <td valign="top" style="font-size: 0.9em; width: 35%;">' . strtoupper($studentProgram) . '</td>
-                                            </tr>
-                                            <tr>
-                                                <th valign="top" style="font-size: 0.9em; text-align: left; width: 15%;">ANGKA GILIRAN: </th>
-                                                <td valign="top" style="font-size: 0.9em; width: 35%;">' . strtoupper($studentDetails['matrixNumber']) . '</td>
-                                                <th valign="top" style="font-size: 0.9em; text-align: left; width: 25%;">SEMESTER: </th>
-                                                <td valign="top" style="font-size: 0.9em; width: 35%;">' . $semester .'</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                
-                            ';
-                            $courseGradesTopHTML = '
-                                <div class="courseGrades">
-                                        <table style="width: 80%;" align="center" autosize="1">
-                                            <thead>
-                                                <tr>
-                                                    <th valign="top" style="font-size: 0.9em; width:20%; text-align: left;">KOD KURSUS</th>
-                                                    <th valign="top" style="font-size: 0.9em; width:40%; text-align: left;">NAMA KURSUS</th>
-                                                    <th valign="top" style="font-size: 0.9em; width:20%; text-align: left;">JAM KREDIT</th>
-                                                    <th valign="top" style="font-size: 0.9em; width:20%; text-align: left;">NILAI GRED</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                            ';
-                            $courseGradesBottomHTML = '
-                                            </tbody>
-                                    </table>
-                                </div>
-                            ';
-                            $semesterGradeHTML = '
-                                <div class="semesterGrade">
-                                    <table style="width: 80%; border-collapse: collapse;" align="center" autosize="1">
-                                        <tbody>
-                                            <tr>
-                                                <th style="font-size: 0.9em; text-align: center; border: 1px solid black">KOMPONEN</th>
-                                                <th style="font-size: 0.9em; text-align: center; 1px solid black">JUMLAH NILAI KREDIT</th>
-                                                <th style="font-size: 0.9em; text-align: center; 1px solid black">PURATA NILAI GRED</th>
-                                            </tr>
-                                            <tr>
-                                                <th style="font-size: 0.9em; text-align: left; 1px solid black">PNG SEMESTER SEMASA (PNGS)</th>
-                                                <td style="font-size: 0.9em; text-align: center; 1px solid black">' . $semesterGrade->total_credit_gpa . '</td>
-                                                <td style="font-size: 0.9em; text-align: center; 1px solid black">' . $semesterGrade->gpa . '</td>
-                                            </tr>
-                                            <tr>
-                                                <th style="font-size: 0.9em; text-align: left; 1px solid black">PNG KUMULATIF KESELURUHAN (PNGKK)</th>
-                                                <td style="font-size: 0.9em; text-align: center; 1px solid black">' . $semesterGrade->total_credit_cgpa . '</td>
-                                                <td style="font-size: 0.9em; text-align: center; 1px solid black">' . $semesterGrade->cgpa . '</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            ';
+                            PDF::SetCreator('eKV');
+                            PDF::SetAuthor('eKV');
+                            PDF::SetTitle($title);
+                            PDF::AddPage();
+                            PDF::SetFont('helvetica', 'B', 10);
                             $settings = $this->instituteSettings;
                             if(isset($settings)){
                                 if(empty($settings['institute_name'])){
@@ -478,44 +371,89 @@ class ExamController extends Controller
                             }else{
                                 $instituteName = "Kolej Vokasional Malaysia";
                             }
-                            $mpdf->WriteHTML($stylesheet,\Mpdf\HTMLParserMode::HEADER_CSS);
-                            $mpdf->SetHTMLHeader('
-                                <div class="header" align="center">
-                                    <img width="2.3cm" src="var:collegeImage">
-                                    <h1>' . $instituteName . '</h1>
-                                </div>
-                            ');
-                            $mpdf->SetHTMLFooter('
-                                <div class="footer">
-                                    <p style="font-style: italic;">Transkrip ini adalah janaan komputer.</p>
-                                    <p style="font-style: italic;">Tandatangan tidak diperlukan.</p>
-                                </div>
-                            ');
-                            $mpdf->WriteHTML($studentDetailsHTML);
-                            $mpdf->WriteHTML($courseGradesTopHTML);
-                            foreach ($courseGrades as $courseGrade) {
-                                $mpdf->WriteHTML('
-                                <tr>
-                                    <td valign="top" style="font-size: 1em;">' . strtoupper($courseGrade->code) . '</td>
-                                    <td valign="top" style="font-size: 1em;">' . strtoupper($courseGrade->name) . '</td>
-                                    <td valign="top" style="font-size: 1em;">' . $courseGrade->credit_hour . '</td>
-                                    <td valign="top" style="font-size: 1em;">' . $courseGrade->grade_pointer . '</td>
-                                </tr>');
+                            if(Storage::disk('local')->exists('public/img/system/logo-300.png')){
+                                $logo = asset('public/img/system/logo-300.png');
+                            }elseif(Storage::disk('local')->exists('public/img/system/logo-def-300.jpg')){
+                                $logo = asset('public/img/system/logo-def-300.jpg');
                             }
-                            $mpdf->SetHTMLHeader('
-                                <div class="header" align="center">
-                                    <h1>KOLEJ VOKASIONAL MALAYSIA</h1>
-                                </div>
-                            ');
-                            $mpdf->SetHTMLFooter('
-                                <div class="footer">
-                                    <p style="font-style: italic;">Transkrip ini dijana menggunakan komputer.</p>
-                                    <p style="font-style: italic;">Tandatangan tidak diperlukan.</p>
-                                </div>
-                            ');
-                            $mpdf->WriteHTML($courseGradesBottomHTML);
-                            $mpdf->WriteHTML($semesterGradeHTML);
-                            $mpdf->Output(ucwords($studentName) . ' - Transkrip Semester ' . $semester . ' ' . $studyLevelName, 'I');
+                            // Header
+                            PDF::Image($logo, 15, 10, 26, 26);
+                            PDF::SetFont('helvetica', 'B', 12);
+                            PDF::Multicell(0, 6, strtoupper($instituteName), 0, 'L', 0, 2, 42, 10);
+                            PDF::SetFont('helvetica', '', 9);
+                            PDF::Multicell(0, 10, 'ALAMAT INSTITUSI: ' . strtoupper($settings['institute_address']), 0, 'L', 0, 2, 42, 16);
+                            PDF::Multicell(0, 5, 'ALAMAT E-MEL: ' . strtoupper($settings['institute_email_address']), 0, 'L', 0, 2, 42, 26);
+                            PDF::Multicell(0, 5, 'NO. TELEFON PEJABAT: ' . strtoupper($settings['institute_phone_number']), 0, 'L', 0, 2, 42, 31);
+                            PDF::Ln(1);
+                            PDF::writeHTML("<hr>", true, false, false, false, '');
+                            PDF::SetFont('helvetica', 'b', 10);
+                            PDF::Multicell(0, 5, 'TRANSKRIP SEMESTER', 0, 'C', 0, 2, 10, 38);
+                            PDF::Ln(1);
+                            PDF::writeHTML("<hr>", true, false, false, false, '');
+                            // Student Details
+                            PDF::SetXY(10, 46);
+                            PDF::SetFont('helvetica', '', 9);
+                            PDF::MultiCell(95, 13, 'NAMA: ' . strtoupper($studentDetails['name']), 0, 'L', 0, 0, '', '', true);
+                            PDF::MultiCell(95, 13, 'PERINGKAT PENGAJIAN: ' . strtoupper($studyLevelName), 0, 'L', 0, 0, '', '', true);
+                            PDF::Ln();
+                            PDF::MultiCell(95, 13, 'NO. K/P: ' . $studentDetails['identificationNumber'], 0, 'L', 0, 0, '', '', true);
+                            PDF::MultiCell(95, 13, 'PROGRAM: ' . strtoupper($studentProgram), 0, 'L', 0, 0, '', '', true);
+                            PDF::Ln();
+                            PDF::MultiCell(95, 13, 'ANGKA GILIRAN: ' . strtoupper($studentDetails['matrixNumber']), 0, 'L', 0, 0, '', '', true);
+                            PDF::MultiCell(95, 13, 'SEMESTER: ' . $semester, 0, 'L', 0, 0, '', '', true);
+                            // Course Grade List
+                            PDF::SetXY(10, 87);
+                            PDF::writeHTML("<hr>", true, false, false, false, '');
+                            PDF::SetXY(10, 88);
+                            PDF::SetFont('helvetica', 'B', 9);
+                            PDF::MultiCell(30, 5, 'KOD KURSUS', 0, 'C', 0, 0, '', '', true);
+                            PDF::MultiCell(100, 5, 'NAMA KURSUS', 0, 'C', 0, 0, '', '', true);
+                            PDF::MultiCell(30, 5, 'JAM KREDIT', 0, 'C', 0, 0, '', '', true);
+                            PDF::MultiCell(30, 5, 'NILAI GRED', 0, 'C', 0, 0, '', '', true);
+                            PDF::SetFont('helvetica', '', 9);
+                            foreach ($courseGrades as $courseGrade) { 
+                                PDF::Ln();
+                                PDF::MultiCell(30, 10, strtoupper($courseGrade->code), 0, 'C', 0, 0, '', '', true);
+                                PDF::MultiCell(100, 10, strtoupper($courseGrade->name), 0, 'C', 0, 0, '', '', true);
+                                PDF::MultiCell(30, 10, $courseGrade->credit_hour, 0, 'C', 0, 0, '', '', true);
+                                PDF::MultiCell(30, 10, $courseGrade->grade_pointer, 0, 'C', 0, 0, '', '', true);
+                            }
+                            // Testing purposes
+                            // for ($i=0; $i < 15; $i++){ 
+                            //     PDF::Ln();
+                            //     PDF::MultiCell(30, 10, 'Test', 0, 'C', 0, 0, '', '', true);
+                            //     PDF::MultiCell(100, 10, 'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Non corporis, voluptas enim quos est mollitia?', 0, 'C', 0, 0, '', '', true);
+                            //     PDF::MultiCell(30, 10, 'Test', 0, 'C', 0, 0, '', '', true);
+                            //     PDF::MultiCell(30, 10, 'Test', 0, 'C', 0, 0, '', '', true);
+                            // }
+                            // Semester Grade
+                            PDF::SetXY(50, 245);
+                            PDF::writeHTML("<hr>", true, false, false, false, '');
+                            PDF::SetXY(10, 248);
+                            PDF::SetFont('helvetica', 'B', 9);
+                            PDF::MultiCell(90, 5, 'KOMPONEN', 1, 'C', 0, 0, '', '', true);
+                            PDF::MultiCell(50, 5, 'JUMLAH NILAI KREDIT', 1, 'C', 0, 0, '', '', true);
+                            PDF::MultiCell(50, 5, 'JUMLAH NILAI GRED', 1, 'C', 0, 0, '', '', true);
+                            PDF::Ln();
+                            PDF::MultiCell(90, 5, 'PNG SEMESTER SEMASA (PNGS)', 1, 'C', 0, 0, '', '', true);
+                            PDF::SetFont('helvetica', '', 9);
+                            PDF::MultiCell(50, 5, $semesterGrade->total_credit_gpa, 1, 'C', 0, 0, '', '', true);
+                            PDF::MultiCell(50, 5, $semesterGrade->gpa, 1, 'C', 0, 0, '', '', true);
+                            PDF::Ln();
+                            PDF::SetFont('helvetica', 'B', 9);
+                            PDF::MultiCell(90, 5, 'PNG KUMULATIF KESELURUHAN (PNGKK)', 1, 'C', 0, 0, '', '', true);
+                            PDF::SetFont('helvetica', '', 9);
+                            PDF::MultiCell(50, 5, $semesterGrade->total_credit_cgpa, 1, 'C', 0, 0, '', '', true);
+                            PDF::MultiCell(50, 5, $semesterGrade->cgpa, 1, 'C', 0, 0, '', '', true);
+                            PDF::Ln();
+                            PDF::SetXY(10, 265);
+                            PDF::SetFont('helvetica', '', 8);
+                            PDF::MultiCell(0, 5, 'Transkrip ini adalah janaan komputer.', 0, 'C', 0, 0, '', '', true);
+                            PDF::Ln(3);
+                            PDF::MultiCell(0, 5, 'Tandatangan tidak diperlukan.', 0, 'C', 0, 0, '', '', true);
+                            PDF::Ln(3);
+                            PDF::MultiCell(0, 5, 'Dijana menggunakan sistem eKV.', 0, 'C', 0, 0, '', '', true);
+                            PDF::Output(strtoupper($studentName) . '_TRANSKRIP SEMESTER ' . $semester . '_' . strtoupper($studyLevelName), 'D');
                         }else{
                             abort(404, 'Transkrip untuk pelajar ini tidak dijumpai!');
                         }

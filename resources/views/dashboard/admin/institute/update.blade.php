@@ -33,9 +33,9 @@
                     <div class="alert alert-danger">{{ $message }}</div>
                 @enderror
             </div>
-            <div class="mb-3">    
+            <div class="form-floating mb-3">
+                <input type="text" name="institute_address" id="institute_address" class="form-control" placeholder="institute_address" value="@php if(old('institute_address') !== null){echo old('institute_address');}elseif(isset($settings['institute_address'])){echo ucwords($settings['institute_address']);}else{echo NULL;} @endphp">
                 <label for="institute_address" class="form-label">Alamat Institut</label>
-                <textarea class="form-control" id="institute_address" name="institute_address" rows="2">@php if(old('institute_address') !== null){echo old('institute_address');}elseif(isset($settings['institute_address'])){echo ucwords($settings['institute_address']);}else{echo NULL;} @endphp</textarea>
                 @error('institute_address')
                     <div class="alert alert-danger">{{ $message }}</div>
                 @enderror
