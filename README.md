@@ -1,3 +1,7 @@
+-----------------------------------------
+# THIS PROJECT IS STILL UNDER DEVELOPMENT
+-----------------------------------------
+
 # e-KV
 Student Information Management System for Malaysian Vocational Colleges.
 
