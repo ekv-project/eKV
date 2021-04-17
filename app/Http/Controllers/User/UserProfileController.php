@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
+use PDF;
 
 class UserProfileController extends Controller
 {
@@ -154,53 +155,13 @@ class UserProfileController extends Controller
         if(Gate::allows('authUser', $username) || Gate::allows('authCoordinator', $username) || Gate::allows('authAdmin')){
                 //Check if student updated their profile
             if(UserProfile::where('users_username', $username)->first()){
-                $mpdf = new \Mpdf\Mpdf([
-                    'mode' => 'utf-8',
-                    'format' => 'A4',
-                    'orientation' => 'P',
-                ]);
-                $mpdf->simpleTables = true;
-                $mpdf->packTableData = true;
-                $mpdf->keep_table_proportions = TRUE;
-                $mpdf->shrink_tables_to_fit=1;
-                $title = "Test";
-                $mpdf->SetTitle($title);
-                if(Storage::disk('local')->exists('public/img/system/logo-300.png')){
-                    $collegeImageUrl = 'public/img/system/logo-300.png';
-                }elseif(Storage::disk('local')->exists('public/img/system/logo-def-300.jpg')){
-                    $collegeImageUrl = 'public/img/system/logo-def-300.jpg';
-                }else{
-                    $collegeImageUrl = '';  
-                }
-                $mpdf->imageVars['collegeImage'] = file_get_contents(storage_path('app/' . $collegeImageUrl));
-                $mpdf->imageVars['profilePicture'] = file_get_contents(storage_path('app/public/img/profile/default/def-300.jpg'));
-                $userProfile = UserProfile::where('users_username', $username)->first();
-                $user = User::where('username', $username)->first();
-                $stylesheet = '
-                    p{
-                        font-family: Arial;
-                    }
-                    .profile{
-                        width: 100%;
-                        margin: 5cm 0 0 0;
-                    }
-                    .header{
-                        text-align: center;
-                        font-family: Arial;
-                    }
-                    .footer{
-                        text-align: center;
-                    }
-                    .col6{
-                        width:50%;
-                        float:left;
-                    }
-                    .col12{
-                        width:100%;
-                        float:left;
-                    }
-                ';
-                $mpdf->WriteHTML($stylesheet,\Mpdf\HTMLParserMode::HEADER_CSS);
+                $profile = UserProfile::join('users', 'users.username', 'user_profiles.users_username')->where('users_username', $username)->select('users.fullname', 'users.email', 'user_profiles.identification_number', 'user_profiles.phone_number', 'user_profiles.date_of_birth', 'user_profiles.place_of_birth', 'user_profiles.home_address', 'user_profiles.home_number', 'user_profiles.guardian_name', 'user_profiles.guardian_phone_number')->first();
+                $title = "Slip Profil Pengguna - " . ucwords($profile['fullname']);
+                PDF::SetCreator('eKV');
+                PDF::SetAuthor('eKV');
+                PDF::SetTitle($title);
+                PDF::AddPage();
+                PDF::SetFont('helvetica', 'B', 10);
                 $settings = $this->instituteSettings;
                 if(isset($settings)){
                     if(empty($settings['institute_name'])){
@@ -211,88 +172,78 @@ class UserProfileController extends Controller
                 }else{
                     $instituteName = "Kolej Vokasional Malaysia";
                 }
-                $mpdf->SetHTMLHeader('
-                            <div class="header col12" align="center">
-                                <div class="col6">
-                                    <img width="2.3cm" src="var:collegeImage">
-                                </div>
-                                <div class="col6">
-                                    <h1>' . $instituteName . '</h1>
-                                </div>
-                            </div>
-                        ');
-                $mpdf->SetHTMLFooter('
-                    <div class="footer" align="center">
-                        <p style="font-style: italic;">Slip profil ini adalah janaan komputer.</p>
-                        <p style="font-style: italic;">Tandatangan tidak diperlukan.</p>
-                    </div>
-                ');
-                $mpdf->WriteHTML('<div><br></div>');
-                $profile = "
-                    <div align='center' style='text-align: center; border-radius: 20%; position: absolute; top: 13%; left: 40%; width: 3.5cm; height: 3.5cm; z-index: 1;'>
-                        <img width='2.3cm' src='var:profilePicture' style='margin: 17% 0;'>
-                    </div>
-                    <div class='profile' style='z-index: 2;'>
-                        <div class='row' style='width: 100%; height: 2.5%; margin: 1% 0;'>
-                            <div style='float: left; width: 20%;'>
-                                <p style='font-weight: bold;'>NAMA PENUH: </p>
-                            </div>
-                            <div style='float: right; width: 80%'>
-                                <p style='font-weight: normal; float: right;'>" . strtoupper($user->fullname) . "</p>
-                            </div>
-                        </div>
-                        <div class='row' style='width: 100%; height: 2.5%; margin: 1% 0;'>
-                            <div style='float: left; width: 50%'>
-                                <p style='font-weight: bold;'>NO. KAD PENGENALAN: <span style='font-weight: normal;'>" . strtoupper($userProfile['identification_number']) . "</span></p>
-                            </div>
-                            <div style='float: right; width: 50%'>
-                                <p style='font-weight: bold; float: right;'>NO. TELEFON PERIBADI: <span style='font-weight: normal;'>" . strtoupper($userProfile['phone_number']) . "</span></p>
-                            </div>
-                        </div>
-                        <div class='row' style='width: 100%; height: 2.5%; margin: 1% 0;'>
-                            <div style='float: left; width: 50%'>
-                                <p style='font-weight: bold;'>E-MEL: <span style='font-weight: normal;'>" . strtoupper($user->email) . "</span></p>
-                            </div>
-                            <div style='float: right; width: 50%'>
-                                <p style='font-weight: bold; float: right;'>TARIKH LAHIR: <span style='font-weight: normal;'>" . strtoupper($userProfile['date_of_birth']) . "</span></p>
-                            </div>
-                        </div>
-                        <div class='row' style='width: 100%; height: 2.5%; margin: 1% 0;'>
-                            <div style='float: left; width: 20%;'>
-                                <p style='font-weight: bold;'>TEMPAT LAHIR: </p>
-                            </div>
-                            <div style='float: right; width: 80%'>
-                                <p style='font-weight: normal; float: right;'>" . strtoupper($userProfile['place_of_birth']) . "</p>
-                            </div>
-                        </div>
-                        <div class='row' style='width: 100%; height: 2.5%; margin: 1% 0;'>
-                            <div style='float: left; width: 20%;'>
-                                <p style='font-weight: bold;'>ALAMAT RUMAH: </p>
-                            </div>
-                            <div style='float: right; width: 80%'>
-                                <p style='font-weight: normal; float: right;'>" . strtoupper($userProfile['home_address']) . "</p>
-                            </div>
-                        </div>
-                        <div class='row' style='width: 100%; height: 2.5%; margin: 1% 0;'>
-                            <div style='float: left; width: 20%;'>
-                                <p style='font-weight: bold;'>NO. TELEFON RUMAH: </p>
-                            </div>
-                            <div style='float: right; width: 80%'>
-                                <p style='font-weight: normal; float: right;'>" . strtoupper($userProfile['home_number']) . "</p>
-                            </div>
-                        </div>
-                        <div class='row' style='width: 100%; height: 2.5%; margin: 1% 0;'>
-                            <div style='float: left; width: 50%'>
-                                <p style='font-weight: bold;'>NAMA PENJAGA: <span style='font-weight: normal;'>" . strtoupper($userProfile['guardian_name']) . "</span></p>
-                            </div>
-                            <div style='float: right; width: 50%'>
-                                <p style='font-weight: bold; float: right;'>NO. TELEFON PENJAGA: <span style='font-weight: normal;'>" . strtoupper($userProfile['guardian_phone_number']) . "</span></p>
-                            </div>
-                        </div>
-                    </div>
-                ";
-                $mpdf->WriteHTML($profile);
-                $mpdf->Output('test.pdf', 'I');
+                if(Storage::disk('local')->exists('public/img/system/logo-300.png')){
+                    $logo = '.' . Storage::disk('local')->url('public/img/system/logo-300.png');
+                }elseif(Storage::disk('local')->exists('public/img/system/logo-def-300.jpg')){
+                    $logo = '.' . Storage::disk('local')->url('public/img/system/logo-def-300.jpg');
+                }
+                // Header
+                PDF::Image($logo, 15, 10, 26, 26);
+                PDF::SetFont('helvetica', 'B', 12);
+                PDF::Multicell(0, 6, strtoupper($instituteName), 0, 'L', 0, 2, 42, 10);
+                PDF::SetFont('helvetica', '', 9);
+                PDF::Multicell(0, 10, 'ALAMAT INSTITUSI: ' . strtoupper($settings['institute_address']), 0, 'L', 0, 2, 42, 16);
+                PDF::Multicell(0, 5, 'ALAMAT E-MEL: ' . strtoupper($settings['institute_email_address']), 0, 'L', 0, 2, 42, 26);
+                PDF::Multicell(0, 5, 'NO. TELEFON PEJABAT: ' . strtoupper($settings['institute_phone_number']), 0, 'L', 0, 2, 42, 31);
+                PDF::Ln(1);
+                PDF::Line(10, 40, 200, 40, []);
+                PDF::SetFont('helvetica', 'b', 10);
+                PDF::Multicell(0, 5, 'SLIP PROFIL PENGGUNA', 0, 'C', 0, 2, 10, 42);
+                PDF::Line(10, 48, 200, 48, []);
+                PDF::Ln(1);
+                // Profile Image
+                if(Storage::disk('local')->exists('public/img/profile/' . $username . '.jpg')){
+                    $profileImage = '.' . Storage::disk('local')->url('public/img/profile/' . $username . '.jpg');
+                    PDF::Image($profileImage, 88, 52, 33, 33);
+                }elseif(Storage::disk('local')->exists('public/img/profile/default/def-300.jpg')){
+                    $profileImage = '.' . Storage::disk('local')->url('public/img/profile/default/def-300.jpg');
+                    PDF::Image($profileImage, 88, 52, 33, 33);
+                }
+                //
+                PDF::SetFont('helvetica', 'B', 10);
+                PDF::Multicell(50, 5, 'NAMA ', 0, 'L', 0, 2, 10, 90);
+                PDF::Multicell(50, 5, 'NO. KAD PENGENALAN ', 0, 'L', 0, 2, 10, 105);
+                PDF::Multicell(50, 5, 'ALAMAT E-MEL: ', 0, 'L', 0, 2, 10, 120);
+                PDF::Multicell(50, 5, 'NO. TELEFON PERIBADI ', 0, 'L', 0, 2, 10, 135);
+                PDF::Multicell(50, 5, 'TARIKH LAHIR ', 0, 'L', 0, 2, 10, 150);
+                PDF::Multicell(50, 5, 'TEMPAT LAHIR ', 0, 'L', 0, 2, 10, 165);
+                PDF::Multicell(50, 5, 'ALAMAT RUMAH ', 0, 'L', 0, 2, 10, 180);
+                PDF::Multicell(50, 5, 'NO. TELEFON RUMAH ', 0, 'L', 0, 2, 10, 195);
+                PDF::Multicell(50, 5, 'NAMA PENJAGA ', 0, 'L', 0, 2, 10, 210);
+                PDF::Multicell(50, 5, 'NO. TELEFON PENJAGA ', 0, 'L', 0, 2, 10, 225);
+                //:
+                PDF::SetFont('helvetica', 'B', 10);
+                PDF::Multicell(0, 5, ':', 0, 'L', 0, 2, 60, 90);
+                PDF::Multicell(0, 5, ':', 0, 'L', 0, 2, 60, 105);
+                PDF::Multicell(0, 5, ':', 0, 'L', 0, 2, 60, 120);
+                PDF::Multicell(0, 5, ':', 0, 'L', 0, 2, 60, 135);
+                PDF::Multicell(0, 5, ':', 0, 'L', 0, 2, 60, 150);
+                PDF::Multicell(0, 5, ':', 0, 'L', 0, 2, 60, 165);
+                PDF::Multicell(0, 5, ':', 0, 'L', 0, 2, 60, 180);
+                PDF::Multicell(0, 5, ':', 0, 'L', 0, 2, 60, 195);
+                PDF::Multicell(0, 5, ':', 0, 'L', 0, 2, 60, 210);
+                PDF::Multicell(0, 5, ':', 0, 'L', 0, 2, 60, 225);
+                //
+                PDF::SetFont('helvetica', '', 10);
+                PDF::Multicell(0, 5, strtoupper($profile['fullname']), 0, 'L', 0, 2, 64, 90);
+                PDF::Multicell(0, 5, strtoupper($profile['identification_number']), 0, 'L', 0, 2, 64, 105);
+                PDF::Multicell(0, 5, strtoupper($profile['email']), 0, 'L', 0, 2, 64, 120);
+                PDF::Multicell(0, 5, strtoupper($profile['phone_number']), 0, 'L', 0, 2, 64, 135);
+                PDF::Multicell(0, 5, strtoupper($profile['date_of_birth']), 0, 'L', 0, 2, 64, 150);
+                PDF::Multicell(0, 5, strtoupper($profile['place_of_birth']), 0, 'L', 0, 2, 64, 165);
+                PDF::Multicell(0, 5, strtoupper($profile['home_address']), 0, 'L', 0, 2, 64, 180);
+                PDF::Multicell(0, 5, strtoupper($profile['home_number']), 0, 'L', 0, 2, 64, 195);
+                PDF::Multicell(0, 5, strtoupper($profile['guardian_name']), 0, 'L', 0, 2, 64, 210);
+                PDF::Multicell(0, 5, strtoupper($profile['guardian_phone_number']), 0, 'L', 0, 2, 64, 225);
+                // Footer
+                PDF::SetXY(10, 265);
+                PDF::SetFont('helvetica', '', 9);
+                PDF::MultiCell(0, 5, 'Slip ini adalah janaan komputer.', 0, 'C', 0, 0, '', '', true);
+                PDF::Ln(3);
+                PDF::MultiCell(0, 5, 'Tandatangan tidak diperlukan.', 0, 'C', 0, 0, '', '', true);
+                PDF::Ln(3);
+                PDF::MultiCell(0, 5, 'Dijana menggunakan sistem eKV.', 0, 'C', 0, 0, '', '', true);
+                PDF::Output($title, 'D');
             }else{
                 abort(404, 'Profil pelajar tidak dijumpai!');
             }
