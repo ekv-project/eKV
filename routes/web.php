@@ -7,6 +7,7 @@ use App\Http\Controllers\Exam\ExamController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\CourseController;
+use App\Http\Controllers\InstallationController;
 use App\Http\Controllers\Admin\ProgramController;
 use App\Http\Controllers\Admin\StudyLevelController;
 use App\Http\Controllers\InstituteSettingController;
@@ -35,6 +36,17 @@ Route::get('/api/search/{data}/{dataType}', [LiveSearchController::class, 'searc
 |
 */
 
+/**
+ * Installation
+ */
+Route::get('/install', [InstallationController::class, 'installView'])->name('install.view');
+Route::get('/install/config', [InstallationController::class, 'installConfigView'])->name('install.config');
+Route::post('/install/config', [InstallationController::class, 'install']);
+Route::get('/install/success', [InstallationController::class, 'installSuccessView'])->name('install.success');
+
+/**
+ * Home
+ */
 Route::get('/', function () {
     if(Auth::check()){
         return redirect()->route('dashboard');

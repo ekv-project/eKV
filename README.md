@@ -22,12 +22,12 @@ Student Information Management System for Malaysian Vocational Colleges.
 
 ## Installation
 1. Download the source code of this system.
-2. Setup your web server.
-3. Configure `.env` file for database.
-4. Run `composer install`, `npm install`, `npm run prod`, `composer update` command on your shell.
-5. Run `php artisan key:generate` command to generate the application key.
-6. Run `php artisan install {password} {fullname=admin} {email=admin@site.local}` to install this system. For explanation,
-   run `php artisan help install`.
+2. Setup your web server (Apache/Nginx) to suit Laravel app.
+3. Copy `.env.example` file and rename to `.env`. Configure the `.env` file for database connection.
+4. Run `composer install`, `npm install`, `npm run prod`, `composer update` command on your shell to install necessary dependencies and compile the assests.
+5. Upload the files to your web server.
+6. Go to your `/install` to proceed the installation.
+The script will add a new `admin` user, migrate the database and generate the application key.
 7. System installation is completed!
 
 ## License

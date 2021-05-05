@@ -53,6 +53,12 @@
                 <button type="submit" class="btn btn-primary w-100 mt-2 hvr-shrink"><i class="bi bi-box-arrow-in-right" style="margin-right: 1em"></i>Log Masuk</button>
             </form>
         </div>
+        <div class="container-fluid row flex-column justify-content-center align-items-center">
+            <div class="mt-4 d-flex flex-column justify-content-center align-items-center col-12 bg-primary rounded">
+                <p class="text-center fw-bold"><a href="https://github.com/hadiirfan/eKV" class="text-light hvr-shrink">Sistem eKV</a></p>
+                <p class="text-center text-light">Hak Cipta Terpelihara &copy; Muhammad Hanis Irfan bin Mohd Zaid & Amirah Hadirah Aina binti Ramlan Jafery 2021</p>
+            </div>
+        </div>
     </div>
     <script src="{{ asset('js/app.js') }}"></script>
 </body>
