@@ -134,7 +134,7 @@ class UserProfileController extends Controller
                 if($pictureExtension == 'png'|| $pictureExtension == 'jpeg' || $pictureExtension == 'jpg' || $pictureExtension == 'gif'){
                     // Only PNG, JPEG and GIF images is supported
                     // Save image to JPEG (300x300 pixels)
-                    Image::make($picture)->resize(300, 300)->save('public/img/profile/'. $username . '.jpg', 60);
+                    Image::make($picture)->resize(300, 300)->save('public/img/profile/'. $username . '.png', 60);
                     session()->flash('pictureSuccess', 'Gambar profil berjaya dikemas kini!');
                     return redirect()->back();
                 }else{
@@ -174,8 +174,8 @@ class UserProfileController extends Controller
                 }
                 if(Storage::disk('local')->exists('public/img/system/logo-300.png')){
                     $logo = '.' . Storage::disk('local')->url('public/img/system/logo-300.png');
-                }elseif(Storage::disk('local')->exists('public/img/system/logo-def-300.jpg')){
-                    $logo = '.' . Storage::disk('local')->url('public/img/system/logo-def-300.jpg');
+                }elseif(Storage::disk('local')->exists('public/img/system/logo-def-300.png')){
+                    $logo = '.' . Storage::disk('local')->url('public/img/system/logo-def-300.png');
                 }
                 // Header
                 PDF::Image($logo, 15, 10, 26, 26);
@@ -192,11 +192,11 @@ class UserProfileController extends Controller
                 PDF::Line(10, 48, 200, 48, []);
                 PDF::Ln(1);
                 // Profile Image
-                if(Storage::disk('local')->exists('public/img/profile/' . $username . '.jpg')){
-                    $profileImage = '.' . Storage::disk('local')->url('public/img/profile/' . $username . '.jpg');
+                if(Storage::disk('local')->exists('public/img/profile/' . $username . '.png')){
+                    $profileImage = '.' . Storage::disk('local')->url('public/img/profile/' . $username . '.png');
                     PDF::Image($profileImage, 88, 52, 33, 33);
-                }elseif(Storage::disk('local')->exists('public/img/profile/default/def-300.jpg')){
-                    $profileImage = '.' . Storage::disk('local')->url('public/img/profile/default/def-300.jpg');
+                }elseif(Storage::disk('local')->exists('public/img/profile/default/def-300.png')){
+                    $profileImage = '.' . Storage::disk('local')->url('public/img/profile/default/def-300.png');
                     PDF::Image($profileImage, 88, 52, 33, 33);
                 }
                 //

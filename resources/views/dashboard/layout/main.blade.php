@@ -7,10 +7,10 @@
     <meta name="api-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <link rel="stylesheet" href="{{ asset('bootstraps-icons/font/bootstrap-icons.css') }}">
-    @if(Storage::disk('local')->exists('public/img/system/logo-16.png'))
-        <link rel="shortcut icon" href="{{ asset('public/img/system/logo-16.png') }}" type="image/png">
-    @elseif(Storage::disk('local')->exists('public/img/system/logo-def-16.jpg'))
-        <link rel="shortcut icon" href="{{ asset('public/img/system/logo-def-16.jpg') }}" type="image/jpeg">
+    @if(Storage::disk('local')->exists('public/img/system/logo-300.png'))
+        <link rel="shortcut icon" href="{{ asset('public/img/system/logo-300.png') }}" type="image/png">
+    @elseif(Storage::disk('local')->exists('public/img/system/logo-def-300.png'))
+        <link rel="shortcut icon" href="{{ asset('public/img/system/logo-def-300.png') }}" type="image/png">
     @endif
     <title>{{ $page }} - {{ env('APP_NAME') }} | 
         @isset($settings)
@@ -49,9 +49,9 @@
                     <a href="{{ route('dashboard') }}" class="ms-3">
                         <img style="width: 2.5em; height: 2.5em; margin: 1em;" src="{{ asset('public/img/system/logo-300.png') }}" alt="Insitite Logo">
                     </a>
-                @elseif(Storage::disk('local')->exists('public/img/system/logo-def-300.jpg'))
+                @elseif(Storage::disk('local')->exists('public/img/system/logo-def-300.png'))
                     <a href="{{ route('dashboard') }}" class="ms-3">
-                        <img style="width: 2.5em; height: 2.5em; margin: 0.5em;" src="{{ asset('public/img/system/logo-def-300.jpg') }}" alt="Insitite Logo">
+                        <img style="width: 2.5em; height: 2.5em; margin: 0.5em;" src="{{ asset('public/img/system/logo-def-300.png') }}" alt="Insitite Logo">
                     </a>
                 @endif
                 @isset($settings)

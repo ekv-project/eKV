@@ -8,6 +8,7 @@
             <div class="col-6 my-3 text-end">
                 {{-- Only the profile owner, coordinator and admin can view --}}
                 @if(Gate::allows('authAdmin') || Gate::allows('authCoordinator', $username) || Gate::allows('authUser', $username))
+                    <a href="{{ route('transcript.student', ['studentID' => $username]) }}" class="btn btn-primary"><i class="bi bi-eye"></i>Transkrip Peperiksaan</a>
                     <a href="{{ route('profile.download', ['username' => $username]) }}" class="btn btn-primary"><i class="bi bi-download"></i>Muat Turun</a>
                     <a href="{{ route('profile.update', ['username' => $username]) }}" class="btn btn-primary"><i class="bi bi-pencil-square"></i>Kemas Kini</a>
                 @endif

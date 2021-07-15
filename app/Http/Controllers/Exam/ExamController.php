@@ -292,6 +292,34 @@ class ExamController extends Controller
             abort(403, 'Anda tiada akses pada laman ini!');
         }
     }
+    public function transcriptBulkAddUpdate(Request $request){
+        /**
+         * For adding student's exam transcript in bulk using Excel spreadsheet
+         * Each student's transcript is seperated by sheets
+         * Maximum of 20 courses result can be added 
+         * Status Codes (Shown for each sheet. If one sheet fails, the others will not be considered as failed too):
+         * SET-1 :- Successful add/update
+         * SET-2 :- Missing cell data (Student's ID etc. For courses list, if one row is empty (no course code and pointer, the entire sheet considered failed.)
+         * If course code found no pointer, it also considered failed vice versa)
+         * SET-3 :- Forbidden (If somehow a coordinator isn't adding transcript for his/her own student)
+         * SET-4 :- Not Found (If student id, semester, student level, credit hour and grade pointe rnot found)
+         * SET-5 :- The file isn't XLSX
+         */
+
+        // Check if spreadsheet file have .XLSX extension
+        if($request->spreadsheet->filetype() == 'xlsx'){
+            // Check if cells empty
+            // if(){
+            //     // D7 (student ID), E7 (semester), F7 (study level)
+            // }elseif(){
+            //     // D9 (credit hour current), E9 (credit hour cumulatif)
+            // }elseif(){
+            //     // 
+            // }
+        }else{
+            $error = 'SET-5';
+        }
+    }
     public function transcriptRemove(Request $request){
         // Only coordinator and admin could remove.
         if(Gate::allows('authCoordinator', $request->studentID) || Gate::allows('authAdmin')){
@@ -335,8 +363,8 @@ class ExamController extends Controller
                             $studentClassroom = ClassroomStudent::where('users_username', $studentID)->first()->classroom;
                             if(Storage::disk('local')->exists('public/img/system/logo-300.png')){
                                 $collegeImageUrl = 'public/img/system/logo-300.png';
-                            }elseif(Storage::disk('local')->exists('public/img/system/logo-def-300.jpg')){
-                                $collegeImageUrl = 'public/img/system/logo-def-300.jpg';
+                            }elseif(Storage::disk('local')->exists('public/img/system/logo-def-300.png')){
+                                $collegeImageUrl = 'public/img/system/logo-def-300.png';
                             }else{
                                 $collegeImageUrl = '';  
                             }
@@ -373,8 +401,8 @@ class ExamController extends Controller
                             }
                             if(Storage::disk('local')->exists('public/img/system/logo-300.png')){
                                 $logo = '.' . Storage::disk('local')->url('public/img/system/logo-300.png');
-                            }elseif(Storage::disk('local')->exists('public/img/system/logo-def-300.jpg')){
-                                $logo = '.' . Storage::disk('local')->url('public/img/system/logo-def-300.jpg');
+                            }elseif(Storage::disk('local')->exists('public/img/system/logo-def-300.png')){
+                                $logo = '.' . Storage::disk('local')->url('public/img/system/logo-def-300.png');
                             }
                             // Header
                             PDF::Image($logo, 15, 10, 26, 26);

@@ -23,7 +23,7 @@
                     <p class="fw-bold">NAMA KELAS: <span class="fw-normal">{{ strtoupper($classroomInfo->name) }}</span></p>
                     <p class="fw-bold">KOD PROGRAM: <span class="fw-normal">{{ strtoupper($classroomInfo->programs_code) }}</span></p>
                     <p class="fw-bold">ID KOORDINATOR: 
-                        <span class="fw-normal"><a href="{{ route('profile.user', [$classroomCoordinator->users_username]) }}" target="_blank" class="text-decoration-none text-dark hvr-underline-reveal">{{ strtoupper($classroomCoordinator->users_username) }}</a></span>
+                        <span class="fw-normal"><a href="{{ route('profile.user', [$classroomCoordinator->users_username]) }}" target="_blank" class="text-dark hvr-underline-reveal">{{ strtoupper($classroomCoordinator->users_username) }}</a></span>
                     </p>
                 </div>
                 <div class="col-6">

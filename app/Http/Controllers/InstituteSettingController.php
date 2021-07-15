@@ -63,7 +63,6 @@ class InstituteSettingController extends Controller
                 // Only PNG, JPEG and GIF images is supported
                 // Save image to PNG (300x300 pixels) and PNG (16x16 pixels) for favicon
                 Image::make($logo)->resize(300, 300)->save('public/img/system/logo-300.png');
-                Image::make($logo)->resize(16, 16)->save('public/img/system/logo-16.png');
                 session()->flash('logoSuccess', 'Logo insitut berjaya dikemas kini!');
                 return redirect()->back();
             }else{
