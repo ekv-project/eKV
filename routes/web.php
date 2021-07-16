@@ -91,6 +91,9 @@ Route::post('/dashboard/classroom/update/{classroomID}', [ClassroomController::c
 /**
 *   Exam Transcript  
 */
+    // Exam Transcript Excel Template
+Route::get('/dashboard/exam/transcript/template', [ExamController::class, 'downloadSpreadsheetTemplate'])->name('transcript.template')->middleware('auth');
+    // ETC
 Route::get('/dashboard/exam/transcript', [ExamController::class, 'transcript'])->name('transcript')->middleware('auth');
 Route::get('/dashboard/exam/transcript/{studentID}', [ExamController::class, 'semesterView'])->name('transcript.student')->middleware('auth');
 Route::get('/dashboard/exam/transcript/{studentID}/{studyLevel}/{semester}', [ExamController::class, 'transcriptView'])->name('transcript.view')->middleware('auth');

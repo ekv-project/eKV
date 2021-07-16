@@ -15,7 +15,7 @@
             </div>
         </div>
         <div class="row rounded-3 shadow-lg mt-2 mb-5 w-100 d-flex flex-column justify-content-center align-items-center">
-            <h1 class="text-center fs-2 my-2">PROFIL PENGGUNA</h1>
+            <h1 class="text-center fs-2 my-2">Profil Pengguna</h1>
             @if(Storage::disk('local')->exists('public/img/profile/'. $username . '.png'))
                 <img src="{{ asset('public/img/profile/'. $username . '.png') }}" alt="User Profile Picture" class="img-fluid rounded-circle mt-1 mb-1 border-2 border-primary" style="height: 8em; width: 9em;">
             @elseif(Storage::disk('local')->exists('public/img/profile/default/def-300.png'))

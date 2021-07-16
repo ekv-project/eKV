@@ -118,7 +118,7 @@
                                     <td>
                                         @foreach ($classroomCoordinator as $cc)
                                             @if($cc->classrooms_id == $c->id)
-                                                <a href="{{ route('profile.user', [$cc->users_username]) }}" target="_blank" class="text-decoration-none text-dark hvr-underline-reveal">{{ strtoupper($cc->users_username) }}</a> 
+                                                <a href="{{ route('profile.user', [$cc->users_username]) }}" target="_blank" class="text-dark hvr-underline-reveal">{{ strtoupper($cc->users_username) }}</a> 
                                             @endif
                                         @endforeach
                                     </td>

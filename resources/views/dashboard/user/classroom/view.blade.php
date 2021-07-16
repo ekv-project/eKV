@@ -15,7 +15,7 @@
         </div>
         <div class="row rounded-3 shadow-lg mt-2 mb-2 w-100">
             <div class="row">
-                <h1 class="fs-2 text-center my-3">MAKLUMAT KELAS</h1>
+                <h1 class="fs-2 text-center my-3">Maklumat Kelas</h1>
             </div>
             <div class="row">
                 <div class="col-6">
@@ -33,7 +33,7 @@
                 </div>
             </div>
             <div class="row  d-flex flex-column align-items-center justify-content-center">
-                <h1 class="fs-2 text-center my-3">SENARAI PELAJAR</h1>
+                <h1 class="fs-2 text-center my-3">Senarai Pelajar</h1>
             </div>
             <div class="row d-flex flex-column align-items-center justify-content-center">
                 <div class="row table-responsive d-flex flex-column align-items-center justify-content-center">

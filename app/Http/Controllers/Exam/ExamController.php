@@ -19,6 +19,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use PDF;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class ExamController extends Controller
 {
@@ -45,6 +47,9 @@ class ExamController extends Controller
             }else{
                 abort(404, 'Pelajar tidak berada dalam mana-mana kelas!');
             }
+        }elseif(Auth::user()->role == 'lecturer' || Auth::user()->role == 'admin' || Auth::user()->role == 'superadmin'){
+             // If authenticated user is a student.
+            return view('dashboard.exam.addBulk')->with(['settings' => $this->instituteSettings, 'page' => 'Tambah Transkrip']);
         }else{
             return redirect()->route('dashboard');
         }
@@ -166,7 +171,81 @@ class ExamController extends Controller
             abort(403, 'Anda tiada akses pada laman ini!');
         }
     }
+    public function downloadSpreadsheetTemplate(Request $request){
+        $fileName = "Templat_Transkrip_Semester_eKV";
+        $spreadsheet = new Spreadsheet();
+        $spreadsheet->getProperties()
+            ->setCreator("eKV")
+            ->setTitle("Templat_Transkrip_Semester_eKV");
+        $sheet = $spreadsheet->getActiveSheet();
+        // Header
+        $fontStyleHeader = [
+            'font' => [
+                'size' => 16,
+                'name' => 'Arial',
+                'bold' => true,
+                'color' => ['argb' => '00000000'],
+            ]
+        ];
+        $sheet->setCellValue('A5', 'eKV - Templat Penambahan Transkrip Semester Pelajar');
+        $spreadsheet->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+        $sheet->mergeCells('A5:E5');
+        $spreadsheet->getActiveSheet()->getStyle('A5')->applyFromArray($fontStyleHeader);
+        $spreadsheet->getActiveSheet()->getRowDimension('5')->setRowHeight(35);
 
+        // Data fields
+        $commonCellOne = ['A8', 'B8', 'F11', 'A13', 'B13', 'C13', 'D13', 'E13', 'F13', 'G13'];
+        $fontStyleData = [
+            'font' => [
+                'size' => 11,
+                'name' => 'Arial',
+                'bold' => true,
+                'color' => ['argb' => 'FFFFFFFF'],
+            ]
+        ];
+        for ($i=0; $i < count($commonCellOne); $i++) { 
+            $spreadsheet->getActiveSheet()->getStyle($commonCellOne[$i])->applyFromArray($fontStyleData);
+            $spreadsheet->getActiveSheet()->getStyle($commonCellOne[$i])->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+            $spreadsheet->getActiveSheet()->getStyle($commonCellOne[$i])->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID);
+            $spreadsheet->getActiveSheet()->getStyle($commonCellOne[$i])->getFill()->getStartColor()->setARGB('111111');
+        }
+
+        // Column width
+        $columnLetter = "A,B,C,D,E";
+        $columnLetters = explode(",", $columnLetter);
+        for ($i=0; $i < count($columnLetters); $i++) { 
+            $spreadsheet->getActiveSheet()->getColumnDimension($columnLetters[$i])->setWidth(30, 'pt'); 
+        }
+
+        $spreadsheet->getActiveSheet()->getColumnDimension('F')->setWidth(15, 'pt'); 
+        $spreadsheet->getActiveSheet()->getColumnDimension('G')->setWidth(15, 'pt'); 
+
+        $sheet->setCellValue('A8', 'Semester');
+        $sheet->setCellValue('B8', 'Tahap Pengajian');
+        
+        $sheet->mergeCells('F11:G11');
+        $sheet->mergeCells('F12:G12');
+        $sheet->setCellValue('F11', 'KOD KURSUS');
+        $sheet->setCellValue('A13', 'ID Pelajar');
+        $sheet->setCellValue('B13', 'Purata Nilai Gred Semasa');
+        $sheet->setCellValue('C13', 'Jumlah Nilai Kredit Semasa');
+        $sheet->setCellValue('D13', 'Purata Nilai Gred Kumulatif');
+        $sheet->setCellValue('E13', 'Jumlah Nilai Kredit Kumulatif');
+        $sheet->setCellValue('F13', 'Jam Kredit');
+        $sheet->setCellValue('G13', 'Nilai Gred');
+        $spreadsheet->getActiveSheet()->getStyle('A1:F30')->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
+
+        // Borders
+        $spreadsheet->getActiveSheet()->getStyle('A8:B9')->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getActiveSheet()->getStyle('F11:G12')->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getActiveSheet()->getStyle('A13:G43')->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+        $writer = new Xlsx($spreadsheet);
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment; filename="'. urlencode($fileName).'"');
+        $writer->save('php://output');
+        exit();
+    }
     /**
      * Handling POST Requests
      */
@@ -297,16 +376,18 @@ class ExamController extends Controller
          * For adding student's exam transcript in bulk using Excel spreadsheet
          * Each student's transcript is seperated by sheets
          * Maximum of 20 courses result can be added 
-         * Status Codes (Shown for each sheet. If one sheet fails, the others will not be considered as failed too):
+         * Status Codes (Shown for each sheet. If one sheet fails, the others will be considered as failed too):
+         * SET = Semester Exam Transcript
          * SET-1 :- Successful add/update
          * SET-2 :- Missing cell data (Student's ID etc. For courses list, if one row is empty (no course code and pointer, the entire sheet considered failed.)
          * If course code found no pointer, it also considered failed vice versa)
          * SET-3 :- Forbidden (If somehow a coordinator isn't adding transcript for his/her own student)
-         * SET-4 :- Not Found (If student id, semester, student level, credit hour and grade pointe rnot found)
+         * SET-4 :- Not Found (If student id, semester, student level, credit hour and grade pointer not found)
          * SET-5 :- The file isn't XLSX
          */
 
         // Check if spreadsheet file have .XLSX extension
+        $excelErr = [];
         if($request->spreadsheet->filetype() == 'xlsx'){
             // Check if cells empty
             // if(){
@@ -317,7 +398,7 @@ class ExamController extends Controller
             //     // 
             // }
         }else{
-            $error = 'SET-5';
+            array_push($excelErr, 'SET-5: Hanya file jenis XLSX sahaja yang disokong!');
         }
     }
     public function transcriptRemove(Request $request){
