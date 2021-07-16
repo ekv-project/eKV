@@ -67,13 +67,13 @@
         </div>
         <div class="col-md-4 m-0 invisible"></div>
         <div class="col-md-3 m-0 d-flex align-items-center justify-content-around">
-            @if(Storage::disk('local')->exists('public/img/profile/'. Auth::user()->username . '.jpg'))
+            @if(Storage::disk('local')->exists('public/img/profile/'. Auth::user()->username . '.png'))
                 <a href="{{ route('profile') }}" class="">
-                    <img style="width: 3em; height: 3em;" src="{{ asset('public/img/profile/'. Auth::user()->username . '.jpg') }}" alt="User Profile Picture" class="img-fluid rounded-circle hvr-shrink" style="height: 3em">
+                    <img style="width: 3em; height: 3em;" src="{{ asset('public/img/profile/'. Auth::user()->username . '.png') }}" alt="User Profile Picture" class="img-fluid rounded-circle hvr-shrink" style="height: 3em">
                 </a>
-            @elseif(Storage::disk('local')->exists('public/img/profile/default/def-300.jpg'))
+            @elseif(Storage::disk('local')->exists('public/img/profile/default/def-300.png'))
                 <a href="{{ route('profile') }}" class="">
-                    <img style="width: 3em; height: 3em;" src="{{ asset('public/img/profile/default/def-300.jpg') }}" alt="Default Profile Picture" class="img-fluid rounded-circle hvr-grow hvr-shrink" style="height: 3em">
+                    <img style="width: 3em; height: 3em; background-color: white;" src="{{ asset('public/img/profile/default/def-300.png') }}" alt="Default Profile Picture" class="img-fluid rounded-circle hvr-grow hvr-shrink" style="height: 3em">
                 </a>
             @endif
             <a href="{{ route('profile') }}" class="text-light fw-bold text-decoration-none hvr-grow">{{ strtoupper(Auth::user()->username) }}</a>
