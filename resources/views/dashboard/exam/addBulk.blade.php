@@ -41,11 +41,13 @@
                 <form action="" method="post" enctype="multipart/form-data" class="mt-4 mb-2">
                     @csrf
                     <p class="fw-bold">Info:</p>
-                    <p class="mt-3">Borang ini digunakan untuk menambah transkrip semester pelajar secara pukal.</p>
-                    <p class="mt-3">Muat turun templat yang diperlukan bagi menyenaraikan transkrip yang ingin ditambah.</p>
-                    <p class="mt-3">Pastikan anda mengisi templat tersebut mengikut format yang ditetapkan.</p>
-                    <p class="mt-3">Jika terdapat duplikasi data seperti ID Pelajar yang sama, hanya data yang pertama akan digunakan.</p>
-                    <p class="mt-3">Jika terdapat sel kosong selepas sesuatu data, sel selepas sel kosong itu akan diabaikan.</p>
+                    <ul>
+                        <li><p class="mt-3">Borang ini digunakan untuk menambah transkrip semester pelajar secara pukal.</p></li>
+                        <li><p class="mt-3">Muat turun templat yang diperlukan bagi menyenaraikan transkrip yang ingin ditambah.</p></li>
+                        <li><p class="mt-3">Pastikan anda mengisi templat tersebut mengikut format yang ditetapkan.</p></li>
+                        <li><p class="mt-3">Jika terdapat duplikasi data seperti ID Pelajar yang sama, hanya data yang pertama akan digunakan.</p></li>
+                        <li><p class="mt-3">Jika terdapat sel kosong selepas sel yang mempunyai data, semua sel selepas sel kosong itu akan diabaikan.</p></li>
+                    </ul>
                     <input type="file" name="spreadsheet" id="spreadsheet" class="form-control mb-3" required>
                     @error('institute-logo')
                         <div class="alert alert-danger">{{ $message }}</div>
@@ -58,5 +60,4 @@
             </div>
         </div>
     </div>
-    <script src="{{ asset('js/addRemoveField.js') }}"></script>
 @endsection

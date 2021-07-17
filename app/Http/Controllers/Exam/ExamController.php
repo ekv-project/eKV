@@ -48,7 +48,7 @@ class ExamController extends Controller
             }else{
                 abort(404, 'Pelajar tidak berada dalam mana-mana kelas!');
             }
-        }elseif(Auth::user()->role == 'lecturer' || Auth::user()->role == 'admin' || Auth::user()->role == 'superadmin'){
+        }elseif(Gate::allows('authAdmin') || Gate::allows('authLecturer')){
              // If authenticated user is a student.
             return view('dashboard.exam.addBulk')->with(['settings' => $this->instituteSettings, 'page' => 'Tambah Transkrip']);
         }else{
@@ -247,7 +247,17 @@ class ExamController extends Controller
         $sheet->setCellValue('D13', 'Purata Nilai Gred Kumulatif');
         $sheet->setCellValue('E13', 'Jumlah Nilai Kredit Kumulatif');
 
-        $spreadsheet->getActiveSheet()->getStyle('A1:Y43')->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
+        /**
+         * Alignments
+         */
+        // Horizontal Alignment One By One
+        $horizontalCells = ["A9", "B9", "F12", "H12", "J12", "L12", "N12", "P12", "R12", "T12", "V12", "X12"];
+        foreach ($horizontalCells as $value) {
+            $spreadsheet->getActiveSheet()->getStyle($value)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+        }
+        // Horizontal Alignment For Range
+        $spreadsheet->getActiveSheet()->getStyle('A14:Y43')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+        $spreadsheet->getActiveSheet()->getStyle('A1:Y43')->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER); // Vertical Alignment For *All Cells
 
         // Borders
         $spreadsheet->getActiveSheet()->getStyle('A8:B9')->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_MEDIUM);
@@ -397,6 +407,8 @@ class ExamController extends Controller
         // Check if spreadsheet file have .XLSX extension
         $excelErr = [];
         $excelStat = [];
+        $semesterGradesAddArray = [];
+        $courseGradesAddArray = [];
         if($request->spreadsheet->extension() == 'xlsx'){
             // Check for empty cells (Semester: A9, Tahap Pengajian: B9)
             $userXLSX = $request->file('spreadsheet');
@@ -421,6 +433,8 @@ class ExamController extends Controller
                         if($sheet->getCell("A9")->getValue() < 1 || $sheet->getCell("A9")->getValue() > $totalSemester['total_semester']){
                             array_push($excelErr, '[A9] Semester tidak tergolong pada jumlah semester Tahap Pengajian!');
                         }else{
+                            $generalSemester = $sheet->getCell("A9")->getValue();
+                            $generalStudyLevel = strtolower($sheet->getCell("B9")->getValue());
                             // Check is first Pelajar ID empty (needs atleast 1 student transcript)
                             if($sheet->getCell("A14")->getValue() === NULL){
                                 array_push($excelErr, '[A14] Sel ID Pelajar kosong!');
@@ -471,7 +485,7 @@ class ExamController extends Controller
                                         if(!Course::where('code', strtolower($value))->first()){
                                             array_push($excelErr, '[' . $key . '] Kursus tidak wujud!');
                                         }else{
-                                            $courseListValid[$key] = $value;
+                                            $courseListValid[preg_replace('/[^a-zA-Z]/', '', $key)] = $value;
                                         }
                                     }
                                     // Display error for unvalid ID Pelajar and Kod Kursus
@@ -518,16 +532,61 @@ class ExamController extends Controller
                                                 $cumulativeCreditHour = $sheet->getCell("E" . $key)->getValue();
                                                 //studentID, bValue [gpa], currentCreditHour, dValue [cgpa], cumulativeCreditHour
                                                 // Add student semester grade
-                                                SemesterGrade::updateOrCreate(
-                                                    ['users_username' => $studentID, 'study_levels_code' => $studyLevel, 'semester' => $semester],
-                                                    ['total_credit_gpa' => $currentCreditHour, 'total_credit_cgpa' => $cumulativeCreditHour, 'gpa' => $bValue, 'cgpa' => $dValue]
-                                                );
-                                                array_push($excelStat, '[ID Pelajar: ' . strtoupper($studentID) . ', ' . 'Tahap Pengajian: ' . strtoupper($studyLevel) . ',' . ' Semester: ' . $semester . '] Gred Semester berjaya ditambah!');
-
-                                                /**
-                                                 * To Do: Student Course Grade
-                                                 */
+                                                array_push($semesterGradesAddArray, ['total_credit_gpa' => $currentCreditHour, 'total_credit_cgpa' => $cumulativeCreditHour, 'gpa' => $bValue, 'cgpa' => $dValue]);
                                             }
+                                        }
+                                    }
+                                    $courseListWithNumber = [];
+                                    $courseColumnList = ["F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y"];
+                                    foreach ($courseListValid as $key => $value) {
+                                        $currentColumnIndex = array_search($key, $courseColumnList);
+                                        $neighborColumnIndex = $currentColumnIndex + 1;
+                                        for ($i=0; $i < count($courseColumnList); $i++) { 
+                                            $neighborColumn = $courseColumnList[$neighborColumnIndex];
+                                        }
+                                        $gradePointerColumn = $key;
+                                        $creditHourColumn = $neighborColumn;
+                                        foreach ($studentListValid as $k => $v) {
+                                            array_push($courseListWithNumber, [$gradePointerColumn . $k, $creditHourColumn . $k]);
+                                        }
+                                    }
+                                    foreach ($courseListWithNumber as $value) {
+                                        $row = $value[0];
+                                        $courseCreditHour = $sheet->getCell($value[0])->getValue();
+                                        $courseGradePointer = $sheet->getCell($value[1])->getValue();
+                                        // Check if value is integer, add .00 behind it for column D
+                                        if(is_int($courseGradePointer)){
+                                            $courseGradePointer = $courseGradePointer . ".00";
+                                        }elseif(is_float($courseGradePointer)){
+                                            // Add 0 to decimal place if less than 10
+                                            $dividedD = explode(".", $courseGradePointer);
+                                            if(strlen($dividedD[1]) < 2){
+                                                $courseGradePointer = $dividedD[0] . "." . $dividedD[1] . "0";
+                                            }else{
+                                                $courseGradePointer = $courseGradePointer;
+                                            }
+                                        }
+                                        array_push($courseGradesAddArray, ['row' => $row,'credit_hour' => $courseCreditHour, 'grade_pointer' => $courseGradePointer]);
+                                    }
+                                    // Check if coordinator to the student or an admin
+                                    foreach ($studentListValid as $key => $value) {
+                                        $studentID = $value;
+                                        if(Gate::allows('authAdmin') || Gate::allows('authCoordinator', $studentID)){
+                                            $details = ['users_username' => $studentID, 'study_levels_code' => $generalStudyLevel, 'semester' => $generalSemester];
+                                            foreach ($semesterGradesAddArray as $value) {
+                                                SemesterGrade::updateOrCreate($details, $value);
+                                            }
+                                            foreach ($courseGradesAddArray as $value) {
+                                                $row = preg_replace('/[^0-9]/', '', $value['row']);
+                                                $column = preg_replace('/[^a-zA-Z]/', '', $value['row']);
+                                                $courseCode =$sheet->getCell($column . "12")->getValue();
+                                                $courseDetails = ['users_username' => strtolower($sheet->getCell("A" . $row)->getValue()), 'courses_code' => $courseCode, 'study_levels_code' => $generalStudyLevel, 'semester' => $generalSemester];
+                                                $courses = ['credit_hour' => $value['credit_hour'], 'grade_pointer' => $value['grade_pointer']];
+                                                CourseGrade::updateOrCreate($courseDetails, $courses);
+                                            }
+                                            array_push($excelStat, '[A' . $key .'] Gred Semester berjaya ditambah!');
+                                        }else{
+                                            array_push($excelErr, '[' . 'A' . $key . '] Anda tidak mempunyai kebenaran untuk menambah transkrip bagi pelajar ini!');
                                         }
                                     }
                                 }
