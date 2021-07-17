@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Storage;
 use PDF;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Reader\Xlsx as XlsxReader;
 
 class ExamController extends Controller
 {
@@ -194,7 +195,9 @@ class ExamController extends Controller
         $spreadsheet->getActiveSheet()->getRowDimension('5')->setRowHeight(35);
 
         // Data fields
-        $commonCellOne = ['A8', 'B8', 'F11', 'A13', 'B13', 'C13', 'D13', 'E13', 'F13', 'G13'];
+        $commonCellOne = ['A8', 'B8', 'F11', 'A13', 'B13', 'C13', 'D13', 'E13', 'F13', 'G13',
+        "H11","I11","J11","K11","L11","M11","N11","O11","P11","Q11","R11","S11","T11","U11","V11","W11","X11","Y11",
+        "H13","I13","J13","K13","L13","M13","N13","O13","P13","Q13","R13","S13","T13","U13","V13","W13","X13","Y13"];
         $fontStyleData = [
             'font' => [
                 'size' => 11,
@@ -217,28 +220,39 @@ class ExamController extends Controller
             $spreadsheet->getActiveSheet()->getColumnDimension($columnLetters[$i])->setWidth(30, 'pt'); 
         }
 
-        $spreadsheet->getActiveSheet()->getColumnDimension('F')->setWidth(15, 'pt'); 
-        $spreadsheet->getActiveSheet()->getColumnDimension('G')->setWidth(15, 'pt'); 
+        $columnLetter = "F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y";
+        $columnLetters = explode(",", $columnLetter);
+        for ($i=0; $i < count($columnLetters); $i++) { 
+            $spreadsheet->getActiveSheet()->getColumnDimension($columnLetters[$i])->setWidth(12, 'pt'); 
+        }
 
         $sheet->setCellValue('A8', 'Semester');
         $sheet->setCellValue('B8', 'Tahap Pengajian');
         
-        $sheet->mergeCells('F11:G11');
-        $sheet->mergeCells('F12:G12');
-        $sheet->setCellValue('F11', 'KOD KURSUS');
+        $mergeCells = ["F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y"];
+        for ($i=0; $i < 20;) { 
+            $rowFirst = $mergeCells[$i] . "11" . ":" . $mergeCells[$i + 1] . "11";
+            $sheet->setCellValue($mergeCells[$i] . "11", 'KOD KURSUS');
+            $rowSecond = $mergeCells[$i] . "12" . ":" . $mergeCells[$i + 1] . "12";
+            $sheet->setCellValue($mergeCells[$i] . "13", 'Nilai Gred');
+            $sheet->setCellValue($mergeCells[$i + 1] . "13", 'Jam Kredit');
+            $sheet->mergeCells($rowFirst);
+            $sheet->mergeCells($rowSecond);
+            $i += 2;
+        }
+
         $sheet->setCellValue('A13', 'ID Pelajar');
         $sheet->setCellValue('B13', 'Purata Nilai Gred Semasa');
         $sheet->setCellValue('C13', 'Jumlah Nilai Kredit Semasa');
         $sheet->setCellValue('D13', 'Purata Nilai Gred Kumulatif');
         $sheet->setCellValue('E13', 'Jumlah Nilai Kredit Kumulatif');
-        $sheet->setCellValue('F13', 'Jam Kredit');
-        $sheet->setCellValue('G13', 'Nilai Gred');
-        $spreadsheet->getActiveSheet()->getStyle('A1:F30')->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
+
+        $spreadsheet->getActiveSheet()->getStyle('A1:Y43')->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
 
         // Borders
-        $spreadsheet->getActiveSheet()->getStyle('A8:B9')->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-        $spreadsheet->getActiveSheet()->getStyle('F11:G12')->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-        $spreadsheet->getActiveSheet()->getStyle('A13:G43')->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getActiveSheet()->getStyle('A8:B9')->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_MEDIUM);
+        $spreadsheet->getActiveSheet()->getStyle('F11:Y43')->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_MEDIUM);
+        $spreadsheet->getActiveSheet()->getStyle('A13:G43')->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_MEDIUM);
 
         $writer = new Xlsx($spreadsheet);
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
@@ -371,35 +385,163 @@ class ExamController extends Controller
             abort(403, 'Anda tiada akses pada laman ini!');
         }
     }
-    public function transcriptBulkAddUpdate(Request $request){
+    public function transcriptBulkAdd(Request $request){
         /**
          * For adding student's exam transcript in bulk using Excel spreadsheet
          * Each student's transcript is seperated by sheets
-         * Maximum of 20 courses result can be added 
-         * Status Codes (Shown for each sheet. If one sheet fails, the others will be considered as failed too):
-         * SET = Semester Exam Transcript
-         * SET-1 :- Successful add/update
-         * SET-2 :- Missing cell data (Student's ID etc. For courses list, if one row is empty (no course code and pointer, the entire sheet considered failed.)
-         * If course code found no pointer, it also considered failed vice versa)
-         * SET-3 :- Forbidden (If somehow a coordinator isn't adding transcript for his/her own student)
-         * SET-4 :- Not Found (If student id, semester, student level, credit hour and grade pointer not found)
-         * SET-5 :- The file isn't XLSX
+         * Maximum of 10 courses result can be added 
+         * Data after an empty cell will not be added to the array of transcript to add(check by ID pelajar and Kod Kursus)
+         * If there's a duplicated data, for example duplicated ID Pelajar and Kod Kursus, only the first data will be added.
          */
 
         // Check if spreadsheet file have .XLSX extension
         $excelErr = [];
-        if($request->spreadsheet->filetype() == 'xlsx'){
-            // Check if cells empty
-            // if(){
-            //     // D7 (student ID), E7 (semester), F7 (study level)
-            // }elseif(){
-            //     // D9 (credit hour current), E9 (credit hour cumulatif)
-            // }elseif(){
-            //     // 
-            // }
+        $excelStat = [];
+        if($request->spreadsheet->extension() == 'xlsx'){
+            // Check for empty cells (Semester: A9, Tahap Pengajian: B9)
+            $userXLSX = $request->file('spreadsheet');
+            $reader = new XlsxReader();
+            $reader->setReadDataOnly(true);
+            //Read XLSX file.
+            $spreadsheet = $reader->load($userXLSX);
+            $sheet = $spreadsheet->getActiveSheet();
+            if($sheet->getCell("A9")->getValue() === NULL){
+                array_push($excelErr, '[A9] Sel Semester kosong!');
+            }else{
+                // Check if Tahap Pengajian empty
+                if($sheet->getCell("A9")->getValue() === NULL){
+                    array_push($excelErr, '[B9] Sel Tahap Pengajian kosong!');
+                }else{
+                    // Check if Tahap Pengajian exist
+                    if(!StudyLevel::where('code', strtolower($sheet->getCell("B9")->getValue()))->first()){
+                        array_push($excelErr, '[B9] Tahap Pengajian tidak wujud!');
+                    }else{
+                        // Check if Tahap Pengajian have amount based on the sheet
+                        $totalSemester = StudyLevel::select('total_semester')->where('code', strtolower($sheet->getCell('B9')->getValue()))->first();
+                        if($sheet->getCell("A9")->getValue() < 1 || $sheet->getCell("A9")->getValue() > $totalSemester['total_semester']){
+                            array_push($excelErr, '[A9] Semester tidak tergolong pada jumlah semester Tahap Pengajian!');
+                        }else{
+                            // Check is first Pelajar ID empty (needs atleast 1 student transcript)
+                            if($sheet->getCell("A14")->getValue() === NULL){
+                                array_push($excelErr, '[A14] Sel ID Pelajar kosong!');
+                            }else{
+                                // Check if student list available
+                                $studentListAvailable = []; 
+                                for ($i=14; $i < 44; $i++) { 
+                                    if($sheet->getCell("A" . $i)->getValue() === NULL){
+                                        break;
+                                    }else{
+                                        $studentListAvailable[$i] = $sheet->getCell("A" . $i)->getValue();
+                                    }
+                                }
+                                // Check for duplicated ID. If there's a duplicated ID, only the first one will be added to the list.
+                                $studentListNoDuplicate = array_unique($studentListAvailable);
+                                // Check is first Kod Kursus empty (needs atleast 1 course code)
+                                if($sheet->getCell("F12")->getValue() === NULL){
+                                    array_push($excelErr, '[F12] Sel Kod Kursus kosong!');
+                                }else{
+                                    $mergeCells = ["F12", "H12", "J12", "L12", "N12", "P12", "R12", "T12", "V12", "X12"];
+                                    $courseListAvailable = [];
+                                    $courseList = [];
+                                    for ($i=0; $i < count($mergeCells); $i++) { 
+                                        $code = $sheet->getCell($mergeCells[$i])->getValue();
+                                        $courseList[$mergeCells[$i]] = $code;
+                                    }
+                                    // Check for NULL cell. All cell after the NULL will be ignored.
+                                    foreach ($courseList as $courseListKey => $courseListValue) {
+                                        if($courseList[$courseListKey] === NULL){
+                                            break;
+                                        }else{
+                                            $courseListAvailable[$courseListKey] = $courseListValue;
+                                        }
+                                    }
+                                    $courseListNoDuplicate = array_unique($courseListAvailable);
+                                    // Check if student exist
+                                    $studentListValid = [];
+                                    foreach ($studentListNoDuplicate as $key => $value) {
+                                        if(!User::where('username', strtolower($studentListAvailable[$key]))->first()){
+                                            array_push($excelErr, '[' . "A" . $key . '] Pelajar tidak wujud!');
+                                        }else{
+                                            $studentListValid[$key] = $value;
+                                        }
+                                    }
+                                    // Check if course exist
+                                    $courseListValid = [];
+                                    foreach ($courseListNoDuplicate as $key => $value) {
+                                        if(!Course::where('code', strtolower($value))->first()){
+                                            array_push($excelErr, '[' . $key . '] Kursus tidak wujud!');
+                                        }else{
+                                            $courseListValid[$key] = $value;
+                                        }
+                                    }
+                                    // Display error for unvalid ID Pelajar and Kod Kursus
+                                    if(count($excelErr) > 0){
+                                        $request->session()->flash('excelErr', $excelErr);
+                                        return redirect()->back();
+                                    }else{
+                                        // Check for empty data on gpa [B], creditHour [C], cgpa [D], cCreditHour [E]
+                                        // It's gonna take a long time to implement each check, so I do it all at the same time
+
+                                        $studentSemesterGrade = [];
+                                        foreach ($studentListValid as $key => $value) {
+                                            if($sheet->getCell("B" . $key)->getValue() === NULL || $sheet->getCell("C" . $key)->getValue() === NULL || $sheet->getCell("D" . $key)->getValue() === NULL || $sheet->getCell("E" . $key)->getValue() === NULL){
+                                                array_push($excelErr, '[' . 'Baris ' . $key . '] Pastikan kesemua ruangan diisi!');
+                                            }else{
+                                                // Check if value is integer, add .00 behind it for column B
+                                                if(is_int($sheet->getCell("B" . $key)->getValue())){
+                                                    $bValue = $sheet->getCell("B" . $key)->getValue() . ".00";
+                                                }elseif(is_float($sheet->getCell("B" . $key)->getValue())){
+                                                    // Add 0 to decimal place if less than 10
+                                                    $dividedB = explode(".", $sheet->getCell("B" . $key)->getValue());
+                                                    if(strlen($dividedB[1]) < 2){
+                                                        $bValue = $dividedB[0] . "." . $dividedB[1] . "0";
+                                                    }else{
+                                                        $bValue = $sheet->getCell("B" . $key)->getValue();
+                                                    }
+                                                }
+                                                // Check if value is integer, add .00 behind it for column D
+                                                if(is_int($sheet->getCell("D" . $key)->getValue())){
+                                                    $dValue = $sheet->getCell("D" . $key)->getValue() . ".00";
+                                                }elseif(is_float($sheet->getCell("D" . $key)->getValue())){
+                                                    // Add 0 to decimal place if less than 10
+                                                    $dividedD = explode(".", $sheet->getCell("D" . $key)->getValue());
+                                                    if(strlen($dividedD[1]) < 2){
+                                                        $dValue = $dividedD[0] . "." . $dividedD[1] . "0";
+                                                    }else{
+                                                        $dValue = $sheet->getCell("D" . $key)->getValue();
+                                                    }
+                                                }
+                                                $studentID = $value;
+                                                $studyLevel = strtolower($sheet->getCell("B9")->getValue());
+                                                $semester = $sheet->getCell("A9")->getValue();
+                                                $currentCreditHour = $sheet->getCell("C" . $key)->getValue();
+                                                $cumulativeCreditHour = $sheet->getCell("E" . $key)->getValue();
+                                                //studentID, bValue [gpa], currentCreditHour, dValue [cgpa], cumulativeCreditHour
+                                                // Add student semester grade
+                                                SemesterGrade::updateOrCreate(
+                                                    ['users_username' => $studentID, 'study_levels_code' => $studyLevel, 'semester' => $semester],
+                                                    ['total_credit_gpa' => $currentCreditHour, 'total_credit_cgpa' => $cumulativeCreditHour, 'gpa' => $bValue, 'cgpa' => $dValue]
+                                                );
+                                                array_push($excelStat, '[ID Pelajar: ' . strtoupper($studentID) . ', ' . 'Tahap Pengajian: ' . strtoupper($studyLevel) . ',' . ' Semester: ' . $semester . '] Gred Semester berjaya ditambah!');
+
+                                                /**
+                                                 * To Do: Student Course Grade
+                                                 */
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }else{
-            array_push($excelErr, 'SET-5: Hanya file jenis XLSX sahaja yang disokong!');
+            array_push($excelErr, 'Hanya file jenis XLSX sahaja yang disokong!');
         }
+        $request->session()->flash('excelErr', $excelErr);
+        $request->session()->flash('excelStat', $excelStat);
+        return redirect()->back();
     }
     public function transcriptRemove(Request $request){
         // Only coordinator and admin could remove.
