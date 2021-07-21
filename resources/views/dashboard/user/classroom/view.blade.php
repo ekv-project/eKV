@@ -23,7 +23,12 @@
                     <p class="fw-bold">NAMA KELAS: <span class="fw-normal">{{ strtoupper($classroomInfo->name) }}</span></p>
                     <p class="fw-bold">KOD PROGRAM: <span class="fw-normal">{{ strtoupper($classroomInfo->programs_code) }}</span></p>
                     <p class="fw-bold">ID KOORDINATOR: 
-                        <span class="fw-normal"><a href="{{ route('profile.user', [$classroomCoordinator->users_username]) }}" target="_blank" class="text-dark hvr-underline-reveal">{{ strtoupper($classroomCoordinator->users_username) }}</a></span>
+                        @if(Gate::allows('authAdmin'))
+                            <span class="fw-normal"><a href="{{ route('profile.user', [$classroomCoordinator->users_username]) }}" class="text-dark hvr-underline-reveal">{{ strtoupper($classroomCoordinator->users_username) }}</a></span>
+                        @else
+                        <span class="fw-normal">{{ strtoupper($classroomCoordinator->users_username) }}</span>    
+                        @endif
+                        
                     </p>
                 </div>
                 <div class="col-6">
@@ -43,8 +48,11 @@
                                 <tr>
                                     <tr>
                                     <th class="col-2">ID PELAJAR</th>
-                                    <th class="col-5">NAMA PELAJAR</th>
-                                    <th class="col-5">E-MEL PELAJAR</th>
+                                    <th class="col-4">NAMA PELAJAR</th>
+                                    <th class="col-4">E-MEL PELAJAR</th>
+                                    @if(Gate::allows('authLecturer') || Gate::allows('authAdmin'))
+                                        <th class="col-1">LIHAT</th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody>
@@ -53,6 +61,9 @@
                                     <td>{{ strtoupper($s->username) }}</td>
                                     <td>{{ strtoupper($s->fullname) }}</td>
                                     <td>{{ strtoupper($s->email) }}</td>
+                                    @if(Gate::allows('authLecturer') || Gate::allows('authAdmin'))
+                                        <td><a href="{{ route('profile.user', [$s->username]) }}" class="btn btn-primary hvr-shrink"><i class="bi bi-eye"></i></a></td>
+                                    @endif
                                 </tr>
                                 @endforeach
                             </tbody>

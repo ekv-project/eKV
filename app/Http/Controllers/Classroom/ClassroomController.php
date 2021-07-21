@@ -31,16 +31,20 @@ class ClassroomController extends Controller
      * Handling Views
      */
     public function classroom(){
-        // If authenticated user is a student or coordinator of a classroom, they will be redirected to their own classroom.
-        if(isset(ClassroomCoordinator::where('users_username', Auth::user()->username)->first()->classroom)){
-            $classroomCoordinator = ClassroomCoordinator::where('users_username', Auth::user()->username)->first()->classroom;
-            return redirect()->route('classroom.view', ['classroomID' => $classroomCoordinator->id]);
-        }elseif(isset(ClassroomStudent::where('users_username', Auth::user()->username)->first()->classroom)){
+        // If user a student, redirect to their classroom. 
+        if(isset(ClassroomStudent::where('users_username', Auth::user()->username)->first()->classroom)){
             $classroomStudent = ClassroomStudent::where('users_username', Auth::user()->username)->first()->classroom;
             return redirect()->route('classroom.view', ['classroomID' => $classroomStudent->id]);
+        }elseif(count(ClassroomCoordinator::where('users_username', Auth::user()->username)->get()) > 0){
+            // If user a coordinator, list all the classes associated with them.
+            $classroomList = ClassroomCoordinator::where('users_username', Auth::user()->username)->with('classroom')->paginate(10);
+            return view('dashboard.user.classroom.coordinator.view')->with(['settings' => $this->instituteSettings, 'page' => 'Senarai Kelas Koordinator', 'classroomList' => $classroomList]);
+        }elseif(Gate::allows('authAdmin')){
+            // If user an admin, redirect to classroom section in admin dashboard
+            return redirect()->route('admin.classroom');
         }else{
-            return redirect()->route('dashboard');
-        }
+            abort(404, 'Anda tidak menjadi koordinator di mana-mana kelas');
+        } 
     }
     public function view($classroomID){
         if(ClassroomStudent::where('classrooms_id', $classroomID)->first()){
@@ -73,7 +77,7 @@ class ClassroomController extends Controller
                 abort(403, 'Anda tiada akses paga laman ini');
             }
         }else{
-            abort(403, 'Anda tiada akses paga laman ini');
+            abort(403, 'Anda tiada akses pada laman ini');
         }
         
         

@@ -57,16 +57,16 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('authCoordinator', function (User $user, $id){
             $currentUser = $user->username;
             if(!empty(ClassroomStudent::where('users_username', $id)->first()->classroom)){
-                $classroomStudentID = ClassroomStudent::where('users_username', $id)->first()->classroom->id;
-                if(!empty(ClassroomCoordinator::where('users_username', $currentUser)->first()->classroom)){
-                    $classroomCoordinatorID = ClassroomCoordinator::where('users_username', $currentUser)->first()->classroom->id;
-                    if($classroomCoordinatorID == $classroomStudentID){
-                        return true;
-                    }
+                // Pass student ID
+                $studentClassroomID = ClassroomStudent::where('users_username', $id)->first()->classroom->id;
+                $currentUserClassroomID = ClassroomCoordinator::where('users_username', $currentUser)->where('classrooms_id', $studentClassroomID)->first();
+                if($currentUserClassroomID){
+                    return true;
                 }
-            }elseif(!empty(ClassroomCoordinator::where('users_username', $currentUser)->first()->classroom)){
-                $classroomCoordinatorID = ClassroomCoordinator::where('users_username', $currentUser)->first()->classroom->id;
-                if($classroomCoordinatorID == $id){
+            }elseif(ClassroomCoordinator::where('users_username', $currentUser)->get()->count() > 0){
+                // Pass classroom ID
+                $classroomCoordinatorID = ClassroomCoordinator::where('users_username', $currentUser)->where('classrooms_id', $id)->first();
+                if($classroomCoordinatorID){
                     return true;
                 }
             }

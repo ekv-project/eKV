@@ -25,6 +25,6 @@ class Classroom extends Model
         return $this->hasOne(ClassroomCoordinator::class, 'classrooms_id');
     }
     public function program(){
-        return $this->belongsTo(Program::class, 'code');
+        return $this->hasOne(Program::class, 'code');
     }
 }
