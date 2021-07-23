@@ -39,7 +39,7 @@ class ClassroomController extends MainController
     }
     public function view($classroomID){
         if(ClassroomStudent::where('classrooms_id', $classroomID)->first()){
-            $students = ClassroomStudent::select('users.username', 'users.fullname', 'users.email')->join('users', 'users.username', 'classroom_students.users_username')->get();
+            $students = ClassroomStudent::select('users.username', 'users.fullname', 'users.email')->where('classrooms_id', $classroomID)->join('users', 'users.username', 'classroom_students.users_username')->get();
         }else{
             $students = NULL;
         }

@@ -14,7 +14,7 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
-class DataSeeder extends Seeder
+class DatabaseSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -87,6 +87,7 @@ class DataSeeder extends Seeder
             [
                 [
                     'id' => 1,
+                    'name' => 'class1',
                     'programs_code' => 'ksk',
                     'admission_year' => '2018',
                     'study_year' => '2020',
@@ -94,12 +95,13 @@ class DataSeeder extends Seeder
                 ],
                 [
                     'id' => 2,
+                    'name' => 'class2',
                     'programs_code' => 'kpd',
                     'admission_year' => '2020',
                     'study_year' => '2020',
                     'study_levels_code' => 'svm',
                 ]
-            ], ['id'], ['id', 'programs_code', 'admission_year', 'study_year', 'study_levels_code',]
+            ], ['id'], ['id', 'name', 'programs_code', 'admission_year', 'study_year', 'study_levels_code',]
         );
         InstituteSetting::upsert(
             [
