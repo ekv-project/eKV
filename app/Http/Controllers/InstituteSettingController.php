@@ -10,15 +10,6 @@ use Illuminate\Support\Facades\Storage;
 
 class InstituteSettingController extends Controller
 {
-    /***************************************************************************
-     * Controller Constuctor
-     * Most of the properties included here is used by any of the methods below.
-     **************************************************************************/
-    protected $instituteSettings;
-    public function __construct()
-    {
-        $this->instituteSettings = InstituteSetting::find(1);
-    }
     /**
      * Handling views
      */

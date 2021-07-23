@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Exam;
 
+use PDF;
 use App\Models\User;
 use App\Models\Course;
 use App\Models\Program;
@@ -17,25 +18,15 @@ use App\Models\InstituteSetting;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
-use PDF;
+use App\Http\Controllers\MainController;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx as XlsxReader;
 
-class ExamController extends Controller
+class ExamController extends MainController
 {
-        /***************************************************************************
-     * Controller Constuctor
-     * Most of the properties included here is used by any of the methods below.
-     **************************************************************************/
-    protected $instituteSettings;
-    public function __construct()
-    {
-        $this->instituteSettings = InstituteSetting::find(1);
-    }
-    /***************************************************************************/
-
     /**
      * Handling Views
      */

@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Http\Controllers\Controller;
+use PDF;
 use App\Models\User;
 use App\Models\UserProfile;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use App\Models\InstituteSetting;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
-use PDF;
+use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\MainController;
 
-class UserProfileController extends Controller
+class UserProfileController extends MainController
 {
     /***************************************************************************
      * Controller Constuctor

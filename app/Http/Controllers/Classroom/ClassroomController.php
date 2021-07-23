@@ -2,30 +2,21 @@
 
 namespace App\Http\Controllers\Classroom;
 
-use App\Http\Controllers\Controller;
-use App\Models\Classroom;
-use App\Models\ClassroomCoordinator;
-use App\Models\ClassroomStudent;
-use App\Models\Program;
-use App\Models\StudyLevel;
 use App\Models\User;
-use App\Models\InstituteSetting;
+use App\Models\Program;
+use App\Models\Classroom;
+use App\Models\StudyLevel;
 use Illuminate\Http\Request;
+use App\Models\ClassroomStudent;
+use App\Models\InstituteSetting;
+use App\Http\Controllers\Controller;
+use App\Models\ClassroomCoordinator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use App\Http\Controllers\MainController;
 
-class ClassroomController extends Controller
+class ClassroomController extends MainController
 {
-    /***************************************************************************
-     * Controller Constuctor
-     * Most of the properties included here is used by any of the methods below.
-     **************************************************************************/
-    protected $instituteSettings;
-    public function __construct()
-    {
-        $this->instituteSettings = InstituteSetting::find(1);
-    }
-    /***************************************************************************/
 
     /**
      * Handling Views

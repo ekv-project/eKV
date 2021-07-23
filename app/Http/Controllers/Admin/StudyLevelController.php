@@ -2,23 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Models\InstituteSetting;
 use App\Models\StudyLevel;
 use Illuminate\Http\Request;
+use App\Models\InstituteSetting;
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\MainController;
 
-class StudyLevelController extends Controller
+class StudyLevelController extends MainController
 {
-    /***************************************************************************
-     * Controller Constuctor
-     * Most of the properties included here is used by any of the methods below.
-     **************************************************************************/
-    protected $instituteSettings;
-    public function __construct()
-    {
-        $this->instituteSettings = InstituteSetting::find(1);
-    }
-    /***************************************************************************/
     /**
      * Handling Views
      */

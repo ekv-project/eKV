@@ -3,6 +3,8 @@
 use App\Models\InstituteSetting;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Request;
+use App\Http\Controllers\LoginController;
 use App\Http\Controllers\Exam\ExamController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Admin\AdminController;
@@ -15,7 +17,6 @@ use App\Http\Controllers\User\UserProfileController;
 use App\Http\Controllers\Classroom\ClassroomController;
 use App\Http\Controllers\LiveSearch\LiveSearchController;
 use App\Http\Controllers\Admin\ClassroomController as AdminClassroomController;
-use Illuminate\Support\Facades\Request;
 
 /**
  * API Routes
@@ -48,18 +49,11 @@ Route::get('/install/success', [InstallationController::class, 'installSuccessVi
 /**
  * Home
  */
-Route::get('/', function () {
-    if(Auth::check()){
-        return redirect()->route('dashboard');
-    }else{
-        $instituteSettings = InstituteSetting::find(1);
-        return view('login')->with(['page' => 'Log Masuk', 'settings' => $instituteSettings]);
-    }
-})->name('login');
+Route::get('/', [LoginController::class, 'rootPage'])->name('login');
 
 // User Login and Logout
 Route::post('/', [UserController::class, 'login']);
-Route::post('/dashboard/logout', [UserController::class, 'logout'])->name('logout')->middleware('auth');
+Route::post('/dashboard/logout', [UserController::class, 'logout'])->name('logout')->middleware(['auth']);
 
 /**
  * Dashboard
@@ -68,22 +62,22 @@ Route::post('/dashboard/logout', [UserController::class, 'logout'])->name('logou
 Route::get('/dashboard', function () { 
     $instituteSettings = InstituteSetting::find(1);
     return view('dashboard.dashboard')->with(['page' => 'Dashboard', 'settings' => $instituteSettings]);
-})->name('dashboard')->middleware('auth');
+})->name('dashboard')->middleware(['auth']);
 
 /**
  *  User Profile
  */
-Route::get('/dashboard/profile', [UserProfileController::class, 'viewProfile'])->name('profile')->middleware('auth');
-Route::get('/dashboard/profile/{username}', [UserProfileController::class, 'view'])->name('profile.user')->middleware('auth');
-Route::get('/dashboard/profile/update/{username}', [UserProfileController::class, 'updateView'])->name('profile.update')->middleware('auth');
-Route::get('/dashboard/profile/download/{username}', [UserProfileController::class, 'download'])->name('profile.download')->middleware('auth');
-Route::post('/dashboard/profile/update/{username}', [UserProfileController::class, 'update'])->middleware('auth');
+Route::get('/dashboard/profile', [UserProfileController::class, 'viewProfile'])->name('profile')->middleware(['auth']);
+Route::get('/dashboard/profile/{username}', [UserProfileController::class, 'view'])->name('profile.user')->middleware(['auth']);
+Route::get('/dashboard/profile/update/{username}', [UserProfileController::class, 'updateView'])->name('profile.update')->middleware(['auth']);
+Route::get('/dashboard/profile/download/{username}', [UserProfileController::class, 'download'])->name('profile.download')->middleware(['auth']);
+Route::post('/dashboard/profile/update/{username}', [UserProfileController::class, 'update'])->middleware(['auth']);
 
 /**
  *  Student Classroom
  */
-Route::get('/dashboard/classroom', [ClassroomController::class, 'classroom'])->name('classroom')->middleware('auth');
-Route::get('/dashboard/classroom/{classroomID}', [ClassroomController::class, 'view'])->name('classroom.view')->middleware('auth');
+Route::get('/dashboard/classroom', [ClassroomController::class, 'classroom'])->name('classroom')->middleware(['auth']);
+Route::get('/dashboard/classroom/{classroomID}', [ClassroomController::class, 'view'])->name('classroom.view')->middleware(['auth']);
 Route::get('/dashboard/classroom/student/{classroomID}', [ClassroomController::class, 'student'])->name('classroom.student')->middleware(['auth']);
 Route::get('/dashboard/classroom/update/{classroomID}', [ClassroomController::class, 'update'])->name('classroom.update')->middleware(['auth']);
 Route::post('/dashboard/classroom/student/{classroomID}', [ClassroomController::class, 'studentUpdate'])->middleware(['auth']);
@@ -93,19 +87,19 @@ Route::post('/dashboard/classroom/update/{classroomID}', [ClassroomController::c
 *   Exam Transcript  
 */
     // Exam Transcript Excel Template
-Route::get('/dashboard/exam/transcript/template', [ExamController::class, 'downloadSpreadsheetTemplate'])->name('transcript.template')->middleware('auth');
+Route::get('/dashboard/exam/transcript/template', [ExamController::class, 'downloadSpreadsheetTemplate'])->name('transcript.template')->middleware(['auth']);
     // ETC
-Route::get('/dashboard/exam/transcript', [ExamController::class, 'transcript'])->name('transcript')->middleware('auth');
-Route::get('/dashboard/exam/transcript/{studentID}', [ExamController::class, 'semesterView'])->name('transcript.student')->middleware('auth');
-Route::get('/dashboard/exam/transcript/{studentID}/{studyLevel}/{semester}', [ExamController::class, 'transcriptView'])->name('transcript.view')->middleware('auth');
+Route::get('/dashboard/exam/transcript', [ExamController::class, 'transcript'])->name('transcript')->middleware(['auth']);
+Route::get('/dashboard/exam/transcript/{studentID}', [ExamController::class, 'semesterView'])->name('transcript.student')->middleware(['auth']);
+Route::get('/dashboard/exam/transcript/{studentID}/{studyLevel}/{semester}', [ExamController::class, 'transcriptView'])->name('transcript.view')->middleware(['auth']);
 Route::get('/dashboard/exam/transcript/add/{studentID}', [ExamController::class, 'transcriptAddView'])->name('transcript.add')->middleware('auth');
-Route::get('/dashboard/exam/transcript/update/{studentID}/{studyLevel}/{semester}', [ExamController::class, 'transcriptUpdateView'])->name('transcript.update')->middleware('auth');
-Route::get('/dashboard/exam/transcript/download/{studentID}/{studyLevel}/{semester}', [ExamController::class, 'transcriptDownload'])->name('transcript.download')->middleware('auth');
-Route::post('/dashboard/exam/transcript', [ExamController::class, 'transcriptBulkAdd'])->middleware('auth');
-Route::post('/dashboard/exam/transcript/{studentID}', [ExamController::class, 'transcriptRemove'])->middleware('auth');
-Route::post('/dashboard/exam/transcript/add/{studentID}', [ExamController::class, 'transcriptAddUpdate'])->middleware('auth');
-Route::post('/dashboard/exam/transcript/{studentID}/{studyLevel}/{semester}', [ExamController::class, 'transcriptView'])->middleware('auth');
-Route::post('/dashboard/exam/transcript/update/{studentID}/{studyLevel}/{semester}', [ExamController::class, 'transcriptAddUpdate'])->middleware('auth');
+Route::get('/dashboard/exam/transcript/update/{studentID}/{studyLevel}/{semester}', [ExamController::class, 'transcriptUpdateView'])->name('transcript.update')->middleware(['auth']);
+Route::get('/dashboard/exam/transcript/download/{studentID}/{studyLevel}/{semester}', [ExamController::class, 'transcriptDownload'])->name('transcript.download')->middleware(['auth']);
+Route::post('/dashboard/exam/transcript', [ExamController::class, 'transcriptBulkAdd'])->middleware(['auth']);
+Route::post('/dashboard/exam/transcript/{studentID}', [ExamController::class, 'transcriptRemove'])->middleware(['auth']);
+Route::post('/dashboard/exam/transcript/add/{studentID}', [ExamController::class, 'transcriptAddUpdate'])->middleware(['auth']);
+Route::post('/dashboard/exam/transcript/{studentID}/{studyLevel}/{semester}', [ExamController::class, 'transcriptView'])->middleware(['auth']);
+Route::post('/dashboard/exam/transcript/update/{studentID}/{studyLevel}/{semester}', [ExamController::class, 'transcriptAddUpdate'])->middleware(['auth']);
 
 /** 
  *  Administration Area

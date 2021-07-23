@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Http\Controllers\Controller;
-use App\Models\LoginActivity;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use App\Models\InstituteSetting;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 use App\Models\User;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use App\Models\LoginActivity;
+use App\Models\InstituteSetting;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use App\Http\Controllers\MainController;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 
-class UserController extends Controller
+class UserController extends MainController
 {
     /***************************************************************************
      * Controller Constuctor
