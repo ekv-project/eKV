@@ -15,6 +15,7 @@ use App\Http\Controllers\User\UserProfileController;
 use App\Http\Controllers\Classroom\ClassroomController;
 use App\Http\Controllers\LiveSearch\LiveSearchController;
 use App\Http\Controllers\Admin\ClassroomController as AdminClassroomController;
+use Illuminate\Support\Facades\Request;
 
 /**
  * API Routes

@@ -6,10 +6,10 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <link rel="stylesheet" href="{{ asset('bootstraps-icons/font/bootstrap-icons.css') }}">
-    @if(Storage::disk('local')->exists('public/img/system/logo-16.png'))
-        <link rel="shortcut icon" href="{{ asset('public/img/system/logo-16.png') }}" type="image/png">
-    @elseif(Storage::disk('local')->exists('public/img/system/logo-def-16.jpg'))
-        <link rel="shortcut icon" href="{{ asset('public/img/system/logo-def-16.jpg') }}" type="image/jpeg">
+    @if(Storage::disk('local')->exists('public/img/system/logo-300.png'))
+        <link rel="shortcut icon" href="{{ asset('storage/img/system/logo-300.png') }}" type="image/png">
+    @elseif(Storage::disk('local')->exists('public/img/system/logo-def-300.png'))
+        <link rel="shortcut icon" href="{{ asset('storage/img/system/logo-def-300.png') }}" type="image/png">
     @endif
     <title>{{ $page }} - {{ env('APP_NAME') }} | 
         @isset($settings)

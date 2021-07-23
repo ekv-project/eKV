@@ -24,7 +24,9 @@
                     <p class="fw-bold">KOD PROGRAM: <span class="fw-normal">{{ strtoupper($classroomInfo->programs_code) }}</span></p>
                     <p class="fw-bold">ID KOORDINATOR: 
                         @if(Gate::allows('authAdmin'))
-                            <span class="fw-normal"><a href="{{ route('profile.user', [$classroomCoordinator->users_username]) }}" class="text-dark hvr-underline-reveal">{{ strtoupper($classroomCoordinator->users_username) }}</a></span>
+                            @if(isset($classroomCoordinator->users_username))
+                                <span class="fw-normal"><a href="{{ route('profile.user', [$classroomCoordinator->users_username]) }}" class="text-dark hvr-underline-reveal">{{ strtoupper($classroomCoordinator->users_username) }}</a></span>
+                            @endif
                         @else
                         <span class="fw-normal">{{ strtoupper($classroomCoordinator->users_username) }}</span>    
                         @endif

@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\InstituteSetting;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\InstituteSetting;
 use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Storage;
 
 class InstituteSettingController extends Controller
 {
@@ -61,8 +62,9 @@ class InstituteSettingController extends Controller
             $logoExtension = $logo->extension();
             if($logoExtension == 'png'|| $logoExtension == 'jpeg' || $logoExtension == 'jpg' || $logoExtension == 'gif'){
                 // Only PNG, JPEG and GIF images is supported
-                // Save image to PNG (300x300 pixels) and PNG (16x16 pixels) for favicon
-                Image::make($logo)->resize(300, 300)->save('public/img/system/logo-300.png');
+                // Save image to PNG (300x300 pixels) 
+                $image = Image::make($logo)->resize(300, 300)->encode('png');
+                Storage::disk('public')->put('/img/system/logo-300.png', $image);
                 session()->flash('logoSuccess', 'Logo insitut berjaya dikemas kini!');
                 return redirect()->back();
             }else{

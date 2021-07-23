@@ -8,9 +8,9 @@
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <link rel="stylesheet" href="{{ asset('bootstraps-icons/font/bootstrap-icons.css') }}">
     @if(Storage::disk('local')->exists('public/img/system/logo-300.png'))
-        <link rel="shortcut icon" href="{{ asset('public/img/system/logo-300.png') }}" type="image/png">
+        <link rel="shortcut icon" href="{{ asset('storage/img/system/logo-300.png') }}" type="image/png">
     @elseif(Storage::disk('local')->exists('public/img/system/logo-def-300.png'))
-        <link rel="shortcut icon" href="{{ asset('public/img/system/logo-def-300.png') }}" type="image/png">
+        <link rel="shortcut icon" href="{{ asset('storage/img/system/logo-def-300.png') }}" type="image/png">
     @endif
     <title>{{ $page }} - {{ env('APP_NAME') }} | 
         @isset($settings)
@@ -47,11 +47,11 @@
             <div class="w-100 d-flex align-items-center">
                 @if(Storage::disk('local')->exists('public/img/system/logo-300.png'))
                     <a href="{{ route('dashboard') }}" class="ms-3">
-                        <img style="width: 2.5em; height: 2.5em; margin: 1em;" src="{{ asset('public/img/system/logo-300.png') }}" alt="Insitite Logo">
+                        <img style="width: 2.5em; height: 2.5em; margin: 1em;" src="{{ asset('storage/img/system/logo-300.png') }}" alt="Insitite Logo">
                     </a>
                 @elseif(Storage::disk('local')->exists('public/img/system/logo-def-300.png'))
                     <a href="{{ route('dashboard') }}" class="ms-3">
-                        <img style="width: 2.5em; height: 2.5em; margin: 0.5em;" src="{{ asset('public/img/system/logo-def-300.png') }}" alt="Insitite Logo">
+                        <img style="width: 2.5em; height: 2.5em; margin: 0.5em;" src="{{ asset('storage/img/system/logo-def-300.png') }}" alt="Insitite Logo">
                     </a>
                 @endif
                 @isset($settings)
@@ -69,11 +69,11 @@
         <div class="col-md-3 m-0 d-flex align-items-center justify-content-around">
             @if(Storage::disk('local')->exists('public/img/profile/'. Auth::user()->username . '.png'))
                 <a href="{{ route('profile') }}" class="">
-                    <img style="width: 3em; height: 3em;" src="{{ asset('public/img/profile/'. Auth::user()->username . '.png') }}" alt="User Profile Picture" class="img-fluid rounded-circle hvr-shrink" style="height: 3em">
+                    <img style="width: 3em; height: 3em;" src="{{ asset('storage/img/profile/'. Auth::user()->username . '.png') }}" alt="User Profile Picture" class="img-fluid rounded-circle hvr-shrink" style="height: 3em">
                 </a>
             @elseif(Storage::disk('local')->exists('public/img/profile/default/def-300.png'))
                 <a href="{{ route('profile') }}" class="">
-                    <img style="width: 3em; height: 3em; background-color: white;" src="{{ asset('public/img/profile/default/def-300.png') }}" alt="Default Profile Picture" class="img-fluid rounded-circle hvr-grow hvr-shrink" style="height: 3em">
+                    <img style="width: 3em; height: 3em; background-color: white;" src="{{ asset('storage/img/profile/default/def-300.png') }}" alt="Default Profile Picture" class="img-fluid rounded-circle hvr-grow hvr-shrink" style="height: 3em">
                 </a>
             @endif
             <a href="{{ route('profile') }}" class="text-light fw-bold text-decoration-none hvr-grow">{{ strtoupper(Auth::user()->username) }}</a>

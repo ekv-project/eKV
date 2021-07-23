@@ -6,12 +6,12 @@
         <div class="d-flex">
             @if(Storage::disk('local')->exists('public/img/system/logo-300.png'))
                 <a href="{{ route('dashboard') }}" class="ms-3">
-                    <img style="width: 10em; height: 10em; margin: 0.1em;" src="{{ asset('public/img/system/logo-300.png') }}" alt="Insitite Logo">
+                    <img style="width: 10em; height: 10em; margin: 0.1em;" src="{{ asset('storage/img/system/logo-300.png') }}" alt="eKV Logo">
                 </a>
             @endif
             @if(Storage::disk('local')->exists('public/img/system/logo-def-300.png'))
                 <a href="{{ route('dashboard') }}" class="ms-3">
-                    <img style="width: 10em; height: 10em; margin: 0.1em;" src="{{ asset('public/img/system/logo-def-300.png') }}" alt="Insitite Logo">
+                    <img style="width: 10em; height: 10em; margin: 0.1em;" src="{{ asset('storage/img/system/logo-def-300.png') }}" alt="eKV Logo">
                 </a>
             @endif
         </div>

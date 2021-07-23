@@ -60,7 +60,7 @@ class ClassroomController extends Controller
         if(ClassroomCoordinator::select('users_username')->where('classrooms_id', $classroomID)->first()){
             $classroomCoordinator = ClassroomCoordinator::select('users_username')->where('classrooms_id', $classroomID)->first();
         }else{
-            $classroomCoordinator = NULL;
+            $classroomCoordinator = "";
         }
         if(Classroom::where('id', $classroomID)->count() < 1){
             abort(404, 'Tiada kelas dijumpai');

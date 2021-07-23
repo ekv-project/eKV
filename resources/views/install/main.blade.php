@@ -9,7 +9,7 @@
         Pastikan anda telah memastikan kesemua <span class="fst-italic">requirements</span> dipenuhi sebelum pemasangan.
     </p>
     <p class="fs-4">
-        Skrip ini akan menambah pengguna <span class="fst-italic fw-bold">admin</span> baharu, membuat <span class="fst-italic">database migration</span class="fst-italic"> dan menjana <span class="fst-italic">application key</span>.
+        Skrip ini akan menambah pengguna <span class="fst-italic fw-bold">admin</span> baharu dan membuat <span class="fst-italic">database migration</span class="fst-italic">.
     </p>
     <a href="{{ route('install.config') }}" class="btn w-50 my-5 hvr-shrink btn-outline-light fs-4">Teruskan <i class="bi bi-box-arrow-right"></i></a>
 </div>

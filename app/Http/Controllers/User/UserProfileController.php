@@ -133,8 +133,9 @@ class UserProfileController extends Controller
                 $pictureExtension = $picture->extension();
                 if($pictureExtension == 'png'|| $pictureExtension == 'jpeg' || $pictureExtension == 'jpg' || $pictureExtension == 'gif'){
                     // Only PNG, JPEG and GIF images is supported
-                    // Save image to JPEG (300x300 pixels)
-                    Image::make($picture)->resize(300, 300)->save('public/img/profile/'. $username . '.png', 60);
+                    // Save image to PNG (300x300 pixels)
+                    $image = Image::make($picture)->resize(300, 300)->encode('png');
+                    Storage::disk('public')->put('/img/profile/'. $username . '.png', $image);
                     session()->flash('pictureSuccess', 'Gambar profil berjaya dikemas kini!');
                     return redirect()->back();
                 }else{

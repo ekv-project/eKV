@@ -8,13 +8,13 @@
             <div class="col-6 my-3 text-end">
             </div>
         </div>
-        <div class="row rounded-3 shadow-lg mt-2 mb-2 w-100">
+        <div class="row rounded-3 shadow-lg mt-2 mb-2 w-100 d-flex align-items-center justify-content-center">
             <h2 class="text-center my-3">Tambah Transkrip Semester</h2>
             @if(session()->has('transcriptSuccess'))
                 <div class="alert alert-success">{{ session('transcriptSuccess') }}</div>
             @endif
             @error('noCourseInserted')
-                <div class="alert alert-danger">{{ $message }}</div>
+                <div class="alert alert-danger col-11">{{ $message }}</div>
             @enderror
             <form action="" method="post">
                 @csrf
