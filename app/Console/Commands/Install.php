@@ -40,7 +40,7 @@ class Install extends Command
      */
     public function handle()
     {
-        Artisan::call('migrate');
+        Artisan::call('migrate'); // Migrate the database
         $this->info('Database migrated!');
         User::updateOrCreate(
             ['username' => 'admin'],
@@ -50,6 +50,7 @@ class Install extends Command
             'password' => Hash::make($this->argument('password')),
             'role' => 'superadmin',
             ]);
+        Artisan::call('storage:link'); // Create symbolic links
         $this->info('A user with the admin user was successfully created or updated!');
         $this->info('System was successfully installed!');
     }
