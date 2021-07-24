@@ -8,7 +8,7 @@ use App\Models\InstituteSetting;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 
-class InstituteSettingController extends Controller
+class InstituteSettingController extends MainController
 {
     /**
      * Handling views

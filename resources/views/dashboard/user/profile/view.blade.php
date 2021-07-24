@@ -22,16 +22,15 @@
                 <img src="{{ asset('storage/img/profile/default/def-300.png') }}" alt="Default Profile Picture" class="img-fluid rounded-circle mt-1 mb-1 border-2 border-primary" style="height: 8em; width: 9em;">
             @endif 
             @if(isset($profile))
-                <div class="row mt-1 mb-4">
+                <div class="row mt-1 mb-4 d-flex justify-content-center">
                     <div class="row row-cols-1 row-cols-lg-2">
                         <p class="col fw-bold my-4"><i class="bi bi-person-lines-fill"></i>NAMA PENUH: <span class="fw-normal">{{ strtoupper($profile->fullname) }}</span></p>
                         <p class="col fw-bold my-4"><i class="bi bi-person-badge"></i>NO. KAD PENGENALAN: <span class="fw-normal">{{ $profile->identification_number }}</span></p>
                         <p class="col fw-bold my-4"><i class="bi bi-envelope-fill"></i>ALAMAT E-MEL: <span class="fw-normal">{{ strtoupper($profile->email) }}</span></p>
                         <p class="col fw-bold my-4"><i class="bi bi-phone-fill"></i>NO. TELEFON PERIBADI: <span class="fw-normal">{{ $profile->phone_number }}</span></p>
+                        <p class="col fw-bold my-4"><i class="bi bi-gender-ambiguous"></i>JANTINA: <span class="fw-normal">{{ strtoupper($profile->gender) }}</span></p>
                         <p class="col fw-bold my-4"><i class="bi bi-calendar2-week-fill"></i>TARIKH LAHIR: <span class="fw-normal">{{ $profile->date_of_birth }}</span></p>
                         <p class="col fw-bold my-4"><i class="bi bi-building"></i>TEMPAT LAHIR: <span class="fw-normal">{{ strtoupper($profile->place_of_birth) }}</span></p>
-                    </div>
-                    <div class="row row-cols-1 row-cols-lg-2">
                         <p class="col fw-bold my-4"><i class="bi bi-house-door-fill"></i>ALAMAT RUMAH: <span class="fw-normal">{{ strtoupper($profile->home_address) }}</span></p>
                         <p class="col fw-bold my-4"><i class="bi bi-telephone-fill"></i>NO. TELEFON RUMAH: <span class="fw-normal">{{ $profile->home_number }}</span></p>
                         <p class="col fw-bold my-4"><i class="bi bi-person-lines-fill"></i>NAMA PENJAGA: <span class="fw-normal">{{ strtoupper($profile->guardian_name) }}</span></p>

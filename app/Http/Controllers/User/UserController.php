@@ -15,17 +15,6 @@ use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 
 class UserController extends MainController
 {
-    /***************************************************************************
-     * Controller Constuctor
-     * Most of the properties included here is used by any of the methods below.
-     **************************************************************************/
-    protected $instituteSettings;
-    public function __construct()
-    {
-        $this->instituteSettings = InstituteSetting::find(1);
-    }
-    /***************************************************************************/
-
     /**
      * Handling Views
      */

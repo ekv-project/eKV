@@ -17,17 +17,6 @@ use App\Http\Controllers\MainController;
 
 class UserProfileController extends MainController
 {
-    /***************************************************************************
-     * Controller Constuctor
-     * Most of the properties included here is used by any of the methods below.
-     **************************************************************************/
-    protected $instituteSettings;
-    public function __construct()
-    {
-        $this->instituteSettings = InstituteSetting::find(1);
-    }
-    /***************************************************************************/
-
     /**
      * Handling Views
      */
@@ -39,7 +28,7 @@ class UserProfileController extends MainController
         // Check if user exist. If true, return view
         if(User::where('username', '=', $username)->count() > 0){
             if(Gate::allows('authUser', $username) || Gate::allows('authCoordinator', $username) || Gate::allows('authAdmin') || Gate::allows('authSuperAdmin')){
-                $profile = UserProfile::join('users', 'users.username', 'user_profiles.users_username')->where('users_username', $username)->select('users.fullname', 'users.email', 'user_profiles.identification_number', 'user_profiles.phone_number', 'user_profiles.date_of_birth', 'user_profiles.place_of_birth', 'user_profiles.home_address', 'user_profiles.home_number', 'user_profiles.guardian_name', 'user_profiles.guardian_phone_number')->first();
+                $profile = UserProfile::join('users', 'users.username', 'user_profiles.users_username')->where('users_username', $username)->select('users.fullname', 'users.email', 'user_profiles.identification_number', 'user_profiles.phone_number', 'user_profiles.gender', 'user_profiles.date_of_birth', 'user_profiles.place_of_birth', 'user_profiles.home_address', 'user_profiles.home_number', 'user_profiles.guardian_name', 'user_profiles.guardian_phone_number')->first();
                 $noProfile = User::select('username', 'fullname', 'email')->where('username', $username)->first();
                 return view('dashboard.user.profile.view')->with(['settings' => $this->instituteSettings, 'page' => 'Profil Pengguna', 'username' => $username, 'profile' => $profile, 'noProfile' => $noProfile]);
             }else{
@@ -78,6 +67,7 @@ class UserProfileController extends MainController
                 $validated = $request->validate([
                     'identification_number' => ['required'],
                     'phone_number' => ['required'],
+                    'gender' => ['required'],
                     'date_of_birth' => ['required'],
                     'place_of_birth' => ['required'],
                     'home_address' => ['required'],
@@ -85,11 +75,12 @@ class UserProfileController extends MainController
                     'guardian_name' => ['required'],
                     'guardian_phone_number' => ['required']
                 ]);
-                UserProfile::updateOrCreate(
-                    ['users_username' => $username],
+                UserProfile::upsert([
                     [
+                        'users_username' => $username,
                         'identification_number' => strtolower($request->identification_number),
                         'phone_number' => strtolower($request->phone_number),
+                        'gender' => strtolower($request->gender),
                         'date_of_birth' => $request->date_of_birth,
                         'place_of_birth' => strtolower($request->place_of_birth),
                         'home_address' => strtolower($request->home_address),
@@ -97,7 +88,7 @@ class UserProfileController extends MainController
                         'guardian_name' => strtolower($request->guardian_name),
                         'guardian_phone_number' => strtolower($request->guardian_phone_number)
                     ]
-                );
+                ],['users_username'],['identification_number', 'phone_number', 'gender', 'date_of_birth', 'place_of_birth', 'home_address', 'home_number', 'guardian_name', 'guardian_phone_number']);
                 session()->flash('profileUpdateSuccess', 'Profil berjaya dikemas kini!');
                 return redirect()->back();
             }elseif($request->has("password")){
@@ -157,7 +148,7 @@ class UserProfileController extends MainController
         if(Gate::allows('authUser', $username) || Gate::allows('authCoordinator', $username) || Gate::allows('authAdmin')){
                 //Check if student updated their profile
             if(UserProfile::where('users_username', $username)->first()){
-                $profile = UserProfile::join('users', 'users.username', 'user_profiles.users_username')->where('users_username', $username)->select('users.fullname', 'users.email', 'user_profiles.identification_number', 'user_profiles.phone_number', 'user_profiles.date_of_birth', 'user_profiles.place_of_birth', 'user_profiles.home_address', 'user_profiles.home_number', 'user_profiles.guardian_name', 'user_profiles.guardian_phone_number')->first();
+                $profile = UserProfile::join('users', 'users.username', 'user_profiles.users_username')->where('users_username', $username)->select('users.fullname', 'users.email', 'user_profiles.identification_number', 'user_profiles.phone_number', 'user_profiles.gender', 'user_profiles.date_of_birth', 'user_profiles.place_of_birth', 'user_profiles.home_address', 'user_profiles.home_number', 'user_profiles.guardian_name', 'user_profiles.guardian_phone_number')->first();
                 $title = "Slip Profil Pengguna - " . ucwords($profile['fullname']);
                 PDF::SetCreator('eKV');
                 PDF::SetAuthor('eKV');
@@ -207,12 +198,13 @@ class UserProfileController extends MainController
                 PDF::Multicell(50, 5, 'NO. KAD PENGENALAN ', 0, 'L', 0, 2, 10, 105);
                 PDF::Multicell(50, 5, 'ALAMAT E-MEL: ', 0, 'L', 0, 2, 10, 120);
                 PDF::Multicell(50, 5, 'NO. TELEFON PERIBADI ', 0, 'L', 0, 2, 10, 135);
-                PDF::Multicell(50, 5, 'TARIKH LAHIR ', 0, 'L', 0, 2, 10, 150);
-                PDF::Multicell(50, 5, 'TEMPAT LAHIR ', 0, 'L', 0, 2, 10, 165);
-                PDF::Multicell(50, 5, 'ALAMAT RUMAH ', 0, 'L', 0, 2, 10, 180);
-                PDF::Multicell(50, 5, 'NO. TELEFON RUMAH ', 0, 'L', 0, 2, 10, 195);
-                PDF::Multicell(50, 5, 'NAMA PENJAGA ', 0, 'L', 0, 2, 10, 210);
-                PDF::Multicell(50, 5, 'NO. TELEFON PENJAGA ', 0, 'L', 0, 2, 10, 225);
+                PDF::Multicell(50, 5, 'JANTINA ', 0, 'L', 0, 2, 10, 150);
+                PDF::Multicell(50, 5, 'TARIKH LAHIR ', 0, 'L', 0, 2, 10, 165);
+                PDF::Multicell(50, 5, 'TEMPAT LAHIR ', 0, 'L', 0, 2, 10, 180);
+                PDF::Multicell(50, 5, 'ALAMAT RUMAH ', 0, 'L', 0, 2, 10, 195);
+                PDF::Multicell(50, 5, 'NO. TELEFON RUMAH ', 0, 'L', 0, 2, 10, 210);
+                PDF::Multicell(50, 5, 'NAMA PENJAGA ', 0, 'L', 0, 2, 10, 225);
+                PDF::Multicell(50, 5, 'NO. TELEFON PENJAGA ', 0, 'L', 0, 2, 10, 240);
                 //:
                 PDF::SetFont('helvetica', 'B', 10);
                 PDF::Multicell(0, 5, ':', 0, 'L', 0, 2, 60, 90);
@@ -231,12 +223,13 @@ class UserProfileController extends MainController
                 PDF::Multicell(0, 5, strtoupper($profile['identification_number']), 0, 'L', 0, 2, 64, 105);
                 PDF::Multicell(0, 5, strtoupper($profile['email']), 0, 'L', 0, 2, 64, 120);
                 PDF::Multicell(0, 5, strtoupper($profile['phone_number']), 0, 'L', 0, 2, 64, 135);
-                PDF::Multicell(0, 5, strtoupper($profile['date_of_birth']), 0, 'L', 0, 2, 64, 150);
-                PDF::Multicell(0, 5, strtoupper($profile['place_of_birth']), 0, 'L', 0, 2, 64, 165);
-                PDF::Multicell(0, 5, strtoupper($profile['home_address']), 0, 'L', 0, 2, 64, 180);
-                PDF::Multicell(0, 5, strtoupper($profile['home_number']), 0, 'L', 0, 2, 64, 195);
-                PDF::Multicell(0, 5, strtoupper($profile['guardian_name']), 0, 'L', 0, 2, 64, 210);
-                PDF::Multicell(0, 5, strtoupper($profile['guardian_phone_number']), 0, 'L', 0, 2, 64, 225);
+                PDF::Multicell(0, 5, strtoupper($profile['gender']), 0, 'L', 0, 2, 64, 150);
+                PDF::Multicell(0, 5, strtoupper($profile['date_of_birth']), 0, 'L', 0, 2, 64, 165);
+                PDF::Multicell(0, 5, strtoupper($profile['place_of_birth']), 0, 'L', 0, 2, 64, 180);
+                PDF::Multicell(0, 5, strtoupper($profile['home_address']), 0, 'L', 0, 2, 64, 195);
+                PDF::Multicell(0, 5, strtoupper($profile['home_number']), 0, 'L', 0, 2, 64, 210);
+                PDF::Multicell(0, 5, strtoupper($profile['guardian_name']), 0, 'L', 0, 2, 64, 225);
+                PDF::Multicell(0, 5, strtoupper($profile['guardian_phone_number']), 0, 'L', 0, 2, 64, 240);
                 // Footer
                 PDF::SetXY(10, 265);
                 PDF::SetFont('helvetica', '', 9);

@@ -77,36 +77,56 @@
                 <div class="col-12 col-md-11 col-lg-9">
                     <form action="" method="post" class="mt-2 mb-2">
                         @csrf
-                        <h2 class="text-center">Kemas Kini Profil</h2>
+                        <h2 class="text-center mb-3">Kemas Kini Profil</h2>
                         @if (session()->has('profileUpdateSuccess'))
                             <div class="alert alert-success">{{ session('profileUpdateSuccess') }}</div>
                         @endif
-                        <div class="form-floating mb-3">
-                            <input type="text" name="identification_number" id="identification_number" class="form-control" placeholder="number" value="@php if(old('identification_number') !== null){echo old('identification_number');}elseif(isset($profile['identification_number'])){echo $profile['identification_number'];}else{echo NULL;} @endphp">
-                            <label for="identification_number" class="form-label">No. Kad Pengenalan</label>
-                            <div class="form-text">
-                                Format: XXXXXX-XX-XXXX
+                        <div class="row row-cols-2">
+                            <div class="col">
+                                <div class="form-floating mb-3">
+                                    <input type="text" name="identification_number" id="identification_number" class="form-control" placeholder="number" value="@php if(old('identification_number') !== null){echo old('identification_number');}elseif(isset($profile['identification_number'])){echo $profile['identification_number'];}else{echo NULL;} @endphp">
+                                    <label for="identification_number" class="form-label">No. Kad Pengenalan</label>
+                                    <div class="form-text">
+                                        Format: XXXXXX-XX-XXXX
+                                    </div>
+                                    @error('identification_number')
+                                        <div class="alert alert-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
                             </div>
-                            @error('identification_number')
-                                <div class="alert alert-danger">{{ $message }}</div>
-                            @enderror
+                            <div class="col">
+                                <div class="form-floating mb-3">
+                                    <input type="text" name="phone_number" id="phone_number" class="form-control" placeholder="phone" value="@php if(old('phone_number') !== null){echo old('phone_number');}elseif(isset($profile['phone_number'])){echo $profile['phone_number'];}else{echo NULL;} @endphp">
+                                    <label for="phone_number" class="form-label">No. Telefon Peribadi</label>
+                                    <div class="form-text">
+                                        Format: +6012-3456789
+                                    </div>
+                                    @error('phone_number')
+                                        <div class="alert alert-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>                            
                         </div>
-                        <div class="form-floating mb-3">
-                            <input type="text" name="phone_number" id="phone_number" class="form-control" placeholder="phone" value="@php if(old('phone_number') !== null){echo old('phone_number');}elseif(isset($profile['phone_number'])){echo $profile['phone_number'];}else{echo NULL;} @endphp">
-                            <label for="phone_number" class="form-label">No. Telefon Peribadi</label>
-                            <div class="form-text">
-                                Format: +6012-3456789
+                        <div class="row row-cols-2">
+                            <div class="col">
+                                <label for="GenderSelect" class="form-label">Jantina</label>
+                                <select class="form-select mb-3" aria-label="Gender Select" name="gender" id="GenderSelect">
+                                    <option value="lelaki" selected>Lelaki</option>
+                                    <option value="perempuan">Perempuan</option>
+                                </select>
+                                @error('gender')
+                                        <div class="alert alert-danger">{{ $message }}</div>
+                                @enderror
                             </div>
-                            @error('phone_number')
-                                <div class="alert alert-danger">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="form-floating mb-3">
-                            <input type="date" name="date_of_birth" id="date_of_birth" class="form-control" placeholder="date" value="@php if(old('date_of_birth') !== null){echo old('date_of_birth');}elseif(isset($profile['date_of_birth'])){echo $profile['date_of_birth'];}else{echo NULL;} @endphp">
-                            <label for="date_of_birth" class="form-label">Tarikh Lahir</label>
-                            @error('date_of_birth')
-                                <div class="alert alert-danger">{{ $message }}</div>
-                            @enderror
+                            <div class="col mt-2">
+                                <div class="form-floating mb-3">
+                                    <input type="date" name="date_of_birth" id="date_of_birth" class="form-control" placeholder="date" value="@php if(old('date_of_birth') !== null){echo old('date_of_birth');}elseif(isset($profile['date_of_birth'])){echo $profile['date_of_birth'];}else{echo NULL;} @endphp">
+                                    <label for="date_of_birth" class="form-label">Tarikh Lahir</label>
+                                    @error('date_of_birth')
+                                        <div class="alert alert-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
                         </div>
                         <div class="form-floating mb-3">
                             <input type="text" name="place_of_birth" id="place_of_birth" class="form-control" placeholder="location" value="@php if(old('place_of_birth') !== null){echo old('place_of_birth');}elseif(isset($profile['place_of_birth'])){echo $profile['place_of_birth'];}else{echo NULL;} @endphp">
@@ -122,16 +142,7 @@
                                 <div class="alert alert-danger">{{ $message }}</div>
                             @enderror
                         </div>
-                        <div class="form-floating mb-3">
-                            <input type="text" name="home_number" id="home_number" class="form-control" placeholder="number" value="@php if(old('home_number') !== null){echo old('home_number');}elseif(isset($profile['home_number'])){echo $profile['home_number'];}else{echo NULL;} @endphp">
-                            <label for="home_number" class="form-label">No. Telefon Rumah</label>
-                            <div class="form-text">
-                                Format: +601-2345678
-                            </div>
-                            @error('home_number')
-                                <div class="alert alert-danger">{{ $message }}</div>
-                            @enderror
-                        </div>
+                        
                         <div class="form-floating mb-3">
                             <input type="text" name="guardian_name" id="guardian_name" class="form-control" placeholder="name" value="@php if(old('guardian_name') !== null){echo old('guardian_name');}elseif(isset($profile['guardian_name'])){echo $profile['guardian_name'];}else{echo NULL;} @endphp">
                             <label for="guardian_name" class="form-label">Nama Penjaga</label>
@@ -139,15 +150,31 @@
                                 <div class="alert alert-danger">{{ $message }}</div>
                             @enderror
                         </div>
-                        <div class="form-floating mb-3">
-                            <input type="text" name="guardian_phone_number" id="guardian_phone_number" class="form-control" placeholder="phone" value="@php if(old('guardian_phone_number') !== null){echo old('guardian_phone_number');}elseif(isset($profile['guardian_phone_number'])){echo $profile['guardian_phone_number'];}else{echo NULL;} @endphp">
-                            <label for="guardian_phone_number" class="form-label">No. Telefon Penjaga</label>
-                            <div class="form-text">
-                                Format: +6012-3456789
+                        <div class="row row-cols-2">
+                            <div class="col">
+                                <div class="form-floating mb-3">
+                                    <input type="text" name="home_number" id="home_number" class="form-control" placeholder="number" value="@php if(old('home_number') !== null){echo old('home_number');}elseif(isset($profile['home_number'])){echo $profile['home_number'];}else{echo NULL;} @endphp">
+                                    <label for="home_number" class="form-label">No. Telefon Rumah</label>
+                                    <div class="form-text">
+                                        Format: +601-2345678
+                                    </div>
+                                    @error('home_number')
+                                        <div class="alert alert-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
                             </div>
-                            @error('guardian_phone_number')
-                                <div class="alert alert-danger">{{ $message }}</div>
-                            @enderror
+                            <div class="col">
+                                <div class="form-floating mb-3">
+                                    <input type="text" name="guardian_phone_number" id="guardian_phone_number" class="form-control" placeholder="phone" value="@php if(old('guardian_phone_number') !== null){echo old('guardian_phone_number');}elseif(isset($profile['guardian_phone_number'])){echo $profile['guardian_phone_number'];}else{echo NULL;} @endphp">
+                                    <label for="guardian_phone_number" class="form-label">No. Telefon Penjaga</label>
+                                    <div class="form-text">
+                                        Format: +6012-3456789
+                                    </div>
+                                    @error('guardian_phone_number')
+                                        <div class="alert alert-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
                         </div>
                         <button type="submit" class="btn btn-primary w-100 mb-5 hvr-shrink" name="profile">Kemas Kini</button>
                     </form>
