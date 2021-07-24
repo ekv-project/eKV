@@ -24,10 +24,10 @@ Student Information Management System for Malaysian Vocational Colleges.
 1. Download the source code of this system.
 2. Setup your web server (Apache/Nginx) to suit Laravel app.
 3. Copy `.env.example` file and rename to `.env`. Configure the `.env` file for database connection.
-4. Generate the application key with `php artisan key:generate` command. This key will be stored in `.env` file and be used for encryption.
-5. (Optional) For production environment, set the `APP_DEBUG` value to `false` to prevent sensitive config to be exposed to the user.
-6. Run `composer update`, `npm update`, `composer install`, `npm install` to update/upgrade and install necessary dependencies.
-7. Run `npm run prod` to and compile the assests.
+4. Run `composer update`, `npm update`, `composer install`, `npm install` to update/upgrade and install necessary dependencies.
+5. Run `npm run prod` to and compile the assests.
+6. Generate the application key with `php artisan key:generate` command. This key will be stored in `.env` file and be used for encryption.
+7. (Optional) For production environment, set the `APP_DEBUG` value to `false` to prevent sensitive config to be exposed to the user.
 8. Upload the files to your web server.
 9. Go to your `/install` to proceed the installation.
 The script will add a new `admin` user, migrate the database and generate the application key.
