@@ -13,10 +13,10 @@ class InstituteSettingController extends MainController
     /**
      * Handling views
      */
-    public function view(){
+    public function view(Request $request){
         return view('dashboard.admin.institute.view')->with(['settings' => $this->instituteSettings, 'page' => 'Sistem']);
     }
-    public function updateView(){
+    public function updateView(Request $request){
         return view('dashboard.admin.institute.update')->with(['settings' => $this->instituteSettings, 'page' => 'Sistem']);
     }
     /**

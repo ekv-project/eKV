@@ -69,9 +69,11 @@ class UserController extends MainController
                     'ip_address' => $request->ip(),
                     'user_agent' => $request->server('HTTP_USER_AGENT')
                 ]);
-                $user = User::find($username);
-                $user->api_token = csrf_token();
-                $user->save();
+                $id = User::select('id')->where('username', '=', $username)->first()->id;
+                $user = User::find($id);
+                $token = $user->createToken('apitoken');
+                // Add Bearer API Token to session
+                $request->session()->put('bearerAPIToken', $token->plainTextToken);
                 return redirect()->intended('dashboard');
             }else{
                 return back()->withInput()->withErrors([
@@ -85,9 +87,13 @@ class UserController extends MainController
         }
     }
     public function logout(Request $request){
-        $user = User::find(Auth::user()->username);
-        $user->api_token = null;
-        $user->save();
+        if(auth()->user()->tokens() != NULL){
+            auth()->user()->tokens()->delete();
+        }
+        // Remove Bearer API Token from session
+        if ($request->session()->has('bearerAPIToken')) {
+            $request->session()->forget('bearerAPIToken');
+        }
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();

@@ -1,9 +1,11 @@
 <?php
 
+use App\Models\User;
+use Illuminate\Http\Request;
+use App\Models\LoginActivity;
 use App\Models\InstituteSetting;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Request;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\Exam\ExamController;
 use App\Http\Controllers\User\UserController;
@@ -17,15 +19,6 @@ use App\Http\Controllers\User\UserProfileController;
 use App\Http\Controllers\Classroom\ClassroomController;
 use App\Http\Controllers\LiveSearch\LiveSearchController;
 use App\Http\Controllers\Admin\ClassroomController as AdminClassroomController;
-
-/**
- * API Routes
- * 
- * API routes is added here to be able to authorize API request using CSRF Tokens from Authorization header.
- * I know this is not the right way to do it, but for my implementation, it should be enough.
- * I'm trying my best to follow RFC7235 or any other specs but my knowledge and time is limited.
- */
-Route::get('/api/search/{data}/{dataType}', [LiveSearchController::class, 'search']);
 
 /*
 |--------------------------------------------------------------------------
@@ -59,7 +52,7 @@ Route::post('/dashboard/logout', [UserController::class, 'logout'])->name('logou
  * Dashboard
  */
 
-Route::get('/dashboard', function () { 
+Route::get('/dashboard', function (Request $request) { 
     $instituteSettings = InstituteSetting::find(1);
     return view('dashboard.dashboard')->with(['page' => 'Dashboard', 'settings' => $instituteSettings]);
 })->name('dashboard')->middleware(['auth']);

@@ -13,6 +13,7 @@ class UserProfile extends Model
         'users_username',
         'identification_number',
         'phone_number',
+        'gender',
         'date_of_birth',
         'place_of_birth',
         'home_address',

@@ -75,6 +75,11 @@ return [
         //     'driver' => 'database',
         //     'table' => 'users',
         // ],
+
+        'personal_access_tokens' => [
+            'driver' => 'database',
+            'table' => 'personal_access_tokens',
+        ],
     ],
 
     /*

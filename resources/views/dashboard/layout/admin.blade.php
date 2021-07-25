@@ -4,9 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    @if(isset(Auth::user()->api_token) AND Auth::user()->api_token != NULL)
-        <meta name="api-token" content="{{ Auth::user()->api_token }}">
-    @endif
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <link rel="stylesheet" href="{{ asset('bootstraps-icons/font/bootstrap-icons.css') }}">
     @if(Storage::disk('local')->exists('public/img/system/logo-300.png'))
