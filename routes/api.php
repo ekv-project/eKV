@@ -35,16 +35,6 @@ Route::group(['middleware' => ['auth:sanctum']], function (){
     Route::get('/statistic/login/year', [StatisticController::class, 'showLoginStatisticsByYearCount']);
 });
 
-/**
- * Display the total count of login statistics by role
- */
-
-Route::group(['middleware' => ['auth:sanctum']], function (){
-    Route::get('/statistic/login/all/role/{role}', [StatisticController::class, 'showLoginStatisticsAllRoleCount']);
-    Route::get('/statistic/login/day/role/{role}', [StatisticController::class, 'showLoginStatisticsByDayRoleCount']);
-    Route::get('/statistic/login/month/role/{role}', [StatisticController::class, 'showLoginStatisticsByMonthRoleCount']);
-    Route::get('/statistic/login/year/role/{role}', [StatisticController::class, 'showLoginStatisticsByYearRoleCount']);
-});
 
 //Route::middleware('auth:api')->get('/search', [LiveSearchController::class, 'search']);
 //Route::middleware('auth:api')->get('/search', [LiveSearchController::class, 'search']);

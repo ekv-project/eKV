@@ -2,5 +2,6 @@
     "/js/addRemoveField.js": "/js/addRemoveField.js",
     "/js/app.js": "/js/app.js",
     "/css/app.css": "/css/app.css",
-    "/js/liveSearch.js": "/js/liveSearch.js"
+    "/js/liveSearch.js": "/js/liveSearch.js",
+    "/js/statistic.js": "/js/statistic.js"
 }
