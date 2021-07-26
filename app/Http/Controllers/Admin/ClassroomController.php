@@ -96,9 +96,10 @@ class ClassroomController extends MainController
                         'programs_code' => strtolower($programs_code),
                         'admission_year' => strtolower($admission_year),
                         'study_year' => strtolower($study_year),
-                        'study_levels_code' => strtolower($study_levels_code)
+                        'study_levels_code' => strtolower($study_levels_code),
+                        'active_status' => 1
                     ]
-                ], ['id'], ['name', 'programs_code', 'admission_year', 'study_year', 'study_levels_code']);
+                ], ['id'], ['name', 'programs_code', 'admission_year', 'study_year', 'study_levels_code', 'active_status']);
                 session()->flash('classroomAddSuccess', 'Kelas berjaya ditambah!');
                 session()->flash('classroomID', $classroomID);
                 return redirect()->back();
@@ -125,7 +126,8 @@ class ClassroomController extends MainController
                 'programs_code' => ['required'],
                 'admission_year' => ['required', 'date_format:Y'],
                 'study_year' => ['required', 'date_format:Y'],
-                'study_levels_code' => ['required']
+                'study_levels_code' => ['required'],
+                'active_status' => ['required', 'integer']
             ]);
             $classroomID = $request->id;
             $name = strtolower($request->name);
@@ -142,9 +144,10 @@ class ClassroomController extends MainController
                         'programs_code' => strtolower($programs_code),
                         'admission_year' => strtolower($admission_year),
                         'study_year' => strtolower($study_year),
-                        'study_levels_code' => strtolower($study_levels_code)
+                        'study_levels_code' => strtolower($study_levels_code),
+                        'active_status' => $request->active_status
                     ]
-                ], ['id'], ['name', 'programs_code', 'admission_year', 'study_year', 'study_levels_code']);
+                ], ['id'], ['name', 'programs_code', 'admission_year', 'study_year', 'study_levels_code', 'active_status']);
                 session()->flash('classroomUpdateSuccess', 'Kelas berjaya dikemas kini!');
                 return redirect()->back();
             }else{

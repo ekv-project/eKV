@@ -19,6 +19,7 @@
                                 <th class="col-1 align-middle">TAHUN KEMASUKAN</th>
                                 <th class="col-1 align-middle">TAHUN PENGAJIAN TERKINI</th>
                                 <th class="col-1 align-middle">TAHAP PENGAJIAN</th>
+                                <th class="col-1 align-middle">STATUS</th>
                                 <th class="col-1 align-middle">LIHAT</th>
                             </tr>
                         </thead>
@@ -31,6 +32,13 @@
                                     <td>{{ strtoupper($c->classroom->admission_year) }}</td>
                                     <td>{{ strtoupper($c->classroom->study_year) }}</td>
                                     <td>{{ strtoupper($c->classroom->study_levels_code) }}</td>
+                                    <td>
+                                        @if($c->classroom->active_status == 1)
+                                            <p class="btn btn-success text-light w-100">Aktif</p>
+                                        @elseif($c->classroom->active_status == 0)
+                                            <p class="btn btn-danger text-light w-100">Nyahaktif</p>
+                                        @endif
+                                    </td>
                                     <td><a href="{{ route('classroom.view', [$c->classroom->id]) }}" class="btn btn-primary hvr-shrink"><i class="bi bi-eye"></i></a></td>
                                 </tr>
                             @endforeach

@@ -64,6 +64,14 @@
                             <div class="alert alert-danger">{{ $message }}</div>
                         @enderror
                     </div>
+                    <label for="active_status" class="form-label">Status Aktif Kelas</label>
+                    <select class="form-select mb-3" aria-label=".form-select-sm" name="active_status" id="active_status">
+                        <option value="1">Aktif</option>
+                        <option value="0">Nyahaktif</option>
+                    </select>
+                    @error('active_status')
+                        <div class="alert alert-danger mb-3">{{ $message }}</div>
+                    @enderror
                     <button type="submit" class="btn btn-primary w-100 hvr-shrink">Kemas Kini</button>
                 </form>
             </div>

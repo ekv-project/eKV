@@ -88,7 +88,7 @@ class ClassroomController extends MainController
         if(Classroom::where('id', $classroomID)->count() < 1){
             abort(404, 'Tiada kelas dijumpai');
         }elseif(Gate::allows('authCoordinator', $classroomID) || Gate::allows('authAdmin') || Gate::allows('authSuperAdmin')){
-            $classroomData = Classroom::select('id', 'name', 'programs_code', 'admission_year', 'study_year')->where('id', $classroomID)->first();
+            $classroomData = Classroom::select('id', 'name', 'programs_code', 'admission_year', 'study_year', 'study_levels_code')->where('id', $classroomID)->first();
             return view('dashboard.user.classroom.update')->with(['settings' => $this->instituteSettings, 'page' => 'Maklumat Kelas', 'classroomData' => $classroomData]);
         }else{
             abort(403, 'Anda tiada akses paga laman ini');
@@ -155,22 +155,24 @@ class ClassroomController extends MainController
                 'programs_code' => ['required'],
                 'admission_year' => ['required', 'date_format:Y'],
                 'study_year' => ['required', 'date_format:Y'],
-                'study_levels_code' => ['required']
+                'study_levels_code' => ['required'],
+                'active_status' => ['required', 'integer']
             ]);
             $program = Program::where('code', $request->programs_code)->get()->count();
             $studyLevel = StudyLevel::where('code', $request->study_levels_code)->get()->count();
             if($program > 0){
                 if($studyLevel > 0){
-                    Classroom::updateOrCreate(
-                        ['id' => $classroomID],
+                    Classroom::upsert([
                         [
-                            'name' => strtolower($request->programs_code),
+                            'id' => $classroomID,
+                            'name' => strtolower($request->name),
                             'programs_code' => strtolower($request->programs_code),
                             'admission_year' => strtolower($request->admission_year),
+                            'study_year' => $request->study_year,
                             'study_levels_code' => strtolower($request->study_levels_code),
-                            'study_year' => strtolower($request->study_year)
+                            'active_status' => $request->active_status
                         ]
-                    );
+                    ], ['id'], ['name', 'programs_code', 'admission_year', 'study_year', 'study_levels_code', 'active_status']);
                     session()->flash('classroomUpdateSuccess', 'Maklumat kelas berjaya dikemas kini!');
                     return redirect()->back();
                 }elseif($studyLevel < 1){
