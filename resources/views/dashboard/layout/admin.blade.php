@@ -91,6 +91,9 @@
                                     <li><a class="dropdown-item" href="{{ route('admin.institute.update') }}">Kemas Kini</a></li>
                                 </ul>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('admin.statistic') }}">Statistik</a>
+                              </li>
                         </ul>
                     </div>
                 </div>

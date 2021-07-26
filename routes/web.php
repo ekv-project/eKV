@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\InstallationController;
 use App\Http\Controllers\Admin\ProgramController;
+use App\Http\Controllers\Admin\StatisticController;
 use App\Http\Controllers\Admin\StudyLevelController;
 use App\Http\Controllers\InstituteSettingController;
 use App\Http\Controllers\User\UserProfileController;
@@ -138,3 +139,5 @@ Route::post('/dashboard/admin/classroom',[AdminClassroomController::class, 'remo
 Route::get('/dashboard/admin/institute',[InstituteSettingController::class, 'view'])->name('admin.institute')->middleware(['auth', 'userIsAdmin']);
 Route::get('/dashboard/admin/institute/update',[InstituteSettingController::class, 'updateView'])->name('admin.institute.update')->middleware(['auth', 'userIsAdmin']);
 Route::post('/dashboard/admin/institute/update',[InstituteSettingController::class, 'updateSettings'])->middleware(['auth', 'userIsAdmin']);
+
+Route::get('/dashboard/admin/statistic',[StatisticController::class, 'view'])->name('admin.statistic')->middleware(['auth', 'userIsAdmin']);

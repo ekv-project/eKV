@@ -15,4 +15,5 @@ mix.sass('resources/scss/app.scss', 'public/css')
     .js('resources/js/app.js', 'public/js')
     .js('resources/js/liveSearch.js', 'public/js')
     .js('resources/js/addRemoveField.js', 'public/js')
+    .js('resources/js/statistic.js', 'public/js')
     .copy('node_modules/bootstrap-icons', 'public/bootstraps-icons');
