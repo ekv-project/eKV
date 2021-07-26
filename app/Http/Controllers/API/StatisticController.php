@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use DateTime;
+use Carbon\Carbon;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\LoginActivity;
@@ -32,6 +33,42 @@ class StatisticController extends Controller
             'admin' => checkPeriod($adminActivities),
             'lecturer' => checkPeriod($lecturerActivities),
             'student' => checkPeriod($studentActivities),
+        ]);
+    }
+
+    public function showLoginStatisticsByWeekCount(Request $request){
+        // I just discovered the existance of Carbon library LOL. This will help for dealing with date and time.
+        Carbon::useMonthsOverflow(false);
+        $monday = Carbon::now('Asia/Kuala_Lumpur')->startOfWeek();
+        $tuesday = $monday->copy()->addDay();
+        $wednesday = $tuesday->copy()->addDay();
+        $thursday = $wednesday->copy()->addDay();
+        $friday = $thursday->copy()->addDay();
+        $saturday = $friday->copy()->addDay();
+        $sunday = Carbon::now('Asia/Kuala_Lumpur')->endOfWeek();
+        $dayList = [$monday->format('d-m-Y'), $tuesday->format('d-m-Y'), $wednesday->format('d-m-Y'), $thursday->format('d-m-Y'), $friday->format('d-m-Y'), $saturday->format('d-m-Y'), $sunday->format('d-m-Y')];
+        $adminActivities = User::join('login_activities', 'users.username', '=', 'login_activities.users_username')->select('users_username', 'login_activities.created_at')->where('users.role', 'admin')->orWhere('users.role', 'superadmin')->get();
+        $lecturerActivities = User::join('login_activities', 'users.username', '=', 'login_activities.users_username')->select('users_username', 'login_activities.created_at')->where('users.role', 'lecturer')->get();
+        $studentActivities = User::join('login_activities', 'users.username', '=', 'login_activities.users_username')->select('users_username', 'login_activities.created_at')->where('users.role', 'student')->get();
+
+        function checkPeriod($activities, $dayList){
+            $validatedActivities = [];
+            foreach ($activities as $key => $value) {
+                foreach ($dayList as $date) {
+                    if($value->created_at->format('d-m-Y') == $date){
+                        array_push($validatedActivities, $value->users_username);
+                    }
+                }
+            }
+            return count($validatedActivities);
+        }
+        
+        return response()->json([
+            'time_period' => 'week',
+            'total' => checkPeriod($adminActivities, $dayList) + checkPeriod($lecturerActivities, $dayList) + checkPeriod($studentActivities, $dayList),
+            'admin' => checkPeriod($adminActivities, $dayList),
+            'lecturer' => checkPeriod($lecturerActivities, $dayList),
+            'student' => checkPeriod($studentActivities, $dayList),
         ]);
     }
 

@@ -31,6 +31,7 @@ use App\Http\Controllers\LiveSearch\LiveSearchController;
 Route::group(['middleware' => ['auth:sanctum']], function (){
     Route::get('/statistic/login/all', [StatisticController::class, 'showLoginStatisticsAllCount']);
     Route::get('/statistic/login/day', [StatisticController::class, 'showLoginStatisticsByDayCount']);
+    Route::get('/statistic/login/week', [StatisticController::class, 'showLoginStatisticsByWeekCount']);
     Route::get('/statistic/login/month', [StatisticController::class, 'showLoginStatisticsByMonthCount']);
     Route::get('/statistic/login/year', [StatisticController::class, 'showLoginStatisticsByYearCount']);
 });

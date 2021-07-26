@@ -159,21 +159,15 @@ function viewAllCharts(timePeriod){
             // });
             break;
         case "week":
-            // getTotal('week', 'student').then(function (response) {
-            //     let totalStudent = response.data.count;
-            //     getTotal('week', 'lecturer').then(function (response) {
-            //         let totalLecturer = response.data.count;
-            //         getTotal('week', 'admin').then(function (response) {
-            //             let totalAdmin = response.data.count;
-            //             let totalRole = totalStudent + totalLecturer + totalAdmin;
-            //             chart1Total.innerText = 'Jumlah: ' + totalRole;
-            //             console.log('Jumlah Hari Ini:' + totalRole);
-            //             let data = [totalStudent, totalLecturer, totalAdmin];
-            //             console.log(data);
-            //             updateChartData(chart1Chart, data);
-            //         });
-            //     });
-            // });
+            getTotal('week').then(function (response) {
+                let data = response.data;
+                let total = data.total;
+                let admin = data.admin;
+                let lecturer = data.lecturer;
+                let student = data.student;
+                updateChartData(chart1Chart, [student, lecturer, admin]);
+                chart1Total.innerText = 'Jumlah: ' + total;
+            });
             break;
         case "month":
             getTotal('month').then(function (response) {
