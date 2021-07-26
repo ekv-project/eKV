@@ -101,6 +101,7 @@
                                 <th class="col-1 align-middle">TAHUN PENGAJIAN TERKINI</th>
                                 <th class="col-1 align-middle">TAHAP PENGAJIAN</th>
                                 <th class="col-1 align-middle">ID KOORDINATOR</th>
+                                <th class="col-1 align-middle">STATUS</th>
                                 <th class="col-1 align-middle">LIHAT</th>
                                 <th class="col-1 align-middle">KEMAS KINI</th>
                                 <th class="col-1 align-middle">BUANG</th>
@@ -121,6 +122,13 @@
                                                 <a href="{{ route('profile.user', [$cc->users_username]) }}" target="_blank" class="text-dark hvr-underline-reveal">{{ strtoupper($cc->users_username) }}</a> 
                                             @endif
                                         @endforeach
+                                    </td>
+                                    <td>
+                                        @if($c->active_status == 1)
+                                            <p class="btn btn-success text-light w-100">Aktif</p>
+                                        @elseif($c->active_status == 0)
+                                            <p class="btn btn-danger text-light w-100">Nyahaktif</p>
+                                        @endif
                                     </td>
                                     <td><a href="{{ route('classroom.view', [$c->id]) }}" target="_blank" class="btn btn-primary hvr-shrink"><i class="bi bi-eye"></i></a></td>
                                     <td><a class="btn btn-primary hvr-shrink" href="{{ route('admin.classroom.update', ['id' => $c->id]) }}"><i class="bi bi-pencil-square"></i></a></td>
