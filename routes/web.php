@@ -3,10 +3,12 @@
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\LoginActivity;
+use App\Models\AnnouncementPost;
 use App\Models\InstituteSetting;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Exam\ExamController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Admin\AdminController;
@@ -19,6 +21,7 @@ use App\Http\Controllers\InstituteSettingController;
 use App\Http\Controllers\User\UserProfileController;
 use App\Http\Controllers\Classroom\ClassroomController;
 use App\Http\Controllers\LiveSearch\LiveSearchController;
+use App\Http\Controllers\Admin\AnnouncementPostController;
 use App\Http\Controllers\Admin\ClassroomController as AdminClassroomController;
 
 /*
@@ -53,10 +56,7 @@ Route::post('/dashboard/logout', [UserController::class, 'logout'])->name('logou
  * Dashboard
  */
 
-Route::get('/dashboard', function (Request $request) { 
-    $instituteSettings = InstituteSetting::find(1);
-    return view('dashboard.dashboard')->with(['page' => 'Dashboard', 'settings' => $instituteSettings]);
-})->name('dashboard')->middleware(['auth']);
+Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard')->middleware(['auth']);
 
 /**
  *  User Profile
@@ -135,6 +135,14 @@ Route::get('/dashboard/admin/classroom/update/{id}',[AdminClassroomController::c
 Route::post('/dashboard/admin/classroom/add',[AdminClassroomController::class, 'add'])->middleware(['auth', 'userIsAdmin']);
 Route::post('/dashboard/admin/classroom/update/{id}',[AdminClassroomController::class, 'update'])->middleware(['auth', 'userIsAdmin']);
 Route::post('/dashboard/admin/classroom',[AdminClassroomController::class, 'remove'])->middleware(['auth', 'userIsAdmin']);
+
+// Annoucement Posts
+//Route::get('/dashboard/admin/announcement',[AnnouncementPostController::class, 'view'])->name('admin.announcement')->middleware(['auth', 'userIsAdmin']);
+Route::get('/dashboard/admin/announcement/add',[AnnouncementPostController::class, 'create'])->name('admin.announcement.add')->middleware(['auth', 'userIsAdmin']);
+//Route::get('/dashboard/admin/announcement/update/{id}',[AnnouncementPostController::class, 'updateView'])->name('admin.announcement.update')->middleware(['auth', 'userIsAdmin']);
+Route::post('/dashboard/admin/announcement/add',[AnnouncementPostController::class, 'store'])->middleware(['auth', 'userIsAdmin']);
+//Route::post('/dashboard/admin/announcement/update/{id}',[AnnouncementPostController::class, 'update'])->middleware(['auth', 'userIsAdmin']);
+//Route::post('/dashboard/admin/announcement',[AnnouncementPostController::class, 'remove'])->middleware(['auth', 'userIsAdmin']);
 
 Route::get('/dashboard/admin/institute',[InstituteSettingController::class, 'view'])->name('admin.institute')->middleware(['auth', 'userIsAdmin']);
 Route::get('/dashboard/admin/institute/update',[InstituteSettingController::class, 'updateView'])->name('admin.institute.update')->middleware(['auth', 'userIsAdmin']);
