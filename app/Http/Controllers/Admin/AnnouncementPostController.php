@@ -64,7 +64,12 @@ class AnnouncementPostController extends MainController
      */
     public function show($id)
     {
-        //
+        if(AnnouncementPost::where('id', $id)->first()){
+            $announcementPost = AnnouncementPost::select('users.fullname', 'announcement_posts.id', 'announcement_posts.title', 'announcement_posts.content', 'announcement_posts.created_at', 'announcement_posts.updated_at')->join('users', 'announcement_posts.user_id', '=', 'users.id')->where('announcement_posts.id', $id)->first();
+            return view('dashboard.admin.announcement.show')->with(['page' => 'Butiran Pengumuman', 'announcementPost' => $announcementPost, 'settings' => $this->instituteSettings]);
+        }else{
+            abort(404, 'Pengumuman tidak dijumpai!');
+        }
     }
 
     /**

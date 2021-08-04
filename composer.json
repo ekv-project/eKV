@@ -12,6 +12,7 @@
         "blade-ui-kit/blade-ui-kit": "^0.3.1",
         "doctrine/dbal": "^3.1",
         "elibyy/tcpdf-laravel": "^8.1",
+        "erusev/parsedown": "^1.7",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
@@ -19,6 +20,7 @@
         "laravel/framework": "^8.12",
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
+        "parsedown/laravel": "^1.2",
         "phpoffice/phpspreadsheet": "^1.16",
         "tecnickcom/tc-lib-pdf": "^8.0"
     },

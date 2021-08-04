@@ -37,7 +37,7 @@
                                     <div class="row"><p class="fs-5">{{ strtoupper($post->title) }}</p></div>
                                     <div class="row"><span class="fw-bold">Tarikh dan Waktu: </span><x-buk-carbon :date="$post->created_at" format="d F Y, h:i A"/></div>
                                     <div class="row"><span class="fw-bold">Penulis: </span><span>{{ strtoupper($post->fullname) }}</span></div>
-                                    <div class="row mt-3"><span><a href="" class="btn btn-outline-primary btn-sm col col-2 hvr-shrink"><i class="bi bi-arrow-right-circle"></i> Baca Lanjut</a></span></div>
+                                    <div class="row mt-3"><span><a href="{{ route('announcement.view', ['id' => $post->id]) }}" class="btn btn-outline-primary btn-sm col col-2 hvr-shrink"><i class="bi bi-arrow-right-circle"></i> Baca Lanjut</a></span></div>
                                 </div>
                             </div>
                         </div> 
