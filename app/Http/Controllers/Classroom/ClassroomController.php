@@ -77,7 +77,7 @@ class ClassroomController extends MainController
         if(Classroom::where('id', $classroomID)->count() < 1){
             abort(404, 'Tiada kelas dijumpai');
         }elseif(Gate::allows('authCoordinator', $classroomID) || Gate::allows('authAdmin') || Gate::allows('authSuperAdmin')){
-            $students = ClassroomStudent::where('classrooms_id', $classroomID)->with('user')->get();
+            $students = ClassroomStudent::select('users.username', 'users.fullname')->join('users', 'classroom_students.users_username', 'users.username')->where('classroom_students.classrooms_id', $classroomID)->get();
             $classroomData = Classroom::select('id', 'name', 'programs_code', 'admission_year', 'study_year')->where('id', $classroomID)->first();
             return view('dashboard.user.classroom.student')->with(['settings' => $this->instituteSettings, 'page' => 'Pelajar Kelas', 'students' => $students, 'classroomData' => $classroomData]);
         }else{

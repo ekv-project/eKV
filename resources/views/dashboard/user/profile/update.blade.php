@@ -2,14 +2,14 @@
 @section('content')
     {{-- Only allows current authenticated user to update their own profile --}} 
     <div class="container-fluid mt-1 w-100 h-100 d-flex flex-column align-items-center">
-        <div class="row rounded-3 shadow-lg mt-5 w-100">
+        <div class="row rounded-3 shadow-lg mt-5 w-100 bg-light">
             <div class="col-6 my-3 text-start">
                 <a href="{{ route('profile.user', [$username]) }}" class="btn btn-primary"><i class="bi bi-arrow-return-left"></i>Profil</a>
             </div>
             <div class="col-6 my-3 text-end">
             </div>
         </div>
-        <div class="row rounded-3 shadow-lg mt-2 mb-2 w-100 d-flex flex-column justify-content-center align-items-center">
+        <div class="row rounded-3 shadow-lg mt-2 mb-2 w-100 d-flex flex-column justify-content-center align-items-center bg-light">
             {{-- Only student can update their profile while others can only update their profile picture and password --}}
             {{-- Update Profile Picture --}}
             <div class="col-12 col-md-11 col-lg-9">
@@ -31,7 +31,7 @@
                 </form>
             </div>
         </div>
-        <div class="row rounded-3 shadow-lg mt-2 mb-2 w-100 d-flex flex-column justify-content-center align-items-center">
+        <div class="row rounded-3 shadow-lg mt-2 mb-2 w-100 d-flex flex-column justify-content-center align-items-center bg-light">
             {{-- Update Password --}}
             <div class="col-12 col-md-11 col-lg-9">
                 <form action="" method="post" class="mt-2 mb-2">

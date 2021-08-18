@@ -1,14 +1,14 @@
 @extends('dashboard.layout.main')
 @section('content')
     <div class="container-fluid mt-1 w-100 h-100 d-flex flex-column align-items-center">
-        <div class="row rounded-3 shadow-lg mt-5 w-100">
+        <div class="row rounded-3 shadow-lg mt-5 w-100 bg-light">
             <div class="col-6 my-3 text-start">
                 <a href="{{ route('transcript.student', [$studentDetails['matrixNumber']]) }}" class="btn btn-primary"><i class="bi bi-arrow-return-left"></i>Senarai Transkrip</a>
             </div>
             <div class="col-6 my-3 text-end">
             </div>
         </div>
-        <div class="row rounded-3 shadow-lg mt-2 mb-5 w-100 d-flex flex-column align-items-center justify-content-center">
+        <div class="row rounded-3 shadow-lg mt-2 mb-5 w-100 d-flex flex-column align-items-center justify-content-center bg-light">
             <div class="row text-center">
                 <h2 class="my-4">Transkrip Penilaian Semester</h2>
             </div>

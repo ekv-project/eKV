@@ -25,7 +25,7 @@
     </title>
     @bukStyles
 </head>
-<body>
+<body background="{{ asset('storage/img/background_image.svg') }}">
     {{-- Hamburger Menu Button --}}
     <div class="d-flex d-lg-none d-md-flex position-fixed top-0 start-0 hamburger-menu" style="z-index: 100">
         <div class="hamburger-layer"></div>

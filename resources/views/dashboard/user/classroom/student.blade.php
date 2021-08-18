@@ -1,14 +1,14 @@
 @extends('dashboard.layout.main')
 @section('content')
     <div class="container-fluid mt-1 w-100 h-100 d-flex flex-column align-items-center">
-        <div class="row rounded-3 shadow-lg mt-5 w-100">
+        <div class="row rounded-3 shadow-lg mt-5 w-100 bg-light">
             <div class="col-6 my-3 text-start">
                 <a href="{{ route('classroom.view', [$classroomData['id']]) }}" class="btn btn-primary"><i class="bi bi-arrow-return-left"></i>Kelas</a>
             </div>
             <div class="col-6 my-3">
             </div>
         </div>
-        <div class="row rounded-3 shadow-lg mt-2 mb-6 w-100">
+        <div class="row rounded-3 shadow-lg mt-2 mb-6 w-100 bg-light">
             <div class="row w-100">
                 <h2 class="text-center mt-md-4">Kemas Kini Senarai Pelajar</h2>
                 <h2 class="text-left mt-md-4 fs-5 mb-4 fw-bold">ID Kelas: <span class="fw-normal">{{ $classroomData['id'] }}</span></h2>
@@ -61,12 +61,12 @@
                             <tbody>
                                 @foreach ($students as $student)
                                 <tr>
-                                    <td>{{ strtoupper($student->user->username) }}</td>
-                                    <td>{{ strtoupper($student->user->fullname) }} </td>
+                                    <td>{{ strtoupper($student->username) }}</td>
+                                    <td>{{ strtoupper($student->fullname) }} </td>
                                     <td>
                                         <form action="" method="post" class="d-flex justify-content-center">
                                             @csrf
-                                            <input type="hidden" name="username" value="{{ $student->user->username }}">
+                                            <input type="hidden" name="username" value="{{ $student->username }}">
                                             <button type="submit" class="btn btn-danger" name="remove"><i class="bi bi-trash"></i></button>
                                         </form>
                                     </td>

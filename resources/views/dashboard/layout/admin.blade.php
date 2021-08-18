@@ -24,7 +24,7 @@
     </title>
     @bukStyles
 </head>
-<body>
+<body background="{{ asset('storage/img/background_image.svg') }}">
     <div class="container-fluid row min-vh-100 w-100 d-flex flex-column align-items-center m-0 p-0">
         <div class="col-11 col-lg-10 mt-3">
             <a href="{{ route('dashboard') }}" class="btn btn-primary"><i class="bi bi-arrow-return-left"></i> Kembali Ke Dashboard</a>
@@ -109,7 +109,7 @@
                 </div>
             </nav>
         </div>
-        <div class="col-11 col-lg-10 rounded-3 shadow-lg mt-2 mb-2 h-100">
+        <div class="col-11 col-lg-10 rounded-3 shadow-lg mt-2 mb-2 h-100 bg-light">
             @yield('content')
         </div>
         <div class="col-11 col-lg-10 rounded-3 shadow-lg mt-2 mb-3 bg-primary">
