@@ -12,8 +12,9 @@
                             <div class="col mb-2">
                                 <div class="form-floating">
                                     <select class="form-select" id="sort_by" name="sort_by" aria-label="sortby">
-                                        <option value="code">Kod Program</option>
-                                        <option value="name">Nama Program</option>
+                                        <option value="id">ID</option>
+                                        <option value="title">Tajuk</option>
+                                        <option value="created_at">Tarikh Dan Waktu Terbitan</option>
                                     </select>
                                     <label for="sort_by">Susun Mengikut:</label>
                                 </div>
@@ -46,10 +47,12 @@
                         <div class="row">
                             @if($filterAndSearch['sortBy'] != NULL AND $filterAndSearch['sortOrder'] != NULL)
                                 <div class="col-6">
-                                    @if($filterAndSearch['sortBy'] == 'code')
-                                        <p>Susun Mengikut: <span class="fst-italic">Kod Kursus</span></p>
-                                    @elseif($filterAndSearch['sortBy'] == 'nama')
-                                        <p>Susun Mengikut: <span class="fst-italic">Nama Kursus</span></p>
+                                    @if($filterAndSearch['sortBy'] == 'id')
+                                        <p>Susun Mengikut: <span class="fst-italic">ID Kursus</span></p>
+                                    @elseif($filterAndSearch['sortBy'] == 'title')
+                                        <p>Susun Mengikut: <span class="fst-italic">Tajuk Pengumuman</span></p>
+                                    @elseif($filterAndSearch['sortBy'] == 'created_at')
+                                        <p>Susun Mengikut: <span class="fst-italic">Tarikh Dan Waktu Terbitan</span></p>
                                     @endif
                                 </div>
                                 <div class="col-6">
@@ -73,7 +76,7 @@
                         <div class="col-11 col-lg-11 alert alert-success">{{ session('deleteSuccess') }}</div>
                     </div>
                 @endif
-                @if($program->count() < 1)
+                @if($announcementPost->count() < 1)
                     <div class="row d-flex justify-content-center align-content-center mt-3">
                         <p class="text-center mt-3 fs-5">Tiada rekod dijumpai.</p>
                     </div>
@@ -86,22 +89,26 @@
                                         <div class="alert alert-success">{{ session('successRemove') }}</div>
                                     @endif
                                     <tr>
-                                    <th class="col-4 align-middle">KOD PROGRAM</th>
-                                    <th class="col-5 align-middle">NAMA PROGRAM</th>
-                                    <th class="col-2 align-middle">KEMAS KINI</th>
+                                    <th class="col-1 align-middle">ID</th>
+                                    <th class="col align-middle">TAJUK</th>
+                                    <th class="col-2 align-middle">TARIKH DAN WAKTU</th>
+                                    <th class="col-2 align-middle">DITERBITKAN OLEH</th>
+                                    <th class="col-1 align-middle">KEMAS KINI</th>
                                     <th class="col-1 align-middle">BUANG</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($program as $p)
+                                @foreach ($announcementPost as $a)
                                     <tr>
-                                        <td>{{ strtoupper($p->code) }}</td>
-                                        <td>{{ strtoupper($p->name) }}</td>
-                                        <td><a class="btn btn-primary hvr-shrink" href="{{ route('admin.program.update', ['code' => strtolower($p->code)]) }}"><i class="bi bi-pencil-square"></i></a></td>
+                                        <td>{{ $a->id }}</td>
+                                        <td>{{ strtoupper($a->title) }}</td>
+                                        <td><x-buk-carbon :date="$a->created_at" format="d/m/Y, h:i A"/></td>
+                                        <td>{{ strtoupper($a->username) }}</td>
+                                        <td><a class="btn btn-primary hvr-shrink" href="{{ route('admin.announcement.update', ['id' => $a->id]) }}"><i class="bi bi-pencil-square"></i></a></td>
                                         <td>
                                             <form action="" method="post" class="d-flex justify-content-center">
                                                 @csrf
-                                                <input type="hidden" name="code" value="{{ strtolower($p->code) }}">
+                                                <input type="hidden" name="id" value="{{ $a->id }}">
                                                 <button type="submit" class="btn btn-danger hvr-shrink" name="remove"><i class="bi bi-trash"></i></i></button>
                                             </form>
                                         </td>
@@ -110,7 +117,7 @@
                             </tbody>
                         </table>
                     </div>
-                    {{ $program->links() }}
+                    {{ $announcementPost->links() }}
                 @endif
             </div>
         </div>

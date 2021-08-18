@@ -97,7 +97,7 @@
                                     Pengumuman
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <li><a class="dropdown-item" href="">Senarai</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('admin.announcement') }}">Senarai</a></li>
                                     <li><a class="dropdown-item" href="{{ route('admin.announcement.add') }}">Tambah</a></li>
                                 </ul>
                             </li>

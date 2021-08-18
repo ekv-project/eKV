@@ -20,8 +20,8 @@
                         @enderror
                     </div>
                     <div id="titleHelp" class="form-text mb-3">Tajuk mestilah ringkas dan padat.</div>
-                    <label for="content" class="form-label">Kandungan</label>
-                    <x-buk-easy-mde name="content"/>
+                    <label for="content" class="form-label fw-bold mt-1">Kandungan</label>
+                    <x-buk-easy-mde name="content" :options="['spellChecker' => false]"/>
                     @error('content')
                         <div class="alert alert-danger">{{ $message }}</div>
                     @enderror

@@ -6,12 +6,6 @@
                 <a href="{{ route('dashboard') }}" class="btn btn-primary"><i class="bi bi-arrow-return-left"></i>Dashboard</a>
             </div>
             <div class="col-6 my-3 text-end">
-                {{-- Only the profile owner, coordinator and admin can view --}}
-                {{-- @if(Gate::allows('authAdmin') || Gate::allows('authCoordinator', $username) || Gate::allows('authUser', $username))
-                    <a href="{{ route('transcript.student', ['studentID' => $username]) }}" class="btn btn-primary"><i class="bi bi-eye"></i>Transkrip Peperiksaan</a>
-                    <a href="{{ route('profile.download', ['username' => $username]) }}" class="btn btn-primary"><i class="bi bi-download"></i>Muat Turun</a>
-                    <a href="{{ route('profile.update', ['username' => $username]) }}" class="btn btn-primary"><i class="bi bi-pencil-square"></i>Kemas Kini</a>
-                @endif --}}
             </div>
         </div>
         <div class="row rounded-3 shadow-lg mt-2 mb-5 w-100 d-flex flex-column justify-content-center align-items-center">
@@ -20,10 +14,10 @@
                 <span class="fw-bold"> Tajuk: <span class="fw-normal">{{ strtoupper($announcementPost->title) }}</span></span>
             </div>
             <div class="row my-3">
-                <span class="fw-bold">Tarikh dan Waktu: <x-buk-carbon :date="$announcementPost->created_at" format="d F Y, h:i A" class="fw-normal"/></span>
+                <span class="fw-bold">Tarikh dan Waktu: <x-buk-carbon :date="$announcementPost->created_at" format="d/m/Y, h:i A" class="fw-normal"/></span>
             </div> 
             <div class="row my-3">
-                <span class="fw-bold">Penulis: <span class="fw-normal">{{ strtoupper($announcementPost->fullname) }}</span></span>
+                <span class="fw-bold">Penulis: <span class="fw-normal">{{ strtoupper($announcementPost->username) }}</span></span>
             </div>
             <div class="row my-3">
                 <p class="fw-bold">Kandugan:</p>

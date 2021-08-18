@@ -137,13 +137,13 @@ Route::post('/dashboard/admin/classroom/update/{id}',[AdminClassroomController::
 Route::post('/dashboard/admin/classroom',[AdminClassroomController::class, 'remove'])->middleware(['auth', 'userIsAdmin']);
 
 // Annoucement Posts
-//Route::get('/dashboard/admin/announcement',[AnnouncementPostController::class, 'view'])->name('admin.announcement')->middleware(['auth', 'userIsAdmin']);
+Route::get('/dashboard/admin/announcement',[AnnouncementPostController::class, 'index'])->name('admin.announcement')->middleware(['auth', 'userIsAdmin']);
 Route::get('/dashboard/admin/announcement/view/{id}',[AnnouncementPostController::class, 'show'])->name('announcement.view')->middleware(['auth']);
 Route::get('/dashboard/admin/announcement/add',[AnnouncementPostController::class, 'create'])->name('admin.announcement.add')->middleware(['auth', 'userIsAdmin']);
-//Route::get('/dashboard/admin/announcement/update/{id}',[AnnouncementPostController::class, 'updateView'])->name('admin.announcement.update')->middleware(['auth', 'userIsAdmin']);
+Route::get('/dashboard/admin/announcement/update/{id}',[AnnouncementPostController::class, 'edit'])->name('admin.announcement.update')->middleware(['auth', 'userIsAdmin']);
 Route::post('/dashboard/admin/announcement/add',[AnnouncementPostController::class, 'store'])->middleware(['auth', 'userIsAdmin']);
-//Route::post('/dashboard/admin/announcement/update/{id}',[AnnouncementPostController::class, 'update'])->middleware(['auth', 'userIsAdmin']);
-//Route::post('/dashboard/admin/announcement',[AnnouncementPostController::class, 'remove'])->middleware(['auth', 'userIsAdmin']);
+Route::post('/dashboard/admin/announcement/update/{id}',[AnnouncementPostController::class, 'update'])->middleware(['auth', 'userIsAdmin']);
+Route::post('/dashboard/admin/announcement',[AnnouncementPostController::class, 'destroy'])->middleware(['auth', 'userIsAdmin']);
 
 Route::get('/dashboard/admin/institute',[InstituteSettingController::class, 'view'])->name('admin.institute')->middleware(['auth', 'userIsAdmin']);
 Route::get('/dashboard/admin/institute/update',[InstituteSettingController::class, 'updateView'])->name('admin.institute.update')->middleware(['auth', 'userIsAdmin']);

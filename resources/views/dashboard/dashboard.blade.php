@@ -35,15 +35,17 @@
                             <div class="border border-1 border-primary rounded-1">
                                 <div class="m-3">
                                     <div class="row"><p class="fs-5">{{ strtoupper($post->title) }}</p></div>
-                                    <div class="row"><span class="fw-bold">Tarikh dan Waktu: </span><x-buk-carbon :date="$post->created_at" format="d F Y, h:i A"/></div>
+                                    <div class="row"><span class="fw-bold">Tarikh dan Waktu: </span><x-buk-carbon :date="$post->created_at" format="d/m/Y, h:i A"/></div>
                                     <div class="row"><span class="fw-bold">Penulis: </span><span>{{ strtoupper($post->fullname) }}</span></div>
-                                    <div class="row mt-3"><span><a href="{{ route('announcement.view', ['id' => $post->id]) }}" class="btn btn-outline-primary btn-sm col col-2 hvr-shrink"><i class="bi bi-arrow-right-circle"></i> Baca Lanjut</a></span></div>
+                                    <div class="row mt-3"><span><a href="{{ route('announcement.view', ['id' => $post->id]) }}" class="btn btn-outline-primary btn-sm col hvr-shrink"><i class="bi bi-arrow-right-circle"></i> Baca Lanjut</a></span></div>
                                 </div>
                             </div>
                         </div> 
                     @endforeach
                 </div>
-                {{ $announcementPosts->links() }}
+                <div class="d-flex align-items-center justify-content-center w-100">
+                    {{ $announcementPosts->links() }}
+                </div>
             @else
                 <div class="row">
                     <p class="fst-italic fw-bold text-center my-4">Tiada pengumuman diterbitkan!</p>
