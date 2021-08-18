@@ -164,7 +164,7 @@ class ExamController extends MainController
         }
     }
     public function downloadSpreadsheetTemplate(Request $request){
-        $fileName = "Templat_Transkrip_Semester_eKV";
+        $fileName = "Templat_Transkrip_Semester_eKV.xlsx";
         $spreadsheet = new Spreadsheet();
         $spreadsheet->getProperties()
             ->setCreator("eKV")

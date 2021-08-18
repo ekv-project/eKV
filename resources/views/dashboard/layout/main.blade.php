@@ -23,6 +23,7 @@
             Kolej Vokasional Malaysia
         @endisset   
     </title>
+    @bukStyles
 </head>
 <body>
     {{-- Hamburger Menu Button --}}
@@ -208,5 +209,6 @@
         <p class="text-center text-secondary p-3 text-light">Hak Cipta Terpelihara &copy; Muhammad Hanis Irfan bin Mohd Zaid & Amirah Hadirah Aina binti Ramlan Jafery 2021</p>
     </footer>
     <script type="module" src="{{ asset('js/app.js') }}"></script>
+    @bukScripts
 </body>
 </html>

@@ -22,6 +22,7 @@
             Kolej Vokasional Malaysia
         @endisset   
     </title>
+    @bukStyles
 </head>
 <body>
     <div class="container-fluid row min-vh-100 w-100 d-flex flex-column align-items-center m-0 p-0">
@@ -91,9 +92,18 @@
                                     <li><a class="dropdown-item" href="{{ route('admin.institute.update') }}">Kemas Kini</a></li>
                                 </ul>
                             </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Pengumuman
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li><a class="dropdown-item" href="{{ route('admin.announcement') }}">Senarai</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('admin.announcement.add') }}">Tambah</a></li>
+                                </ul>
+                            </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('admin.statistic') }}">Statistik</a>
-                              </li>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -107,5 +117,6 @@
         </div>
     </div>
     <script type="module" src="{{ asset('js/app.js') }}"></script>
+    @bukScripts
 </body>
 </html>
