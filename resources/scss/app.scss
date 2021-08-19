@@ -9,23 +9,62 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
 
 body{
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Poppins', sans-serif;  
+}
+  
+#background-image{
+    width: 225vh;
+    height: 225vh;
+    top: -30%;
+    left: -5%;
+    z-index: -1;
+    background: url(../../storage/app/public/img/background_image.svg); 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: fixed;
+    animation-name: spin;
+    animation-duration: 80000ms;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
 }
 
 .hamburger-menu{
-    height: 3rem;
-    width: 3rem;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
+    justify-content: space-around;
 }
 
 .hamburger-layer{
+    border-radius: 20%;
+    width: 90%;
+    height: 20%;
     background-color: whitesmoke;
-    border-radius: 1rem;
-    margin-bottom: 0.3rem;
-    height: 15%;
-    width: 75%;
+}
+
+// Taken from https://codepen.io/teerapuch/pen/vLJXeR
+@keyframes spin {
+    from {
+        transform:rotateZ(0deg);
+    }
+    to {
+        transform:rotateZ(360deg);
+    }
+}
+
+@media (min-width: 0px) {
+    .hamburger-menu{
+        width: 10vw;
+        height: 10vw;
+    }
+}
+
+@media (min-width: 768px) { 
+    .hamburger-menu{
+        width: 5vw;
+        height: 5vw;
+    }
 }

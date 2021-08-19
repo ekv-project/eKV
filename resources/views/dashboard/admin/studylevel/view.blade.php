@@ -88,7 +88,7 @@
                                     @if(session()->has('successRemove'))
                                         <div class="alert alert-success">{{ session('successRemove') }}</div>
                                     @endif
-                                    <tr>
+                                    <th class="col-1 align-middle">NO</th>
                                     <th class="col-3 align-middle">KOD TAHAP PENGAJIAN</th>
                                     <th class="col-3 align-middle">NAMA TAHAP PENGAJIAN</th>
                                     <th class="col-3 align-middle">JUMLAH SEMESTER</th>
@@ -97,8 +97,17 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @php
+                                    $i = 1;
+                                @endphp
                                 @foreach ($studyLevel as $sl)
                                     <tr>
+                                        <td>
+                                            @php
+                                                echo $i;
+                                                $i = $i + 1;
+                                            @endphp
+                                        </td>
                                         <td>{{ strtoupper($sl->code) }}</td>
                                         <td>{{ strtoupper($sl->name) }}</td>
                                         <td>{{ strtoupper($sl->total_semester) }}</td>

@@ -755,7 +755,7 @@ class ExamController extends MainController
                             PDF::MultiCell(0, 5, 'Tandatangan tidak diperlukan.', 0, 'C', 0, 0, '', '', true);
                             PDF::Ln(3);
                             PDF::MultiCell(0, 5, 'Dijana menggunakan sistem eKV.', 0, 'C', 0, 0, '', '', true);
-                            PDF::Output(strtoupper($studentName) . '_TRANSKRIP SEMESTER ' . $semester . '_' . strtoupper($studyLevelName), 'D');
+                            PDF::Output(strtoupper($studentName) . '_TRANSKRIP SEMESTER ' . $semester . '_' . strtoupper($studyLevelName) . '.pdf', 'D');
                         }else{
                             abort(404, 'Transkrip untuk pelajar ini tidak dijumpai!');
                         }

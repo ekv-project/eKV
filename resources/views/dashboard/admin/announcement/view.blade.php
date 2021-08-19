@@ -88,7 +88,7 @@
                                     @if(session()->has('successRemove'))
                                         <div class="alert alert-success">{{ session('successRemove') }}</div>
                                     @endif
-                                    <tr>
+                                    <th class="col-1 align-middle">NO</th>
                                     <th class="col-1 align-middle">ID</th>
                                     <th class="col align-middle">TAJUK</th>
                                     <th class="col-2 align-middle">TARIKH DAN WAKTU</th>
@@ -98,8 +98,17 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @php
+                                    $i = 1;
+                                @endphp
                                 @foreach ($announcementPost as $a)
                                     <tr>
+                                        <td>
+                                            @php
+                                                echo $i;
+                                                $i = $i + 1;
+                                            @endphp
+                                        </td>
                                         <td>{{ $a->id }}</td>
                                         <td>{{ strtoupper($a->title) }}</td>
                                         <td><x-buk-carbon :date="$a->created_at" format="d/m/Y, h:i A"/></td>

@@ -4,6 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    @php
+        if(!empty($settings)){
+            if(!empty($settings['institute_name'])){
+                $instituteName = ucwords($settings['institute_name']);
+            }else{
+                $instituteName = "Kolej Vokasional Malaysia";
+            }
+        }else{
+            $instituteName = "Kolej Vokasional Malaysia";
+        }
+    @endphp
+    <meta name="description" content="{{ 'Sistem maklumat pelajar - ' . $instituteName . '.'}}" >
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <link rel="stylesheet" href="{{ asset('bootstraps-icons/font/bootstrap-icons.css') }}">
     @if(Storage::disk('local')->exists('public/img/system/logo-300.png'))
@@ -11,17 +23,7 @@
     @elseif(Storage::disk('local')->exists('public/img/system/logo-def-300.png'))
         <link rel="shortcut icon" href="{{ asset('storage/img/system/logo-def-300.png') }}" type="image/png">
     @endif
-    <title>{{ $page }} - {{ env('APP_NAME') }} | 
-        @isset($settings)
-            @empty($settings['institute_name'])
-                Kolej Vokasional Malaysia
-            @else
-                {{ ucwords($settings['institute_name']) }}
-            @endempty        
-        @else   
-            Kolej Vokasional Malaysia
-        @endisset   
-    </title>
+    <title>{{ $page }} - {{ env('APP_NAME') }} | {{ $instituteName }}</title>
 </head>
 <body>
     <div class="container-fluid d-flex flex-column justify-content-center p-0 m-0 vh-100">

@@ -94,6 +94,7 @@
                                 @if(session()->has('successRemove'))
                                     <div class="alert alert-success">{{ session('successRemove') }}</div>
                                 @endif
+                                <th class="col-1 align-middle">NO</th>
                                 <th class="col-1 align-middle fst-normal">ID KELAS</th>
                                 <th class="col-1 align-middle">NAMA KELAS</th>
                                 <th class="col-1 align-middle">KOD PROGRAM</th>
@@ -108,8 +109,17 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @php
+                                $i = 1;
+                            @endphp
                             @foreach($classroom as $c)
                                 <tr>
+                                    <td>
+                                        @php
+                                            echo $i;
+                                            $i = $i + 1;
+                                        @endphp
+                                    </td>
                                     <td>{{ $c->id }} </td>
                                     <td>{{ strtoupper($c->name) }}</td>
                                     <td>{{ strtoupper($c->programs_code) }}</td>

@@ -4,6 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    @php
+        if(!empty($settings)){
+            if(!empty($settings['institute_name'])){
+                $instituteName = ucwords($settings['institute_name']);
+            }else{
+                $instituteName = "Kolej Vokasional Malaysia";
+            }
+        }else{
+            $instituteName = "Kolej Vokasional Malaysia";
+        }
+    @endphp
+    <meta name="description" content="{{ 'Sistem maklumat pelajar - ' . $instituteName . '.'}}" >
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <link rel="stylesheet" href="{{ asset('bootstraps-icons/font/bootstrap-icons.css') }}">
     @if(Storage::disk('local')->exists('public/img/system/logo-300.png'))
@@ -11,20 +23,11 @@
     @elseif(Storage::disk('local')->exists('public/img/system/logo-def-300.png'))
         <link rel="shortcut icon" href="{{ asset('storage/img/system/logo-def-300.png') }}" type="image/png">
     @endif
-    <title>{{ $page }} - {{ env('APP_NAME') }} | 
-        @isset($settings)
-            @empty($settings['institute_name'])
-                Kolej Vokasional Malaysia
-            @else
-                {{ ucwords($settings['institute_name']) }}
-            @endempty        
-        @else   
-            Kolej Vokasional Malaysia
-        @endisset   
-    </title>
+    <title>{{ $page }} - {{ env('APP_NAME') }} | {{ $instituteName }}</title>
     @bukStyles
 </head>
 <body>
+    <div id="background-image"></div>
     <div class="container-fluid row min-vh-100 w-100 d-flex flex-column align-items-center m-0 p-0">
         <div class="col-11 col-lg-10 mt-3">
             <a href="{{ route('dashboard') }}" class="btn btn-primary"><i class="bi bi-arrow-return-left"></i> Kembali Ke Dashboard</a>
@@ -109,7 +112,7 @@
                 </div>
             </nav>
         </div>
-        <div class="col-11 col-lg-10 rounded-3 shadow-lg mt-2 mb-2 h-100">
+        <div class="col-11 col-lg-10 rounded-3 shadow-lg mt-2 mb-2 bg-light min-vh-100">
             @yield('content')
         </div>
         <div class="col-11 col-lg-10 rounded-3 shadow-lg mt-2 mb-3 bg-primary">

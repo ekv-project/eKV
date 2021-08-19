@@ -4,6 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    @php
+        if(!empty($settings)){
+            if(!empty($settings['institute_name'])){
+                $instituteName = ucwords($settings['institute_name']);
+            }else{
+                $instituteName = "Kolej Vokasional Malaysia";
+            }
+        }else{
+            $instituteName = "Kolej Vokasional Malaysia";
+        }
+    @endphp
+    <meta name="description" content="{{ 'Sistem maklumat pelajar - ' . $instituteName . '.'}}" >
     <meta name="api-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <link rel="stylesheet" href="{{ asset('bootstraps-icons/font/bootstrap-icons.css') }}">
@@ -12,20 +24,11 @@
     @elseif(Storage::disk('local')->exists('public/img/system/logo-def-300.png'))
         <link rel="shortcut icon" href="{{ asset('storage/img/system/logo-def-300.png') }}" type="image/png">
     @endif
-    <title>{{ $page }} - {{ env('APP_NAME') }} | 
-        @isset($settings)
-            @empty($settings['institute_name'])
-                Kolej Vokasional Malaysia
-            @else
-                {{ ucwords($settings['institute_name']) }}
-            @endempty        
-        @else   
-            Kolej Vokasional Malaysia
-        @endisset   
-    </title>
+    <title>{{ $page }} - {{ env('APP_NAME') }} | {{ $instituteName }}</title>
     @bukStyles
 </head>
-<body>
+<body class="d-flex flex-column">
+    <div id="background-image"></div>
     {{-- Hamburger Menu Button --}}
     <div class="d-flex d-lg-none d-md-flex position-fixed top-0 start-0 hamburger-menu" style="z-index: 100">
         <div class="hamburger-layer"></div>
@@ -202,7 +205,7 @@
             </div>
         </div>
         <div class="d-flex align-items-center justify-content-center">
-            <div class="mx-2"><a href="" class="text-light text-center" data-bs-toggle="modal" data-bs-target="#licenseModal">Lesen dan Kredit</a></div>
+            <div class="mx-2"><a href="#" class="text-light text-center" data-bs-toggle="modal" data-bs-target="#licenseModal">Lesen dan Kredit</a></div>
             <div class="mx-2"><a href="#" class="text-light text-center">Laman Sesawang</a></div>
             <div class="mx-2"><a href="#" class="text-light text-center">Dokumentasi</a></div>
         </div>
