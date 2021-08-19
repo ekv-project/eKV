@@ -51,7 +51,7 @@
                         <table class="table table-hover table-bordered border-secondary text-center w-75 my-3">
                             <thead class="table-dark">
                                 <tr>
-                                    <tr>
+                                    <th class="col-1">NO</th>
                                     <th class="col-2">ID PELAJAR</th>
                                     <th class="col-4">NAMA PELAJAR</th>
                                     <th class="col-4">E-MEL PELAJAR</th>
@@ -61,8 +61,17 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @php
+                                    $i = 1;
+                                @endphp
                                 @foreach ($students as $s)
                                 <tr>
+                                    <td>
+                                        @php
+                                            echo $i;
+                                            $i = $i + 1;
+                                        @endphp
+                                    </td>
                                     <td>{{ strtoupper($s->username) }}</td>
                                     <td>{{ strtoupper($s->fullname) }}</td>
                                     <td>{{ strtoupper($s->email) }}</td>

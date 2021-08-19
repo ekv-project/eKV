@@ -1,7 +1,7 @@
 @extends('dashboard.layout.main')
 @section('content')
     <div class="container-fluid mt-1 w-100 h-100 d-flex flex-column align-items-center">
-        <div class="row rounded-3 shadow-lg mt-5 w-100">
+        <div class="row rounded-3 shadow-lg mt-5 w-100 bg-light">
             <div class="col-6 my-3 text-start">
                 <a href="{{ route('dashboard') }}" class="btn btn-primary"><i class="bi bi-arrow-return-left"></i>Dashboard</a>
             </div>
@@ -9,7 +9,7 @@
                 <a href="{{ route('transcript.template') }}" class="btn btn-primary"><i class="bi bi-download"></i>Muat Turun Templat</a>
             </div>
         </div>
-        <div class="row rounded-3 shadow-lg mt-2 mb-2 w-100 d-flex flex-column align-items-center justify-content-center">
+        <div class="row rounded-3 shadow-lg mt-2 mb-5 w-100 d-flex flex-column align-items-center justify-content-center bg-light">
             <div class="col-11 col-lg-9">
                 <h2 class="text-center mt-5 mb-3">Tambah Transkrip Semester Pukal</h2>
                 <div class="d-flex flex-column align-items-center justify-content-center">

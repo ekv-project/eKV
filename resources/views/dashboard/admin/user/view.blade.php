@@ -96,6 +96,7 @@
                                     @if(session()->has('successRemove'))
                                         <div class="alert alert-success">{{ session('successRemove') }}</div>
                                     @endif
+                                    <th class="col-1 align-middle">NO</th>
                                     <th class="col-2 align-middle">NAMA PENUH</th>
                                     <th class="col-2 align-middle">ID PENGGUNA</th>
                                     <th class="col-2 align-middle">ALAMAT E-MEL</th>
@@ -106,8 +107,17 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @php
+                                    $i = 1;
+                                @endphp
                                 @foreach ($user as $u)
                                     <tr>
+                                        <td>
+                                            @php
+                                                echo $i;
+                                                $i = $i + 1;
+                                            @endphp
+                                        </td>
                                         <td>{{ strtoupper($u->fullname) }}</td>
                                         <td>{{ strtoupper($u->username) }}</td>
                                         <td>{{ strtoupper($u->email) }}</td>

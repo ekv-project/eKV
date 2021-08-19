@@ -22,6 +22,7 @@
                     <table class="table table-hover table-bordered border-secondary text-center">  
                         <thead class="table-dark">
                             <tr>
+                                <th class="col-1">NO</th>
                                 <th class="col-3">Tahap Pengajian</th>
                                 <th class="col-2">Semester</th>
                                 <th class="col-2">Lihat</th>
@@ -33,8 +34,17 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @php
+                                $i = 1;
+                            @endphp
                             @foreach ($semesterGrades as $semesterGrade)
                             <tr>
+                                <td>
+                                    @php
+                                        echo $i;
+                                        $i = $i + 1;
+                                    @endphp
+                                </td>
                                 <td>{{ strtoupper($semesterGrade->study_levels_code) }}</td>
                                 <td>{{ $semesterGrade->semester }}</td>
                                 <td><a href="{{ route('transcript.view', ['studentID' => $studentID, 'studyLevel' => $semesterGrade->study_levels_code, 'semester' => $semesterGrade->semester]) }}" class="btn btn-primary hvr-shrink"><i class="bi bi-eye"></i></a></td>

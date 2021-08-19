@@ -13,8 +13,9 @@
                     <table class="table table-hover table-striped table-bordered border-secondary text-center mt-3">
                         <thead class="table-dark">
                             <tr>
-                                <th class="col-1 align-middle fst-normal">ID KELAS</th>
-                                <th class="col-1 align-middle">NAMA KELAS</th>
+                                <th class="col-1 align-middle">NO</th>
+                                <th class="col-1 align-middle">ID KELAS</th>
+                                <th class="col-4 align-middle">NAMA KELAS</th>
                                 <th class="col-1 align-middle">KOD PROGRAM</th>
                                 <th class="col-1 align-middle">TAHUN KEMASUKAN</th>
                                 <th class="col-1 align-middle">TAHUN PENGAJIAN TERKINI</th>
@@ -24,8 +25,17 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @php
+                                $i = 1;
+                            @endphp
                             @foreach($classroomList as $c)
                                 <tr>
+                                    <td>
+                                        @php
+                                            echo $i;
+                                            $i = $i + 1;
+                                        @endphp
+                                    </td>
                                     <td>{{ $c->classroom->id }} </td>
                                     <td>{{ strtoupper($c->classroom->name) }}</td>
                                     <td>{{ strtoupper($c->classroom->programs_code) }}</td>

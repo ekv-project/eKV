@@ -85,7 +85,7 @@
                                     @if(session()->has('successRemove'))
                                         <div class="alert alert-success">{{ session('successRemove') }}</div>
                                     @endif
-                                    <tr>
+                                    <th class="col-1">NO</th>
                                     <th class="col-4">KOD KURSUS</th>
                                     <th class="col-5">NAMA KURSUS</th>
                                     <th class="col-2">KEMAS KINI</th>
@@ -93,8 +93,17 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @php
+                                    $i = 1;
+                                @endphp
                                 @foreach ($course as $c)
                                     <tr>
+                                        <td>
+                                            @php
+                                                echo $i;
+                                                $i = $i + 1;
+                                            @endphp
+                                        </td>
                                         <td>{{ strtoupper($c->code) }}</td>
                                         <td>{{ strtoupper($c->name) }}</td>
                                         <td><a class="btn btn-primary hvr-shrink" href="{{ route('admin.course.update', ['code' => strtolower($c->code)]) }}"><i class="bi bi-pencil-square"></i></a></td>

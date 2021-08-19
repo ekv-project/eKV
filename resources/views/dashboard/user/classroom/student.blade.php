@@ -52,15 +52,24 @@
                         <table class="table table-hover table-bordered border-secondary text-center mt-3">
                             <thead class="table-dark">
                                 <tr>
-                                    <tr>
-                                    <th class="col-2">ID PELAJAR</th>
-                                    <th class="col-3">NAMA PELAJAR</th>
+                                    <th class="col-1">NO</th>
+                                    <th class="col-3">ID PELAJAR</th>
+                                    <th class="col-7">NAMA PELAJAR</th>
                                     <th class="col-1">BUANG</th>
                                 </tr>
                             </thead>
                             <tbody>
+                                @php
+                                    $i = 1;
+                                @endphp
                                 @foreach ($students as $student)
                                 <tr>
+                                    <td>
+                                        @php
+                                            echo $i;
+                                            $i = $i + 1;
+                                        @endphp
+                                    </td>
                                     <td>{{ strtoupper($student->username) }}</td>
                                     <td>{{ strtoupper($student->fullname) }} </td>
                                     <td>

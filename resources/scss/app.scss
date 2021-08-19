@@ -9,5 +9,53 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
 
 body{
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Poppins', sans-serif;  
+}
+// body::before {
+//     content: "";
+//     position: absolute;
+//     width: 200%;
+//     height: 200%;
+//     top: -50%;
+//     left: -50%;
+//     z-index: -1;
+//     background: url(../../storage/app/public/img/background_image.svg) no-repeat center center fixed; 
+//     -webkit-background-size: cover;
+//     -moz-background-size: cover;
+//     -o-background-size: cover;
+//     background-size: cover;
+//     animation-name: spin;
+//     animation-duration: 5000ms;
+//     animation-iteration-count: infinite;
+//     animation-timing-function: linear; 
+//   }
+  
+#background-image{
+    width: 225vh;
+    height: 225vh;
+    top: -30%;
+    left: -5%;
+    z-index: -1;
+    background: url(../../storage/app/public/img/background_image.svg); 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: fixed;
+    animation-name: spin;
+    animation-duration: 80000ms;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+
+// Taken from https://codepen.io/teerapuch/pen/vLJXeR
+@keyframes spin {
+    from {
+        transform:rotateZ(0deg);
+    }
+    to {
+        transform:rotateZ(360deg);
+    }
 }

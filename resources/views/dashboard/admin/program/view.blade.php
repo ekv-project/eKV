@@ -85,7 +85,7 @@
                                     @if(session()->has('successRemove'))
                                         <div class="alert alert-success">{{ session('successRemove') }}</div>
                                     @endif
-                                    <tr>
+                                    <th class="col-1 align-middle">NO</th>
                                     <th class="col-4 align-middle">KOD PROGRAM</th>
                                     <th class="col-5 align-middle">NAMA PROGRAM</th>
                                     <th class="col-2 align-middle">KEMAS KINI</th>
@@ -93,8 +93,17 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @php
+                                    $i = 1;
+                                @endphp
                                 @foreach ($program as $p)
                                     <tr>
+                                        <td>
+                                            @php
+                                                echo $i;
+                                                $i = $i + 1;
+                                            @endphp
+                                        </td>
                                         <td>{{ strtoupper($p->code) }}</td>
                                         <td>{{ strtoupper($p->name) }}</td>
                                         <td><a class="btn btn-primary hvr-shrink" href="{{ route('admin.program.update', ['code' => strtolower($p->code)]) }}"><i class="bi bi-pencil-square"></i></a></td>
