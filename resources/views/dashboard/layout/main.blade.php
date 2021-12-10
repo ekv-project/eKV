@@ -30,7 +30,7 @@
 <body class="d-flex flex-column">
     <div id="background-image"></div>
     {{-- Hamburger Menu Button --}}
-    <div class="d-flex d-lg-none d-md-flex position-fixed top-0 start-0 hamburger-menu" style="z-index: 100">
+    <div class="border-end border-5 border-light d-flex d-lg-none d-md-flex position-fixed top-0 start-0 hamburger-menu m-3" style="z-index: 100">
         <div class="hamburger-layer"></div>
         <div class="hamburger-layer"></div>
         <div class="hamburger-layer"></div>
@@ -48,7 +48,7 @@
             </div>
         </div>
         <div class="col-md-5 m-0 d-flex align-items-center justify-content-center">
-            <div class="w-100 d-flex align-items-center">
+            <div class="w-100 d-flex align-items-center justify-content-start offset-1">
                 @if(Storage::disk('local')->exists('public/img/system/logo-300.png'))
                     <a href="{{ route('dashboard') }}" class="ms-3">
                         <img style="width: 2.5em; height: 2.5em; margin: 1em;" src="{{ asset('storage/img/system/logo-300.png') }}" alt="Insitite Logo">
@@ -70,7 +70,8 @@
             </div>
         </div>
         <div class="col-md-4 m-0 invisible"></div>
-        <div class="col-md-3 m-0 d-flex align-items-center justify-content-around">
+        <div class="col-md-3 m-0 d-flex align-items-center justify-content-between">
+          <div class="offset-sm-1 p-4 text-nowrap">
             @if(Storage::disk('local')->exists('public/img/profile/'. Auth::user()->username . '.png'))
                 <a href="{{ route('profile') }}" class="">
                     <img style="width: 3em; height: 3em;" src="{{ asset('storage/img/profile/'. Auth::user()->username . '.png') }}" alt="User Profile Picture" class="img-fluid rounded-circle hvr-shrink" style="height: 3em">
@@ -80,7 +81,8 @@
                     <img style="width: 3em; height: 3em; background-color: white;" src="{{ asset('storage/img/profile/default/def-300.png') }}" alt="Default Profile Picture" class="img-fluid rounded-circle hvr-grow hvr-shrink" style="height: 3em">
                 </a>
             @endif
-            <a href="{{ route('profile') }}" class="text-light fw-bold text-decoration-none hvr-grow">{{ strtoupper(Auth::user()->username) }}</a>
+            <a href="{{ route('profile') }}" class="offset-sm-1 text-light fw-bold text-decoration-none hvr-grow">{{ strtoupper(Auth::user()->username) }}</a>
+          </div>
             <form action="{{ route('logout') }}" method="post">
                 @csrf
                 <button type="submit" class="btn btn-secondary hvr-shrink"><i class="bi bi-box-arrow-in-left"></i>Log Keluar</button>
