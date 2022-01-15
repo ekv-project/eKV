@@ -117,7 +117,6 @@
                                     <td>
                                         @php
                                             echo $i;
-                                            $i = $i + 1;
                                         @endphp
                                     </td>
                                     <td>{{ $c->id }} </td>
@@ -129,7 +128,7 @@
                                     <td>
                                         @foreach ($classroomCoordinator as $cc)
                                             @if($cc->classrooms_id == $c->id)
-                                                <a href="{{ route('profile.user', [$cc->users_username]) }}" target="_blank" class="text-dark hvr-underline-reveal">{{ strtoupper($cc->users_username) }}</a> 
+                                                <a href="{{ route('profile.user', [$cc->users_username]) }}" target="_blank" class="text-dark hvr-underline-reveal">{{ strtoupper($cc->users_username) }}</a>
                                             @endif
                                         @endforeach
                                     </td>
@@ -143,13 +142,17 @@
                                     <td><a href="{{ route('classroom.view', [$c->id]) }}" target="_blank" class="btn btn-primary hvr-shrink"><i class="bi bi-eye"></i></a></td>
                                     <td><a class="btn btn-primary hvr-shrink" href="{{ route('admin.classroom.update', ['id' => $c->id]) }}"><i class="bi bi-pencil-square"></i></a></td>
                                     <td>
-                                        <form action="" method="post" class="d-flex justify-content-center">
-                                            @csrf
-                                            <input type="hidden" name="id" value="{{ strtolower($c->id) }}">
-                                            <button type="submit" class="btn btn-danger hvr-shrink" name="remove"><i class="bi bi-trash"></i></button>
-                                        </form>
+                                        <!-- Delete Static Backdrop Confirmation -->
+                                        @php
+                                            $deleteFormData = [array("nameAttr" => "id", "valueAttr" => strtolower($c->id))];
+                                        @endphp
+                                        <x-delete-confirmation name="kelas" :formData="$deleteFormData" :increment="$i"/>
+                                        <x-delete-confirmation-button :increment="$i"/>
                                     </td>
                                 </tr>
+                                @php
+                                    $i = $i + 1;
+                                @endphp
                             @endforeach
                         </tbody>
                     </table>
