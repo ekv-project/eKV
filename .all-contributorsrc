@@ -22,6 +22,15 @@
       "contributions": [
         "maintenance"
       ]
+    },
+    {
+      "login": "GenericNominalUser",
+      "name": "GenericNominalUser",
+      "avatar_url": "https://avatars.githubusercontent.com/u/67431218?v=4",
+      "profile": "https://github.com/GenericNominalUser",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
