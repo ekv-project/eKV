@@ -105,7 +105,6 @@
                                         <td>
                                             @php
                                                 echo $i;
-                                                $i = $i + 1;
                                             @endphp
                                         </td>
                                         <td>{{ strtoupper($sl->code) }}</td>
@@ -113,13 +112,18 @@
                                         <td>{{ strtoupper($sl->total_semester) }}</td>
                                         <td><a class="btn btn-primary hvr-shrink" href="{{ route('admin.studylevel.update', ['code' => strtolower($sl->code)]) }}"><i class="bi bi-pencil-square"></i></a></td>
                                         <td>
-                                            <form action="" method="post" class="d-flex justify-content-center">
-                                                @csrf
-                                                <input type="hidden" name="study_level_code" value="{{ strtolower($sl->code) }}">
-                                                <button type="submit" class="btn btn-danger hvr-shrink" name="remove"><i class="bi bi-trash"></i></button>
-                                            </form>
+                                            <!-- Delete Static Backdrop Confirmation -->
+                                            @php
+                                                $deleteFormData = [array("nameAttr" => "study_level_code", "valueAttr" => strtolower($sl->code))];
+                                            @endphp
+                                            <x-delete-confirmation name="tahap pengajian" :formData="$deleteFormData" :increment="$i"/>
+                                            <x-delete-confirmation-button :increment="$i"/>
+
                                         </td>
                                     </tr>
+                                    @php
+                                        $i = $i + 1;
+                                    @endphp
                                 @endforeach
                             </tbody>
                         </table>
