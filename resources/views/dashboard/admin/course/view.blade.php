@@ -101,24 +101,27 @@
                                         <td>
                                             @php
                                                 echo $i;
-                                                $i = $i + 1;
                                             @endphp
                                         </td>
                                         <td>{{ strtoupper($c->code) }}</td>
                                         <td>{{ strtoupper($c->name) }}</td>
                                         <td><a class="btn btn-primary hvr-shrink" href="{{ route('admin.course.update', ['code' => strtolower($c->code)]) }}"><i class="bi bi-pencil-square"></i></a></td>
                                         <td>
-                                            <form action="" method="post" class="d-flex justify-content-center">
-                                                @csrf
-                                                <input type="hidden" name="code" value="{{ strtolower($c->code) }}">
-                                                <button type="submit" class="btn btn-danger hvr-shrink" name="remove"><i class="bi bi-trash"></i></i></button>
-                                            </form>
+                                            <!-- Delete Static Backdrop Confirmation -->
+                                            @php
+                                            $deleteFormData = [array("nameAttr" => "code", "valueAttr" => strtolower($c->code))];
+                                            @endphp
+                                            <x-delete-confirmation name="kursus" :formData="$deleteFormData" :increment="$i"/>
+                                            <x-delete-confirmation-button :increment="$i"/>
                                         </td>
                                     </tr>
+                                    @php
+                                        $i = $i + 1;
+                                    @endphp
                                 @endforeach
                             </tbody>
                         </table>
-                    </div>    
+                    </div>
                     {{ $course->links() }}
                 @endif
             </div>
