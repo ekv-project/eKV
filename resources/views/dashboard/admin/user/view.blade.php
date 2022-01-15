@@ -97,7 +97,7 @@
                                         <div class="alert alert-success">{{ session('successRemove') }}</div>
                                     @endif
                                     <th class="col-1 align-middle">NO</th>
-                                    <th class="col-2 align-middle">USERNAME</th>
+                                    <th class="col-2 align-middle">ID PENGGUNA</th>
                                     <th class="col-4 align-middle">NAMA PENUH</th>
                                     <th class="col-2 align-middle">JANTINA</th>
                                     <th class="col-1 align-middle">ALAMAT E-MEL</th>
