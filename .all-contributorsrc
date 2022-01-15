@@ -1,0 +1,24 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "hanisirfan",
+      "name": "Muhammad Hanis Irfan Mohd Zaid",
+      "avatar_url": "https://avatars.githubusercontent.com/u/66242389?v=4",
+      "profile": "https://www.hanisirfan.xyz",
+      "contributions": [
+        "maintenance"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "eKV",
+  "projectOwner": "hadiirfan",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "skipCi": true
+}
