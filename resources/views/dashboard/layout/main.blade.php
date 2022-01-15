@@ -63,10 +63,10 @@
                         <a class="text-light text-center fw-bold fs-4 text-decoration-none" href="{{ route('dashboard') }}">Kolej Vokasional Malaysia</a>
                     @else
                         <a class="text-light text-center fw-bold fs-4 text-decoration-none" href="{{ route('dashboard') }}">{{ ucwords($settings['institute_name']) }}</a>
-                    @endempty        
+                    @endempty
                 @else
                     <a class="text-light text-center fw-bold fs-4 text-decoration-none" href="{{ route('dashboard') }}">Kolej Vokasional Malaysia</a>
-                @endisset  
+                @endisset
             </div>
         </div>
         <div class="col-md-4 m-0 invisible"></div>
@@ -211,7 +211,7 @@
             <div class="mx-2"><a href="#" class="text-light text-center">Laman Sesawang</a></div>
             <div class="mx-2"><a href="#" class="text-light text-center">Dokumentasi</a></div>
         </div>
-        <p class="text-center text-secondary p-3 text-light">Hak Cipta Terpelihara &copy; Muhammad Hanis Irfan bin Mohd Zaid & Amirah Hadirah Aina binti Ramlan Jafery 2021</p>
+        <p class="text-center text-secondary p-3 text-light">Hak Cipta Terpelihara &copy; Muhammad Hanis Irfan bin Mohd Zaid & Amirah Hadirah Aina binti Ramlan Jafery 2021-2022</p>
     </footer>
     <script type="module" src="{{ asset('js/app.js') }}"></script>
     @bukScripts

@@ -3,11 +3,8 @@
 namespace App\Http\Controllers\User;
 
 use App\Models\User;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\LoginActivity;
-use App\Models\InstituteSetting;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\MainController;
@@ -61,7 +58,7 @@ class UserController extends MainController
             $credentials = [
                 'username' => $username,
                 'password' => $request->password
-            ];   
+            ];
             if(Auth::attempt($credentials)) {
                 $request->session()->regenerate();
                 LoginActivity::create([
@@ -110,22 +107,43 @@ class UserController extends MainController
                     'userExist' => 'Pengguna telah wujud!',
                 ]);
             }else{
-            // If no user exist, add them
+
+                // If no user existed, add them
                 $validated = $request->validate([
-                    'fullname' => ['required'],
                     'username' => ['required'],
+                    'fullname' => ['required'],
+                    'gender' => ['required'],
                     'email' => ['required', 'email:rfc'],
                     'password' => ['required', 'confirmed'],
                     'role' => ['required']
                 ]);
-                // If validation failed, display the error
+
+                switch ($request->input('gender')) {
+                    case 'male':
+                        $userGender = 0;
+                        break;
+                    case 'female':
+                        $userGender = 1;
+                        break;
+                    case 'notapplicable':
+                        $userGender = 2;
+                        break;
+                    default:
+                        return redirect()->back()->withInput()->withErrors([
+                            'gender' => 'Input tidak diketahui!'
+                        ]);
+                        break;
+                }
+
                 User::create([
-                    'fullname' => strtolower($request->fullname),
                     'username' => strtolower($username),
+                    'fullname' => strtolower($request->fullname),
+                    'gender' => $userGender,
                     'email' => strtolower($request->email),
                     'password' => Hash::make($request->password),
                     'role' => strtolower($request->role),
                 ]);
+
                 session()->flash('userAddSuccess', 'Pengguna berjaya ditambah!');
                 return redirect()->back();
             }
@@ -169,7 +187,7 @@ class UserController extends MainController
                 }
                 //The array will be imported into the database using Eloquent Upsert() method
                 //by checking the username. This means if there's already existed user, it'll just
-                //update it with the data from XLSX file.    
+                //update it with the data from XLSX file.
                 User::upsert($userArray, ['username'], ['fullname', 'username', 'email', 'password'], 'role');
                 session()->flash('userBulkAddSuccess', 'Pengguna berjaya ditambah!');
                 return redirect()->back();
@@ -184,16 +202,36 @@ class UserController extends MainController
         $validated = $request->validate([
             'username' => ['required'],
             'fullname' => ['required'],
+            'gender' => ['required'],
             'email' => ['required', 'email:rfc']
         ]);
         $username = $request->username;
         $fullname = $request->fullname;
         $email = $request->email;
+
+        switch ($request->input('gender')) {
+            case 'male':
+                $userGender = 0;
+                break;
+            case 'female':
+                $userGender = 1;
+                break;
+            case 'notapplicable':
+                $userGender = 2;
+                break;
+            default:
+                return redirect()->back()->withInput()->withErrors([
+                    'gender' => 'Input tidak diketahui!'
+                ]);
+                break;
+        }
+
         // Check if user existed
         if(User::where('username', $username)->first()){
             User::where('username', $username)->update([
                 'username' => strtolower($username),
                 'fullname' => strtolower($fullname),
+                'gender' => strtolower($userGender),
                 'email' => strtolower($email)
             ]);
             session()->flash('userUpdateSuccess', 'Pengguna berjaya dikemas kini!');
@@ -211,7 +249,7 @@ class UserController extends MainController
                 session()->flash('deleteError', 'Pengguna ini tidak boleh dibuang!');
                 return redirect()->back();
             }else{
-                if(User::where('username', $username)->first()){   
+                if(User::where('username', $username)->first()){
                     User::where('username', $username)->delete();
                     session()->flash('deleteSuccess', 'Pengguna berjaya dibuang!');
                     return redirect()->back();

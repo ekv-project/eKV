@@ -97,9 +97,10 @@
                                         <div class="alert alert-success">{{ session('successRemove') }}</div>
                                     @endif
                                     <th class="col-1 align-middle">NO</th>
-                                    <th class="col-2 align-middle">NAMA PENUH</th>
                                     <th class="col-2 align-middle">ID PENGGUNA</th>
-                                    <th class="col-2 align-middle">ALAMAT E-MEL</th>
+                                    <th class="col-4 align-middle">NAMA PENUH</th>
+                                    <th class="col-2 align-middle">JANTINA</th>
+                                    <th class="col-1 align-middle">ALAMAT E-MEL</th>
                                     <th class="col-2 align-middle">PERANAN</th>
                                     <th class="col-1 align-middle">PROFIL</th>
                                     <th class="col-2 align-middle">KEMAS KINI</th>
@@ -118,11 +119,22 @@
                                                 $i = $i + 1;
                                             @endphp
                                         </td>
-                                        <td>{{ strtoupper($u->fullname) }}</td>
                                         <td>{{ strtoupper($u->username) }}</td>
+                                        <td>{{ strtoupper($u->fullname) }}</td>
+                                        @switch($u->gender)
+                                            @case(0)
+                                                <td>LELAKI</td>
+                                                @break
+                                            @case(1)
+                                                <td>PEREMPUAN</td>
+                                                @break
+                                            @default
+                                                <td>N/A</td>
+                                                @break
+                                        @endswitch
                                         <td>{{ strtoupper($u->email) }}</td>
                                         <td>{{ strtoupper($u->role) }}</td>
-                                        @if($u->username == "admin")  
+                                        @if($u->username == "admin")
                                             <td></td>
                                             <td></td>
                                             <td></td>
