@@ -19,7 +19,7 @@
             @endif
             @if(count($semesterGrades) > 0)
                 <div class="table-responsive my-3">
-                    <table class="table table-hover table-bordered border-secondary text-center">  
+                    <table class="table table-hover table-bordered border-secondary text-center">
                         <thead class="table-dark">
                             <tr>
                                 <th class="col-1">NO</th>
@@ -38,40 +38,43 @@
                                 $i = 1;
                             @endphp
                             @foreach ($semesterGrades as $semesterGrade)
-                            <tr>
-                                <td>
-                                    @php
-                                        echo $i;
-                                        $i = $i + 1;
-                                    @endphp
-                                </td>
-                                <td>{{ strtoupper($semesterGrade->study_levels_code) }}</td>
-                                <td>{{ $semesterGrade->semester }}</td>
-                                <td><a href="{{ route('transcript.view', ['studentID' => $studentID, 'studyLevel' => $semesterGrade->study_levels_code, 'semester' => $semesterGrade->semester]) }}" class="btn btn-primary hvr-shrink"><i class="bi bi-eye"></i></a></td>
-                                <td>
-                                    <a href="{{ route('transcript.download', ['studentID' => $studentID, 'studyLevel' => $semesterGrade->study_levels_code, 'semester' => $semesterGrade->semester]) }}" class="btn btn-primary hvr-shrink"><i class="bi bi-download"></i></a>
-                                </td>
-                                @if(Gate::allows('authAdmin') || Gate::allows('authCoordinator', $studentID))
-                                <td>
-                                    <a href="{{ route('transcript.update', ['studentID' => $studentID, 'studyLevel' => $semesterGrade->study_levels_code, 'semester' => $semesterGrade->semester]) }}" class="btn btn-primary hvr-shrink"><i class="bi bi-pencil-square"></i></a>
-                                </td>
-                                <td>
-                                    <form action="" method="post">
-                                        @csrf
-                                        <input type="hidden" name="studentID" value="{{ $studentID }}">
-                                        <input type="hidden" name="studyLevel" value="{{ $semesterGrade->study_levels_code }}">
-                                        <input type="hidden" name="semester" value="{{ $semesterGrade->semester }}">
-                                        <button class="btn btn-danger hvr-shrink"><i class="bi bi-trash"></i></button>
-                                    </form>
-                                </td>
-                                @endif
-                            </tr>
+                                <tr>
+                                    <td>
+                                        @php
+                                            echo $i;
+                                        @endphp
+                                    </td>
+                                    <td>{{ strtoupper($semesterGrade->study_levels_code) }}</td>
+                                    <td>{{ $semesterGrade->semester }}</td>
+                                    <td><a href="{{ route('transcript.view', ['studentID' => $studentID, 'studyLevel' => $semesterGrade->study_levels_code, 'semester' => $semesterGrade->semester]) }}" class="btn btn-primary hvr-shrink"><i class="bi bi-eye"></i></a></td>
+                                    <td>
+                                        <a href="{{ route('transcript.download', ['studentID' => $studentID, 'studyLevel' => $semesterGrade->study_levels_code, 'semester' => $semesterGrade->semester]) }}" class="btn btn-primary hvr-shrink"><i class="bi bi-download"></i></a>
+                                    </td>
+                                    @if(Gate::allows('authAdmin') || Gate::allows('authCoordinator', $studentID))
+                                    <td>
+                                        <a href="{{ route('transcript.update', ['studentID' => $studentID, 'studyLevel' => $semesterGrade->study_levels_code, 'semester' => $semesterGrade->semester]) }}" class="btn btn-primary hvr-shrink"><i class="bi bi-pencil-square"></i></a>
+                                    </td>
+                                    <td>
+                                        <!-- Delete Static Backdrop Confirmation -->
+                                        @php
+                                            $deleteFormData = [array("nameAttr" => "studentID", "valueAttr" => $studentID),
+                                                               array("nameAttr" => "studyLevel", "valueAttr" => $semesterGrade->study_levels_code),
+                                                               array("nameAttr" => "semester", "valueAttr" => $semesterGrade->semester)];
+                                        @endphp
+                                        <x-delete-confirmation name="transkrip" :formData="$deleteFormData" :increment="$i"/>
+                                        <x-delete-confirmation-button :increment="$i"/>
+                                    </td>
+                                    @endif
+                                </tr>
+                                @php
+                                    $i = $i + 1;
+                                @endphp
                             @endforeach
                         </tbody>
-                    </table> 
+                    </table>
                 </div>
             @else
-                <p class="fst-italic fw-bold text-center my-4">Tiada transkrip dijumpai untuk pelajar ini!</p> 
+                <p class="fst-italic fw-bold text-center my-4">Tiada transkrip dijumpai untuk pelajar ini!</p>
             @endif
         </div>
     </div>
