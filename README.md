@@ -1,6 +1,6 @@
 -----------------------------------------
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 # THIS PROJECT IS STILL UNDER DEVELOPMENT
 -----------------------------------------
@@ -51,6 +51,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <table>
   <tr>
     <td align="center"><a href="https://www.hanisirfan.xyz"><img src="https://avatars.githubusercontent.com/u/66242389?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Muhammad Hanis Irfan Mohd Zaid</b></sub></a><br /><a href="#maintenance-hanisirfan" title="Maintenance">🚧</a></td>
+    <td align="center"><a href="https://github.com/amihadi"><img src="https://avatars.githubusercontent.com/u/95136371?v=4?s=100" width="100px;" alt=""/><br /><sub><b>amihadi</b></sub></a><br /><a href="#maintenance-amihadi" title="Maintenance">🚧</a></td>
   </tr>
 </table>
 
