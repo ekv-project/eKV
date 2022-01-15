@@ -88,7 +88,6 @@
                                     @if(session()->has('successRemove'))
                                         <div class="alert alert-success">{{ session('successRemove') }}</div>
                                     @endif
-                                    <th class="col-1 align-middle">NO</th>
                                     <th class="col-1 align-middle">ID</th>
                                     <th class="col align-middle">TAJUK</th>
                                     <th class="col-2 align-middle">TARIKH DAN WAKTU</th>
@@ -103,25 +102,23 @@
                                 @endphp
                                 @foreach ($announcementPost as $a)
                                     <tr>
-                                        <td>
-                                            @php
-                                                echo $i;
-                                                $i = $i + 1;
-                                            @endphp
-                                        </td>
                                         <td>{{ $a->id }}</td>
                                         <td>{{ strtoupper($a->title) }}</td>
                                         <td><x-buk-carbon :date="$a->created_at" format="d/m/Y, h:i A"/></td>
                                         <td>{{ strtoupper($a->username) }}</td>
                                         <td><a class="btn btn-primary hvr-shrink" href="{{ route('admin.announcement.update', ['id' => $a->id]) }}"><i class="bi bi-pencil-square"></i></a></td>
                                         <td>
-                                            <form action="" method="post" class="d-flex justify-content-center">
-                                                @csrf
-                                                <input type="hidden" name="id" value="{{ $a->id }}">
-                                                <button type="submit" class="btn btn-danger hvr-shrink" name="remove"><i class="bi bi-trash"></i></i></button>
-                                            </form>
+                                            <!-- Delete Static Backdrop Confirmation -->
+                                            @php
+                                                $deleteFormData = [array("nameAttr" => "id", "valueAttr" => strtolower($a->id))];
+                                            @endphp
+                                            <x-delete-confirmation name="pengumuman" :formData="$deleteFormData" :increment="$i"/>
+                                            <x-delete-confirmation-button :increment="$i"/>
                                         </td>
                                     </tr>
+                                    @php
+                                        $i = $i + 1;
+                                    @endphp
                                 @endforeach
                             </tbody>
                         </table>
