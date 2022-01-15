@@ -116,7 +116,6 @@
                                         <td>
                                             @php
                                                 echo $i;
-                                                $i = $i + 1;
                                             @endphp
                                         </td>
                                         <td>{{ strtoupper($u->username) }}</td>
@@ -142,14 +141,18 @@
                                             <td><a href="{{ route('profile.user', [$u->username]) }}" target="_blank" class="btn btn-primary hvr-shrink"><i class="bi bi-eye"></i></a></td>
                                             <td><a class="btn btn-primary hvr-shrink" href="{{ route('admin.user.update', ['username' => strtolower($u->username)]) }}"><i class="bi bi-pencil-square"></i></a></td>
                                             <td>
-                                                <form action="" method="post" class="d-flex justify-content-center">
-                                                    @csrf
-                                                    <input type="hidden" name="username" value="{{ strtolower($u->username) }}">
-                                                    <button type="submit" class="btn btn-danger hvr-shrink" name="remove"><i class="bi bi-trash"></i></button>
-                                                </form>
+                                                <!-- Delete Static Backdrop Confirmation -->
+                                                @php
+                                                    $deleteFormData = [array("nameAttr" => "username", "valueAttr" => strtolower($u->username))];
+                                                @endphp
+                                                <x-delete-confirmation name="pengguna" :formData="$deleteFormData" :increment="$i"/>
+                                                <x-delete-confirmation-button :increment="$i"/>
                                             </td>
                                         @endif
                                     </tr>
+                                    @php
+                                        $i = $i + 1;
+                                    @endphp
                                 @endforeach
                             </tbody>
                         </table>

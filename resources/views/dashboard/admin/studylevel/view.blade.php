@@ -118,7 +118,6 @@
                                             @endphp
                                             <x-delete-confirmation name="tahap pengajian" :formData="$deleteFormData" :increment="$i"/>
                                             <x-delete-confirmation-button :increment="$i"/>
-
                                         </td>
                                     </tr>
                                     @php
