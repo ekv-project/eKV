@@ -50,7 +50,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- markdownlint-disable -->
 <table>
   <tr>
-    <td align="center"><a href="https://www.hanisirfan.xyz"><img src="https://avatars.githubusercontent.com/u/66242389?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Muhammad Hanis Irfan Mohd Zaid</b></sub></a><br /><a href="#maintenance-hanisirfan" title="Maintenance">🚧</a></td>
+    <td align="center"><a href="https://www.hanisirfan.xyz"><img src="https://avatars.githubusercontent.com/u/66242389?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Muhammad Hanis Irfan Mohd Zaid</b></sub></a><br /><a href="#maintenance-hanisirfan" title="Maintenance">🚧</a> <a href="https://github.com/hadiirfan/eKV/commits?author=hanisirfan" title="Code">💻</a> <a href="#ideas-hanisirfan" title="Ideas, Planning, & Feedback">🤔</a> <a href="#design-hanisirfan" title="Design">🎨</a> <a href="https://github.com/hadiirfan/eKV/commits?author=hanisirfan" title="Documentation">📖</a></td>
     <td align="center"><a href="https://github.com/amihadi"><img src="https://avatars.githubusercontent.com/u/95136371?v=4?s=100" width="100px;" alt=""/><br /><sub><b>amihadi</b></sub></a><br /><a href="#maintenance-amihadi" title="Maintenance">🚧</a></td>
     <td align="center"><a href="https://github.com/GenericNominalUser"><img src="https://avatars.githubusercontent.com/u/67431218?v=4?s=100" width="100px;" alt=""/><br /><sub><b>GenericNominalUser</b></sub></a><br /><a href="https://github.com/hadiirfan/eKV/commits?author=GenericNominalUser" title="Code">💻</a></td>
   </tr>
