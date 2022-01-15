@@ -35,10 +35,10 @@
                         <h2>Kolej Vokasional Malaysia</h2>
                     @else
                         <h2>{{ ucwords($settings['institute_name']) }}</h2>
-                    @endempty        
-                @else   
+                    @endempty
+                @else
                     <h2>Kolej Vokasional Malaysia</h2>
-                @endisset  
+                @endisset
             </div>
             <form action="{{ route('login') }}" method="post" class="col-lg">
                 @csrf
@@ -58,7 +58,7 @@
         <div class="container-fluid row flex-column justify-content-center align-items-center">
             <div class="mt-4 d-flex flex-column justify-content-center align-items-center col-12">
                 <p class="text-center fw-bold"><a href="https://github.com/hadiirfan/eKV" class="hvr-shrink text-decoration-none">Sistem eKV</a></p>
-                <p class="text-center">Hak Cipta Terpelihara &copy; Muhammad Hanis Irfan bin Mohd Zaid & Amirah Hadirah Aina binti Ramlan Jafery 2021</p>
+                <p class="text-center">Hak Cipta Terpelihara &copy; Muhammad Hanis Irfan bin Mohd Zaid & Amirah Hadirah Aina binti Ramlan Jafery 2021-2022</p>
             </div>
         </div>
     </div>

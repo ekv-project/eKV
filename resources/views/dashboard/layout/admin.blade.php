@@ -116,7 +116,7 @@
             @yield('content')
         </div>
         <div class="col-11 col-lg-10 rounded-3 shadow-lg mt-2 mb-3 bg-primary">
-            <p class="text-center text-secondary m-3 text-light">Hak Cipta Terpelihara &copy; Muhammad Hanis Irfan bin Mohd Zaid & Amirah Hadirah Aina binti Ramlan Jafery 2021</p>
+            <p class="text-center text-secondary m-3 text-light">Hak Cipta Terpelihara &copy; Muhammad Hanis Irfan bin Mohd Zaid & Amirah Hadirah Aina binti Ramlan Jafery 2021-2022</p>
         </div>
     </div>
     <script type="module" src="{{ asset('js/app.js') }}"></script>
