@@ -1,4 +1,7 @@
 -----------------------------------------
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
 # THIS PROJECT IS STILL UNDER DEVELOPMENT
 -----------------------------------------
 
@@ -37,3 +40,23 @@ The script will add a new `admin` user, migrate the database and generate the ap
 
 This system/project is licensed under [GNU GPLv3](COPYING). Each contributions to this system will
 be licensed under the same terms. Contributions are listed in [CREDITS](CREDITS) and eKV website in the future.
+
+## Contributors ✨
+
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tr>
+    <td align="center"><a href="https://www.hanisirfan.xyz"><img src="https://avatars.githubusercontent.com/u/66242389?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Muhammad Hanis Irfan Mohd Zaid</b></sub></a><br /><a href="#maintenance-hanisirfan" title="Maintenance">🚧</a></td>
+  </tr>
+</table>
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
