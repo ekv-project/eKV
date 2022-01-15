@@ -202,16 +202,36 @@ class UserController extends MainController
         $validated = $request->validate([
             'username' => ['required'],
             'fullname' => ['required'],
+            'gender' => ['required'],
             'email' => ['required', 'email:rfc']
         ]);
         $username = $request->username;
         $fullname = $request->fullname;
         $email = $request->email;
+
+        switch ($request->input('gender')) {
+            case 'male':
+                $userGender = 0;
+                break;
+            case 'female':
+                $userGender = 1;
+                break;
+            case 'notapplicable':
+                $userGender = 2;
+                break;
+            default:
+                return redirect()->back()->withInput()->withErrors([
+                    'gender' => 'Input tidak diketahui!'
+                ]);
+                break;
+        }
+
         // Check if user existed
         if(User::where('username', $username)->first()){
             User::where('username', $username)->update([
                 'username' => strtolower($username),
                 'fullname' => strtolower($fullname),
+                'gender' => strtolower($userGender),
                 'email' => strtolower($email)
             ]);
             session()->flash('userUpdateSuccess', 'Pengguna berjaya dikemas kini!');
