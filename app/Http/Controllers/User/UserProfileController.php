@@ -43,7 +43,7 @@ class UserProfileController extends MainController
     public function updateView($username){
         // Check if user exist. True, return view.
         if(User::where('username', '=', $username)->count() > 0){
-            if(Gate::allows('authUser', $username)){
+            if(Gate::allows('authUser', $username) || Gate::allows('authAdmin')){
                 $profile = UserProfile::where('users_username', $username)->first();
                 return view('dashboard.user.profile.update')->with(['settings' => $this->instituteSettings, 'page' => 'Kemas Kini Profil Pengguna', 'username' => $username, 'profile' => $profile]);
             }else{
@@ -134,7 +134,7 @@ class UserProfileController extends MainController
                     return redirect()->back()->withErrors([
                         "unsupportedType" => "Hanya gambar jenis PNG, JPEG dan GIF sahaja yang disokong!"
                     ]);
-                }      
+                }
             }else{
                 return redirect()->back();
             }
@@ -142,7 +142,7 @@ class UserProfileController extends MainController
             abort(403, 'Anda tiada akses pada laman ini!');
         }
     }
-    
+
     public function download($username){
             //Only current authenticated user (their own profile), admin and their coordinator is allowed to download the profile.
         if(Gate::allows('authUser', $username) || Gate::allows('authCoordinator', $username) || Gate::allows('authAdmin')){
