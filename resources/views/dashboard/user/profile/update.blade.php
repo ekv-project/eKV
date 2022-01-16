@@ -1,6 +1,6 @@
 @extends('dashboard.layout.main')
 @section('content')
-    {{-- Only allows current authenticated user to update their own profile --}} 
+    {{-- Only allows current authenticated user to update their own profile --}}
     <div class="container-fluid mt-1 w-100 h-100 d-flex flex-column align-items-center">
         <div class="row rounded-3 shadow-lg mt-5 w-100 bg-light">
             <div class="col-6 my-3 text-start">
@@ -68,11 +68,11 @@
                         @enderror
                     </div>
                     <button type="submit" class="btn btn-primary w-100 mb-5 hvr-shrink" name="password">Ubah</button>
-                </form> 
-            </div> 
+                </form>
+            </div>
         </div>
         @can('authStudent')
-            <div class="row rounded-3 shadow-lg mt-2 mb-5 w-100 d-flex flex-column justify-content-center align-items-center">
+            <div class="row rounded-3 shadow-lg mt-2 mb-5 w-100 d-flex flex-column justify-content-center align-items-center bg-light">
                 {{-- Update Profile --}}
                 <div class="col-12 col-md-11 col-lg-9">
                     <form action="" method="post" class="mt-2 mb-2">
@@ -105,10 +105,10 @@
                                         <div class="alert alert-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
-                            </div>                            
+                            </div>
                         </div>
                         <div class="row row-cols-2">
-                            <div class="col">
+                            {{-- <div class="col">
                                 <label for="GenderSelect" class="form-label">Jantina</label>
                                 <select class="form-select mb-3" aria-label="Gender Select" name="gender" id="GenderSelect">
                                     <option value="lelaki" selected>Lelaki</option>
@@ -117,7 +117,7 @@
                                 @error('gender')
                                         <div class="alert alert-danger">{{ $message }}</div>
                                 @enderror
-                            </div>
+                            </div> --}}
                             <div class="col mt-2">
                                 <div class="form-floating mb-3">
                                     <input type="date" name="date_of_birth" id="date_of_birth" class="form-control" placeholder="date" value="@php if(old('date_of_birth') !== null){echo old('date_of_birth');}elseif(isset($profile['date_of_birth'])){echo $profile['date_of_birth'];}else{echo NULL;} @endphp">
@@ -127,13 +127,15 @@
                                     @enderror
                                 </div>
                             </div>
-                        </div>
-                        <div class="form-floating mb-3">
-                            <input type="text" name="place_of_birth" id="place_of_birth" class="form-control" placeholder="location" value="@php if(old('place_of_birth') !== null){echo old('place_of_birth');}elseif(isset($profile['place_of_birth'])){echo $profile['place_of_birth'];}else{echo NULL;} @endphp">
-                            <label for="place_of_birth" class="form-label">Tempat Lahir</label>
-                            @error('place_of_birth')
-                                <div class="alert alert-danger">{{ $message }}</div>
-                            @enderror
+                            <div class="col mt-2">
+                                <div class="form-floating mb-3">
+                                    <input type="text" name="place_of_birth" id="place_of_birth" class="form-control" placeholder="location" value="@php if(old('place_of_birth') !== null){echo old('place_of_birth');}elseif(isset($profile['place_of_birth'])){echo $profile['place_of_birth'];}else{echo NULL;} @endphp">
+                                    <label for="place_of_birth" class="form-label">Tempat Lahir</label>
+                                    @error('place_of_birth')
+                                        <div class="alert alert-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
                         </div>
                         <div class="mb-3">
                             <label for="home_address" class="form-label">Alamat Rumah</label>
@@ -142,7 +144,7 @@
                                 <div class="alert alert-danger">{{ $message }}</div>
                             @enderror
                         </div>
-                        
+
                         <div class="form-floating mb-3">
                             <input type="text" name="guardian_name" id="guardian_name" class="form-control" placeholder="name" value="@php if(old('guardian_name') !== null){echo old('guardian_name');}elseif(isset($profile['guardian_name'])){echo $profile['guardian_name'];}else{echo NULL;} @endphp">
                             <label for="guardian_name" class="form-label">Nama Penjaga</label>
@@ -178,7 +180,7 @@
                         </div>
                         <button type="submit" class="btn btn-primary w-100 mb-5 hvr-shrink" name="profile">Kemas Kini</button>
                     </form>
-                </div>       
+                </div>
             </div>
         @endcan
     </div>

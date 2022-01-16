@@ -67,7 +67,6 @@ class UserProfileController extends MainController
                 $validated = $request->validate([
                     'identification_number' => ['required'],
                     'phone_number' => ['required'],
-                    'gender' => ['required'],
                     'date_of_birth' => ['required'],
                     'place_of_birth' => ['required'],
                     'home_address' => ['required'],
@@ -80,7 +79,6 @@ class UserProfileController extends MainController
                         'users_username' => $username,
                         'identification_number' => strtolower($request->identification_number),
                         'phone_number' => strtolower($request->phone_number),
-                        'gender' => strtolower($request->gender),
                         'date_of_birth' => $request->date_of_birth,
                         'place_of_birth' => strtolower($request->place_of_birth),
                         'home_address' => strtolower($request->home_address),
@@ -88,7 +86,7 @@ class UserProfileController extends MainController
                         'guardian_name' => strtolower($request->guardian_name),
                         'guardian_phone_number' => strtolower($request->guardian_phone_number)
                     ]
-                ],['users_username'],['identification_number', 'phone_number', 'gender', 'date_of_birth', 'place_of_birth', 'home_address', 'home_number', 'guardian_name', 'guardian_phone_number']);
+                ],['users_username'],['identification_number', 'phone_number', 'date_of_birth', 'place_of_birth', 'home_address', 'home_number', 'guardian_name', 'guardian_phone_number']);
                 session()->flash('profileUpdateSuccess', 'Profil berjaya dikemas kini!');
                 return redirect()->back();
             }elseif($request->has("password")){

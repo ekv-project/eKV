@@ -10,7 +10,7 @@
     "require": {
         "php": "^7.3|^8.0",
         "blade-ui-kit/blade-ui-kit": "^0.3.1",
-        "doctrine/dbal": "^3.1",
+        "doctrine/dbal": "^3.2",
         "elibyy/tcpdf-laravel": "^8.1",
         "erusev/parsedown": "^1.7",
         "fideloper/proxy": "^4.4",
