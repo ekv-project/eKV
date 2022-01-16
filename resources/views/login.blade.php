@@ -57,8 +57,7 @@
         </div>
         <div class="container-fluid row flex-column justify-content-center align-items-center">
             <div class="mt-4 d-flex flex-column justify-content-center align-items-center col-12">
-                <p class="text-center fw-bold"><a href="https://github.com/hadiirfan/eKV" class="hvr-shrink text-decoration-none">Sistem eKV</a></p>
-                <p class="text-center">Hak Cipta Terpelihara &copy; Muhammad Hanis Irfan bin Mohd Zaid & Amirah Hadirah Aina binti Ramlan Jafery 2021-2022</p>
+                <x-copyright-notice colorScheme="dark" />
             </div>
         </div>
     </div>
