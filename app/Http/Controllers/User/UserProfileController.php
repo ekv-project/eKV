@@ -68,21 +68,33 @@ class UserProfileController extends MainController
                     'identification_number' => ['required'],
                     'phone_number' => ['required'],
                     'date_of_birth' => ['required'],
-                    'place_of_birth' => ['required'],
                     'home_address' => ['required'],
-                    'home_number' => ['required'],
                     'guardian_name' => ['required'],
                     'guardian_phone_number' => ['required']
                 ]);
+
+                // Place of birth and home number is optional
+                if ($request->filled('place_of_birth')) {
+                    $userPlaceOfBirth = $request->place_of_birth;
+                }else{
+                    $userPlaceOfBirth = NULL;
+                }
+
+                if ($request->filled('home_number')) {
+                    $userHomeNumber = $request->home_number;
+                }else{
+                    $userHomeNumber = NULL;
+                }
+
                 UserProfile::upsert([
                     [
                         'users_username' => $username,
                         'identification_number' => strtolower($request->identification_number),
                         'phone_number' => strtolower($request->phone_number),
                         'date_of_birth' => $request->date_of_birth,
-                        'place_of_birth' => strtolower($request->place_of_birth),
+                        'place_of_birth' => strtolower($userPlaceOfBirth),
                         'home_address' => strtolower($request->home_address),
-                        'home_number' => strtolower($request->home_number),
+                        'home_number' => strtolower($userHomeNumber),
                         'guardian_name' => strtolower($request->guardian_name),
                         'guardian_phone_number' => strtolower($request->guardian_phone_number)
                     ]
@@ -214,7 +226,7 @@ class UserProfileController extends MainController
                 PDF::Multicell(50, 5, 'NO. TELEFON RUMAH ', 0, 'L', 0, 2, 10, 210);
                 PDF::Multicell(50, 5, 'NAMA PENJAGA ', 0, 'L', 0, 2, 10, 225);
                 PDF::Multicell(50, 5, 'NO. TELEFON PENJAGA ', 0, 'L', 0, 2, 10, 240);
-                //:
+                //
                 PDF::SetFont('helvetica', 'B', 10);
                 PDF::Multicell(0, 5, ':', 0, 'L', 0, 2, 60, 90);
                 PDF::Multicell(0, 5, ':', 0, 'L', 0, 2, 60, 105);
@@ -226,7 +238,22 @@ class UserProfileController extends MainController
                 PDF::Multicell(0, 5, ':', 0, 'L', 0, 2, 60, 195);
                 PDF::Multicell(0, 5, ':', 0, 'L', 0, 2, 60, 210);
                 PDF::Multicell(0, 5, ':', 0, 'L', 0, 2, 60, 225);
+                PDF::Multicell(0, 5, ':', 0, 'L', 0, 2, 60, 240);
                 //
+
+                // Check if place of birth and home number is present
+                if (!empty($profile['place_of_birth'])) {
+                    $userPlaceOfBirth = $profile['place_of_birth'];
+                }else{
+                    $userPlaceOfBirth = "N/A";
+                }
+
+                if (!empty($profile['home_number'])) {
+                    $userHomeNumber = $profile['home_number'];
+                }else{
+                    $userHomeNumber = "N/A";
+                }
+
                 PDF::SetFont('helvetica', '', 10);
                 PDF::Multicell(0, 5, strtoupper($profile['fullname']), 0, 'L', 0, 2, 64, 90);
                 PDF::Multicell(0, 5, strtoupper($profile['identification_number']), 0, 'L', 0, 2, 64, 105);
@@ -234,9 +261,9 @@ class UserProfileController extends MainController
                 PDF::Multicell(0, 5, strtoupper($profile['phone_number']), 0, 'L', 0, 2, 64, 135);
                 PDF::Multicell(0, 5, strtoupper($userGender), 0, 'L', 0, 2, 64, 150);
                 PDF::Multicell(0, 5, strtoupper($profile['date_of_birth']), 0, 'L', 0, 2, 64, 165);
-                PDF::Multicell(0, 5, strtoupper($profile['place_of_birth']), 0, 'L', 0, 2, 64, 180);
+                PDF::Multicell(0, 5, strtoupper($userPlaceOfBirth), 0, 'L', 0, 2, 64, 180);
                 PDF::Multicell(0, 5, strtoupper($profile['home_address']), 0, 'L', 0, 2, 64, 195);
-                PDF::Multicell(0, 5, strtoupper($profile['home_number']), 0, 'L', 0, 2, 64, 210);
+                PDF::Multicell(0, 5, strtoupper($userHomeNumber), 0, 'L', 0, 2, 64, 210);
                 PDF::Multicell(0, 5, strtoupper($profile['guardian_name']), 0, 'L', 0, 2, 64, 225);
                 PDF::Multicell(0, 5, strtoupper($profile['guardian_phone_number']), 0, 'L', 0, 2, 64, 240);
                 // Footer

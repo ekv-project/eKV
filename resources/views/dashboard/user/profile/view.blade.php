@@ -40,12 +40,26 @@
                                     $userGender = 'tidak berkaitan';
                                     break;
                             }
+
+                            // Check if place of birth and home number is present
+                            if (!empty($profile->place_of_birth)) {
+                                $userPlaceOfBirth = $profile->place_of_birth;
+                            }else{
+                                $userPlaceOfBirth = "N/A";
+                            }
+
+                            if (!empty($profile->home_number)) {
+                                $userHomeNumber = $profile->home_number;
+                            }else{
+                                $userHomeNumber = "N/A";
+                            }
+
                         @endphp
                         <p class="col fw-bold my-4"><i class="bi bi-gender-ambiguous"></i>JANTINA: <span class="fw-normal">{{ strtoupper($userGender) }}</span></p>
                         <p class="col fw-bold my-4"><i class="bi bi-calendar2-week-fill"></i>TARIKH LAHIR: <span class="fw-normal">{{ $profile->date_of_birth }}</span></p>
-                        <p class="col fw-bold my-4"><i class="bi bi-building"></i>TEMPAT LAHIR: <span class="fw-normal">{{ strtoupper($profile->place_of_birth) }}</span></p>
+                        <p class="col fw-bold my-4"><i class="bi bi-building"></i>TEMPAT LAHIR: <span class="fw-normal">{{ strtoupper($userPlaceOfBirth) }}</span></p>
                         <p class="col fw-bold my-4"><i class="bi bi-house-door-fill"></i>ALAMAT RUMAH: <span class="fw-normal">{{ strtoupper($profile->home_address) }}</span></p>
-                        <p class="col fw-bold my-4"><i class="bi bi-telephone-fill"></i>NO. TELEFON RUMAH: <span class="fw-normal">{{ $profile->home_number }}</span></p>
+                        <p class="col fw-bold my-4"><i class="bi bi-telephone-fill"></i>NO. TELEFON RUMAH: <span class="fw-normal">{{ $userHomeNumber }}</span></p>
                         <p class="col fw-bold my-4"><i class="bi bi-person-lines-fill"></i>NAMA PENJAGA: <span class="fw-normal">{{ strtoupper($profile->guardian_name) }}</span></p>
                         <p class="col fw-bold my-4"><i class="bi bi-phone-fill"></i>NO. TELEFON PENJAGA: <span class="fw-normal">{{ $profile->guardian_phone_number }}</span></p>
                     </div>

@@ -108,16 +108,6 @@
                             </div>
                         </div>
                         <div class="row row-cols-2">
-                            {{-- <div class="col">
-                                <label for="GenderSelect" class="form-label">Jantina</label>
-                                <select class="form-select mb-3" aria-label="Gender Select" name="gender" id="GenderSelect">
-                                    <option value="lelaki" selected>Lelaki</option>
-                                    <option value="perempuan">Perempuan</option>
-                                </select>
-                                @error('gender')
-                                        <div class="alert alert-danger">{{ $message }}</div>
-                                @enderror
-                            </div> --}}
                             <div class="col mt-2">
                                 <div class="form-floating mb-3">
                                     <input type="date" name="date_of_birth" id="date_of_birth" class="form-control" placeholder="date" value="@php if(old('date_of_birth') !== null){echo old('date_of_birth');}elseif(isset($profile['date_of_birth'])){echo $profile['date_of_birth'];}else{echo NULL;} @endphp">
@@ -134,6 +124,9 @@
                                     @error('place_of_birth')
                                         <div class="alert alert-danger">{{ $message }}</div>
                                     @enderror
+                                    <div class="form-text">
+                                        Ruangan ini tidak wajib diisi. <br>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -158,6 +151,7 @@
                                     <input type="text" name="home_number" id="home_number" class="form-control" placeholder="number" value="@php if(old('home_number') !== null){echo old('home_number');}elseif(isset($profile['home_number'])){echo $profile['home_number'];}else{echo NULL;} @endphp">
                                     <label for="home_number" class="form-label">No. Telefon Rumah</label>
                                     <div class="form-text">
+                                        Ruangan ini tidak wajib diisi. <br>
                                         Format: +601-2345678
                                     </div>
                                     @error('home_number')
