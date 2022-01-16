@@ -39,8 +39,7 @@ The script will add a new `admin` user, migrate the database and generate the ap
 ## License
 
 This system/project is licensed under [GNU GPLv3](COPYING). Each contributions to this system will
-be licensed under the same terms. Contributions are listed in [CREDITS](CREDITS) and eKV website in the future.
-
+be licensed under the same terms.
 ## Contributors ✨
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):

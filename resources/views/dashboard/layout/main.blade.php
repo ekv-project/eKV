@@ -121,7 +121,7 @@
                                     eKV
                                 </div>
                                 <div class="col-6">
-                                    <p>Oleh: Muhammad Hanis Irfan bin Mohd Zaid & Amirah Hadirah Aina binti Ramlan Jafery</p>
+                                    <p>Oleh: eKV Contributors</p>
                                     <p>Lesen: GPLv3</p>
                                 </div>
                             </div>
@@ -211,7 +211,7 @@
             <div class="mx-2"><a href="#" class="text-light text-center">Laman Sesawang</a></div>
             <div class="mx-2"><a href="#" class="text-light text-center">Dokumentasi</a></div>
         </div>
-        <p class="text-center text-secondary p-3 text-light">Hak Cipta Terpelihara &copy; Muhammad Hanis Irfan bin Mohd Zaid & Amirah Hadirah Aina binti Ramlan Jafery 2021-2022</p>
+        <x-copyright-notice colorScheme="light" />
     </footer>
     <script type="module" src="{{ asset('js/app.js') }}"></script>
     @bukScripts
