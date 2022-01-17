@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\LoginActivity;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use App\Http\Controllers\MainController;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 
@@ -153,51 +154,169 @@ class UserController extends MainController
              * Handle XLSX with Phpspreadsheet library
              */
             $validated = $request->validate([
-                'user-xlsx' => ['required']
+                'user-xlsx' => ['required', 'mimes:xlsx'],
             ]);
-            $requestExtension = $request->file('user-xlsx')->extension();
-            if($requestExtension == 'xlsx'){
-                $userXLSX = $request->file('user-xlsx');
-                $reader = new Xlsx();
-                $reader->setReadDataOnly(true);
-                //Read XLSX file.
-                $spreadsheet = $reader->load($userXLSX);
-                $dataArray = $spreadsheet->getActiveSheet()
-                    ->rangeToArray(
-                        'A6:E106',     // The worksheet range that we want to retrieve
-                        NULL,        // Value that should be returned for empty cells
-                        FALSE,        // Should formulas be calculated (the equivalent of getCalculatedValue() for each cell)
-                        FALSE,        // Should values be formatted (the equivalent of getFormattedValue() for each cell)
-                        FALSE         // Should the array be indexed by cell row and cell column
-                    );
-                $userArray = array();
-                foreach ($dataArray as $row) {
-                    //Check if one of the row field is empty (if yes, don't proceed that row).
-                    if(!empty($row[0]) AND !empty($row[1]) AND !empty($row[2]) AND !empty($row[3]) AND !empty($row[4])){
-                        //Check if role is equal to admin, student or lecturer
-                        if(strtolower($row[4]) == 'admin' || strtolower($row[4]) == 'student' || strtolower($row[4]) == 'lecturer'){
-                            //Check if email is valid
-                            if(filter_var($row[2], FILTER_VALIDATE_EMAIL)){
-                                //If all good, insert the row into an array.
-                                $user = ['fullname' => strtolower($row[0]), 'username' => strtolower($row[1]), 'email' => strtolower($row[2]), 'password' => Hash::make($row[3]), 'role' => strtolower($row[4])];
-                                array_push($userArray, $user);
+
+            $spreadsheetErr = [];
+            $inputFile = $request->file('user-xlsx');
+            $reader = IOFactory::createReader('Xlsx');
+            $reader->setReadDataOnly(true);
+            $reader->setLoadSheetsOnly('1'); // Only read from worksheet named 1
+            try {
+                $spreadsheet = $reader->load($inputFile);
+            } catch (PHPSpreadsheetReaderException $e) {
+                exit('Error loading file: ' . $e->getMessage());
+            }
+            // Get all available rows. If a row is empty (in the username field), the rest of the row will be ignored. Warn the admin.
+            $rows = $spreadsheet->getActiveSheet()->rangeToArray('A6:F106', null, false, false, true);
+
+            if (empty($rows[6]['A']) || empty($rows[6]['B']) || empty($rows[6]['C']) || empty($rows[6]['D']) || empty($rows[6]['E']) || empty($rows[6]['F'])) {
+                $error = 'Sekurang-kurangnya satu data pengguna diperlukan!';
+                array_push($spreadsheetErr, $error);
+                $request->session()->flash('spreadsheetErr', $spreadsheetErr);
+                return back();
+            }
+
+            $availableRows = [];
+            foreach ($rows as $row => $value) {
+                if (!empty($value['A'])) {
+                    array_push($availableRows, $row);
+                } else {
+                    // If one row is empty in the fullname field, all the following rows will be ignored.
+                    break;
+                }
+            }
+
+            $userData = [];
+            foreach ($availableRows as $row) {
+                $data = $spreadsheet->getActiveSheet()->rangeToArray('A' . $row . ':F' . $row, null, false, false, true);
+                array_push($userData, $data);
+            }
+
+            $validUserList = [];
+            foreach ($userData as $dataIndex) {
+                foreach ($dataIndex as $data) {
+                    $fullname = strtolower($data['A']);
+                    $username = strtolower($data['B']);
+                    $email = strtolower($data['C']);
+                    $password = $data['D'];
+                    $role = $data['E'];
+                    $gender = $data['F'];
+                    $currentRow = key($dataIndex);
+
+                    // Check if user already existed with the username
+                    if ('admin' == $username) {
+                        // Check if adding user named 'admin'
+                        $error = '[B' . $currentRow . '] ' . 'Anda tidak boleh menambah pengguna yang mempunyai username: admin!';
+                        array_push($spreadsheetErr, $error);
+                    } elseif (User::where('username', strtolower($username))->first()) {
+                        $error = '[B' . $currentRow . '] ' . 'Pengguna dengan username tersebut telah wujud!';
+                        array_push($spreadsheetErr, $error);
+                    } else {
+                        $usernameValid = $username;
+
+                        if (empty($fullname)) {
+                            $error = '[A' . $currentRow . '] ' . 'Ruangan nama penuh kosong!';
+                            array_push($spreadsheetErr, $error);
+                        } else {
+                            $fullnameValid = $fullname;
+                        }
+
+                        if (empty($email)) {
+                            $error = '[C' . $currentRow . '] ' . 'Ruangan alamat e-mel kosong!';
+                            array_push($spreadsheetErr, $error);
+                        } else {
+                            // Check if email valid
+                            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                                $error = '[C' . $currentRow . '] ' . 'Alamat e-mel mestilah merupakan alamat e-mel yang sah!';
+                                array_push($spreadsheetErr, $error);
+                            } else {
+                                $emailValid = $email;
                             }
                         }
+
+                        if (empty($password)) {
+                            $error = '[D' . $currentRow . '] ' . 'Ruangan kata laluan kosong!';
+                            array_push($spreadsheetErr, $error);
+                        } else {
+                            $passwordValid = $password;
+                        }
+
+                        if (empty($role)) {
+                            $error = '[E' . $currentRow . '] ' . 'Ruangan peranan kosong!';
+                            array_push($spreadsheetErr, $error);
+                        } else {
+                            // Check if role valid
+                            // Pelajar = S
+                            // Lecturer = L
+                            // Admin = A
+                            switch($role){
+                                case 'S':
+                                    $roleValid = 'student';
+                                    break;
+                                case 'L':
+                                    $roleValid = 'lecturer';
+                                    break;
+                                case 'A':
+                                    $roleValid = 'admin';
+                                    break;
+                                default:
+                                    $error = '[E' . $currentRow . '] ' . 'Hanya masukkan huruf yang diperlukan di ruangan peranan!';
+                                    array_push($spreadsheetErr, $error);
+                                    break;
+                            }
+                        }
+
+                        // User gender
+                        if (empty($gender)) {
+                            $error = '[F' . $currentRow . '] ' . 'Ruangan jantina kosong!';
+                            array_push($spreadsheetErr, $error);
+                        } else {
+                            // Lelaki = L
+                            // Perempuan = P
+                            // Tidak Berkaitan = TB
+                            switch ($gender) {
+                                case 'L':
+                                    $genderValid = 0;
+                                    break;
+                                case 'P':
+                                    $genderValid = 1;
+                                    break;
+                                case 'TB':
+                                    $genderValid = 2;
+                                    break;
+                                default:
+                                    $error = '[F' . $currentRow . '] ' . 'Hanya masukkan huruf yang diperlukan di ruangan jantina!';
+                                    array_push($spreadsheetErr, $error);
+                                    break;
+                            }
+                        }
+
+                        $validUser = [
+                            'username' => $usernameValid,
+                            'fullname' => $fullnameValid,
+                            'email' => $emailValid,
+                            'password' => Hash::make($passwordValid),
+                            'role' => $roleValid,
+                            'gender' => $genderValid,
+                        ];
+                        array_push($validUserList, $validUser);
                     }
                 }
-                //The array will be imported into the database using Eloquent Upsert() method
-                //by checking the username. This means if there's already existed user, it'll just
-                //update it with the data from XLSX file.
-                User::upsert($userArray, ['username'], ['fullname', 'username', 'email', 'password'], 'role');
-                session()->flash('userBulkAddSuccess', 'Pengguna berjaya ditambah!');
-                return redirect()->back();
-            }else{
-                return redirect()->back()->withErrors([
-                    "unsupportedType" => "Hanya file XLSX yang disokong, sila gunakan templat yang disediakan!"
-                ]);
+            }
+
+            // If if there's no problem with the spreadsheet, if doesn't, proceed to add the users.
+            if (count($spreadsheetErr) > 0) {
+                $request->session()->flash('spreadsheetErr', $spreadsheetErr);
+                return back();
+            } else {
+                User::upsert($validUserList, ['username'], ['fullname', 'email', 'password', 'role', 'gender']);
+                $request->session()->flash('userBulkAddSuccess', count($validUserList) . ' pengguna berjaya ditambah secara pukal!');
+                return back();
             }
         }
     }
+
     public function adminUpdateUser(Request $request){
         $validated = $request->validate([
             'username' => ['required'],
@@ -234,7 +353,7 @@ class UserController extends MainController
                 'gender' => strtolower($userGender),
                 'email' => strtolower($email)
             ]);
-            session()->flash('userUpdateSuccess', 'Pengguna berjaya dikemas kini!');
+            session()->flash('userBulkAddSuccess', 'Pengguna berjaya dikemas kini!');
             return redirect()->back();
         }else{
             return redirect()->back()->withInput()->withErrors([
