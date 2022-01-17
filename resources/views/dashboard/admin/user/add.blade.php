@@ -6,16 +6,29 @@
             <form action="" method="post" enctype="multipart/form-data" class="mt-2 mb-2">
                 @csrf
                 <h2 class="text-left">Tambah Pengguna Secara Pukal</h2>
+                <a href="{{ asset('storage/spreadsheet/Tambah_Pengguna_Baharu.xlsx'); }}" class="btn btn-primary w-25 hvr-shrink my-3">Muat Turun Templat</a>
                 @if(session()->has('userBulkAddSuccess'))
                     <div class="alert alert-success">{{ session('userBulkAddSuccess') }}</div>
                 @endif
                 <input type="file" name="user-xlsx" id="user-xlsx" class="form-control mb-3">
-                    @error('user-xlsx')
-                        <div class="alert alert-danger">{{ $message }}</div>
-                    @enderror
-                    @error('unsupportedType')
-                        <div class="alert alert-danger">{{ $message }}</div>
-                    @enderror
+                @error('user-xlsx')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                @enderror
+                @if(session()->has('spreadsheetErr'))
+                    @if(count(session('spreadsheetErr')) > 0)
+                        <div class="my-3 alert alert-danger">
+                            <p class="fw-bold">Ralat ({{ count(session('spreadsheetErr')) }}):</p>
+                            <button class="btn btn-outline-danger" type="button" data-bs-toggle="collapse" data-bs-target="#errorCollapse" aria-expanded="false" aria-controls="errorCollapse"><i class="bi bi-arrows-expand"></i> Senarai Ralat</button>
+                            <div class="collapse mt-3" id="errorCollapse">
+                                <div class="card card-body">
+                                    @for ($i = 0; $i < count(session('spreadsheetErr')); $i++)
+                                        <p class="mt-1">{{ $i + 1 . ": " }}{{ session('spreadsheetErr')[$i] }}</p>
+                                    @endfor
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+                @endif
                 <button type="submit" class="btn btn-primary w-100 hvr-shrink" name="addBulk">Tambah Pukal</button>
             </form>
         </div>
