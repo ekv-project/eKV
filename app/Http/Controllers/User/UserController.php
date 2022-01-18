@@ -102,22 +102,30 @@ class UserController extends MainController
             /**
              * Add one user at a time
              */
+
+            $validated = $request->validate([
+                'username' => ['required'],
+                'fullname' => ['required'],
+                'gender' => ['required'],
+                'email' => ['required', 'email:rfc'],
+                'password' => ['required', 'confirmed'],
+                'role' => ['required']
+            ]);
+
             $username = strtolower($request->username);
             if(User::where('username', $username)->first()){
-                return back()->withErrors([
+                return back()->withInput()->withErrors([
                     'userExist' => 'Pengguna telah wujud!',
                 ]);
+
             }else{
 
-                // If no user existed, add them
-                $validated = $request->validate([
-                    'username' => ['required'],
-                    'fullname' => ['required'],
-                    'gender' => ['required'],
-                    'email' => ['required', 'email:rfc'],
-                    'password' => ['required', 'confirmed'],
-                    'role' => ['required']
-                ]);
+                if(User::where('email', strtolower($request->email))->first()){
+                    return back()->withInput()->withErrors([
+                        'email' => 'Pengguna dengan e-mel tersebut telah wujud!',
+                    ]);
+                }
+
 
                 switch ($request->input('gender')) {
                     case 'male':
@@ -231,7 +239,12 @@ class UserController extends MainController
                                 $error = '[C' . $currentRow . '] ' . 'Alamat e-mel mestilah merupakan alamat e-mel yang sah!';
                                 array_push($spreadsheetErr, $error);
                             } else {
-                                $emailValid = $email;
+                                if (User::where('email', strtolower($email))->first()) {
+                                    $error = '[C' . $currentRow . '] ' . 'Pengguna dengan e-mel tersebut telah wujud!';
+                                    array_push($spreadsheetErr, $error);
+                                }else{
+                                    $emailValid = $email;
+                                }
                             }
                         }
 
