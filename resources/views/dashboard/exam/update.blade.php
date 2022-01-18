@@ -33,7 +33,7 @@
                 </div>
                 <div class="row mt-2 mb-2">
                     <div class="col">
-                        <p class="fw-bold">Tahap Pengajian: <span class="fw-normal">{{ $studyLevel->name }}</span></p>
+                        <p class="fw-bold">Tahap Pengajian: <span class="fw-normal">{{ ucwords($studyLevel->name) }}</span></p>
                         <input type="hidden" name="studyLevel" value="{{ $studyLevel->code }}">
                         </div>
                     <div class="col">
@@ -75,7 +75,7 @@
                         @error('total_credit_cgpa')
                             <div class="alert alert-danger">{{ $message }}</div>
                         @enderror
-                    </div> 
+                    </div>
                 </div>
                 <div class="row d-flex flex-column justify-content-center align-items-center">
                     <div class="row mb-1">
@@ -94,16 +94,12 @@
                                     <label for="coursesCode">Kod Kursus</label>
                                 </div>
                                 <div class="form-floating m-2">
-                                    <input type="text" class="form-control" id="creditHour" name="creditHour[]" placeholder="creditHour" value="{{ $courseGrade->credit_hour }}" required>
-                                    <label for="creditHour">Jam Kredit</label>
-                                </div>
-                                <div class="form-floating m-2">
                                     <input type="text" class="form-control" id="gradePointer" name="gradePointer[]" placeholder="gradePointer" value="{{ $courseGrade->grade_pointer }}" required>
                                     <label for="gradePointer">Nilai Gred</label>
                                 </div>
                                 <button type="button" id="removeField" data-remove-field-type="courseGrade" data-remove-field-id="courseGrade" class="btn btn-danger m-1 fs-hvr-shrink">Keluarkan</button>
                             </div>
-                        </div>          
+                        </div>
                         @endforeach
                     </div>
                 </div>

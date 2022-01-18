@@ -82,7 +82,7 @@ class ExamController extends MainController
                             'identificationNumber' => $studentIdentificationNumber,
                             'matrixNumber' => $studentID
                         ];
-                        $courseGrades = CourseGrade::join('courses', 'course_grades.courses_code', 'courses.code')->select('course_grades.credit_hour', 'course_grades.grade_pointer', 'courses.code', 'courses.name')->where('users_username', $studentID)->where('study_levels_code', $studyLevel)->where('semester', $semester)->get();
+                        $courseGrades = CourseGrade::join('courses', 'course_grades.courses_code', 'courses.code')->select('courses.credit_hour', 'course_grades.grade_pointer', 'courses.code', 'courses.name')->where('users_username', $studentID)->where('study_levels_code', $studyLevel)->where('semester', $semester)->orderBy('courses.code', 'asc')->get();
                         return view('dashboard.exam.transcript')->with(['settings' => $this->instituteSettings, 'page' => 'Transkrip Penilaian', 'studentProgram' => $studentProgram, 'studyLevelName' => $studyLevelName, 'semester' => $semester, 'studentDetails' => $studentDetails, 'courseGrades' => $courseGrades, 'semesterGrade' => $semesterGrade]);
                     }else{
                         abort(404, 'Pelajar tidak diletakkan dalam kelas!');
