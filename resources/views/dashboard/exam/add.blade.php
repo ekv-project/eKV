@@ -13,9 +13,21 @@
             @if(session()->has('transcriptSuccess'))
                 <div class="alert alert-success">{{ session('transcriptSuccess') }}</div>
             @endif
-            @error('noCourseInserted')
-                <div class="alert alert-danger col-11">{{ $message }}</div>
-            @enderror
+            @if(session()->has('transcriptErr'))
+                @if(count(session('transcriptErr')) > 0)
+                    <div class="my-3 alert alert-danger">
+                        <p class="fw-bold">Ralat ({{ count(session('transcriptErr')) }}):</p>
+                        <button class="btn btn-outline-danger" type="button" data-bs-toggle="collapse" data-bs-target="#errorCollapse" aria-expanded="false" aria-controls="errorCollapse"><i class="bi bi-arrows-expand"></i> Senarai Ralat</button>
+                        <div class="collapse mt-3" id="errorCollapse">
+                            <div class="card card-body">
+                                @for ($i = 0; $i < count(session('transcriptErr')); $i++)
+                                    <p class="mt-1">{{ $i + 1 . ": " }}{{ session('transcriptErr')[$i] }}</p>
+                                @endfor
+                            </div>
+                        </div>
+                    </div>
+                @endif
+            @endif
             <form action="" method="post">
                 @csrf
                 <div class="row">
@@ -36,7 +48,7 @@
                         <div class="form-floating mb-3">
                             <select class="form-select" id="semester" name="semester" aria-label="Semester">
                                 @php
-                                    for ($i=1; $i <= $maxSemester; $i++) { 
+                                    for ($i=1; $i <= $maxSemester; $i++) {
                                         echo '<option value="' . $i . '">' . $i . '</option>';
                                     }
                                 @endphp
@@ -81,7 +93,7 @@
                         @error('total_credit_cgpa')
                             <div class="alert alert-danger">{{ $message }}</div>
                         @enderror
-                    </div> 
+                    </div>
                 </div>
                 <div class="row d-flex flex-column justify-content-center align-items-center">
                     <div class="row mb-1">
@@ -91,7 +103,25 @@
                         </div>
                         <div class="col"></div>
                     </div>
-                    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3" id="courseGrade"></div>
+                    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3" id="courseGrade">
+                        @if(!empty(old('coursesCode')))
+                                @for ($i = 0; $i < count(old('coursesCode')); $i++)
+                                <div>
+                                    <div class="col border border-dark mt-1 d-flex flex-column justify-content-center align-items-center">
+                                        <div class="form-floating m-2">
+                                            <input type="text" class="form-control" id="coursesCode" name="coursesCode[]" placeholder="coursesCode" value="{{ old('coursesCode')[$i] }}" required>
+                                            <label for="coursesCode">Kod Kursus</label>
+                                        </div>
+                                        <div class="form-floating m-2">
+                                            <input type="text" class="form-control" id="gradePointer" name="gradePointer[]" placeholder="gradePointer" value="{{ old('gradePointer')[$i] }}" required>
+                                            <label for="gradePointer">Nilai Gred</label>
+                                        </div>
+                                        <button type="button" id="removeField" data-remove-field-type="courseGrade" data-remove-field-id="courseGrade" class="btn btn-danger m-1 fs-hvr-shrink">Keluarkan</button>
+                                    </div>
+                                </div>
+                                @endfor
+                        @endif
+                    </div>
                 </div>
                 <div class="row d-flex flex-column align-items-center justify-content-center">
                     <button type="submit" class="btn btn-primary my-6 hvr-shrink w-25">Tambah Transkrip</button>

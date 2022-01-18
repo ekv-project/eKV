@@ -197,7 +197,7 @@ class ExamController extends MainController
                 'color' => ['argb' => 'FFFFFFFF'],
             ]
         ];
-        for ($i=0; $i < count($commonCellOne); $i++) { 
+        for ($i=0; $i < count($commonCellOne); $i++) {
             $spreadsheet->getActiveSheet()->getStyle($commonCellOne[$i])->applyFromArray($fontStyleData);
             $spreadsheet->getActiveSheet()->getStyle($commonCellOne[$i])->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
             $spreadsheet->getActiveSheet()->getStyle($commonCellOne[$i])->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID);
@@ -207,21 +207,21 @@ class ExamController extends MainController
         // Column width
         $columnLetter = "A,B,C,D,E";
         $columnLetters = explode(",", $columnLetter);
-        for ($i=0; $i < count($columnLetters); $i++) { 
-            $spreadsheet->getActiveSheet()->getColumnDimension($columnLetters[$i])->setWidth(30, 'pt'); 
+        for ($i=0; $i < count($columnLetters); $i++) {
+            $spreadsheet->getActiveSheet()->getColumnDimension($columnLetters[$i])->setWidth(30, 'pt');
         }
 
         $columnLetter = "F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y";
         $columnLetters = explode(",", $columnLetter);
-        for ($i=0; $i < count($columnLetters); $i++) { 
-            $spreadsheet->getActiveSheet()->getColumnDimension($columnLetters[$i])->setWidth(12, 'pt'); 
+        for ($i=0; $i < count($columnLetters); $i++) {
+            $spreadsheet->getActiveSheet()->getColumnDimension($columnLetters[$i])->setWidth(12, 'pt');
         }
 
         $sheet->setCellValue('A8', 'Semester');
         $sheet->setCellValue('B8', 'Tahap Pengajian');
-        
+
         $mergeCells = ["F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y"];
-        for ($i=0; $i < 20;) { 
+        for ($i=0; $i < 20;) {
             $rowFirst = $mergeCells[$i] . "11" . ":" . $mergeCells[$i + 1] . "11";
             $sheet->setCellValue($mergeCells[$i] . "11", 'KOD KURSUS');
             $rowSecond = $mergeCells[$i] . "12" . ":" . $mergeCells[$i + 1] . "12";
@@ -265,7 +265,7 @@ class ExamController extends MainController
      * Handling POST Requests
      */
     public function transcriptAddUpdate(Request $request, $studentID){
-        // Only coordinator and admin could update. 
+        // Only coordinator and admin could update.
         if(Gate::allows('authCoordinator', $studentID) || Gate::allows('authAdmin')){
             // Check if user exist.
             if(User::where('username', $studentID)->first()){
@@ -279,6 +279,9 @@ class ExamController extends MainController
                         'gpa' => ['required', 'numeric'],
                         'cgpa' => ['required', 'numeric']
                     ]);
+
+                    $transcriptErr = [];
+
                     $studyLevel = $request->studyLevel;
                     $semester = $request->semester;
                     $creditGPA = $request->total_credit_gpa;
@@ -316,21 +319,12 @@ class ExamController extends MainController
                     }else{
                         $cgpa = $pointerCGPA . '.00';
                     }
-                    // Because it's not neccessary to add multiple method for add and update. I'm just gonna use the same method for both actions.
-                    // For this, student semester grade and all course grades will be deleted before inserting new ones
-                    SemesterGrade::where('users_username', $studentID)->where('study_levels_code', $studyLevel)->where('semester', $semester)->delete();
-                    CourseGrade::where('users_username', $studentID)->where('study_levels_code', $studyLevel)->where('semester', $semester)->delete();
                     // Add semester grade
                     $coursesCodes = $request->coursesCode;
-                    $creditHours = $request->creditHour;
                     $gradePointers = $request->gradePointer;
-                    $allData = array();
+                    $allCourseData = array();
                     // Check if course grades is inserted, if not return an error
                     if(isset($coursesCodes)){
-                        SemesterGrade::updateOrCreate(
-                            ['users_username' => $studentID, 'study_levels_code' => $studyLevel, 'semester' => $semester],
-                            ['total_credit_gpa' => $creditGPA, 'total_credit_cgpa' => $creditCGPA, 'gpa' => $gpa, 'cgpa' => $cgpa]
-                        );
                         for($i=0; $i < count($coursesCodes); $i++){
                             // Check if course is existed
                             if(Course::where('code', $coursesCodes[$i])->first()){
@@ -351,12 +345,37 @@ class ExamController extends MainController
                                 }else{
                                     $gradePointer = $pointer . '.00';
                                 }
-                                $allData[] = array('users_username' => strtolower($studentID), 'study_levels_code' => $studyLevel, 'semester' => $semester, 'courses_code' => strtolower($coursesCodes[$i]), 'credit_hour' => $creditHours[$i], 'grade_pointer' => $gradePointer);
+                                $allCourseData[] = array('users_username' => strtolower($studentID), 'study_levels_code' => $studyLevel, 'semester' => $semester, 'courses_code' => strtolower($coursesCodes[$i]), 'grade_pointer' => $gradePointer);
+                            }else{
+                                // Course not found
+                                $error = '[Kod Kursus: ' . $coursesCodes[$i] . ']' . ' Kursus tidak wujud!';
+                                array_push($transcriptErr, $error);
                             }
                         }
+                    }else{
+                        // Course not added
+                        $error = 'Tiada rekod gred kursus ditambah!';
+                        array_push($transcriptErr, $error);
+                    }
+
+                    if (count($transcriptErr) > 0) {
+                        // Return errors if available
+                        $request->session()->flash('transcriptErr', $transcriptErr);
+                        return redirect()->back()->withInput();
+                    }else{
+                        // Because it's not neccessary to add multiple method for add and update. I'm just gonna use the same method for both actions.
+                        // For this, student semester grade and all course grades will be deleted before inserting new ones
+                        SemesterGrade::where('users_username', $studentID)->where('study_levels_code', $studyLevel)->where('semester', $semester)->delete();
+                        CourseGrade::where('users_username', $studentID)->where('study_levels_code', $studyLevel)->where('semester', $semester)->delete();
+
+                        // Inserting data into DB
+                        SemesterGrade::updateOrCreate(
+                            ['users_username' => $studentID, 'study_levels_code' => $studyLevel, 'semester' => $semester],
+                            ['total_credit_gpa' => $creditGPA, 'total_credit_cgpa' => $creditCGPA, 'gpa' => $gpa, 'cgpa' => $cgpa]
+                        );
                         // I have to make custom upsert function. Laravel upsert() doesn't
                         // seems to like 'semester' column without unique index.
-                        foreach($allData as $data){
+                        foreach($allCourseData as $data){
                             if(CourseGrade::where('users_username', $data['users_username'])->where('study_levels_code', $data['study_levels_code'])->where('semester', $data['semester'])->where('courses_code', $data['courses_code'])->count() < 1){
                                 CourseGrade::create(
                                     $data
@@ -366,16 +385,13 @@ class ExamController extends MainController
                                 ->where('study_levels_code', $data['study_levels_code'])
                                 ->where('semester', $data['semester'])
                                 ->where('courses_code', $data['courses_code'])
-                                ->update(['credit_hour' => $data['credit_hour'], 'grade_pointer' => $data['grade_pointer']]);
+                                ->update(['grade_pointer' => $data['grade_pointer']]);
                             }
                         }
                         session()->flash('transcriptSuccess', 'Transkrip Berjaya Dikemas kini!');
                         return redirect()->back();
-                    }else{
-                        return redirect()->back()->withInput()->withErrors([
-                            'noCourseInserted' => 'Tiada rekod gred kursus ditambah!'
-                        ]);
                     }
+
                 }else{
                     abort(404, 'Pengguna bukanlah seorang pelajar!');
                 }
@@ -390,7 +406,7 @@ class ExamController extends MainController
         /**
          * For adding student's exam transcript in bulk using Excel spreadsheet
          * Each student's transcript is seperated by sheets
-         * Maximum of 10 courses result can be added 
+         * Maximum of 10 courses result can be added
          * Data after an empty cell will not be added to the array of transcript to add(check by ID pelajar and Kod Kursus)
          * If there's a duplicated data, for example duplicated ID Pelajar and Kod Kursus, only the first data will be added.
          */
@@ -431,8 +447,8 @@ class ExamController extends MainController
                                 array_push($excelErr, '[A14] Sel ID Pelajar kosong!');
                             }else{
                                 // Check if student list available
-                                $studentListAvailable = []; 
-                                for ($i=14; $i < 44; $i++) { 
+                                $studentListAvailable = [];
+                                for ($i=14; $i < 44; $i++) {
                                     if($sheet->getCell("A" . $i)->getValue() === NULL){
                                         break;
                                     }else{
@@ -448,7 +464,7 @@ class ExamController extends MainController
                                     $mergeCells = ["F12", "H12", "J12", "L12", "N12", "P12", "R12", "T12", "V12", "X12"];
                                     $courseListAvailable = [];
                                     $courseList = [];
-                                    for ($i=0; $i < count($mergeCells); $i++) { 
+                                    for ($i=0; $i < count($mergeCells); $i++) {
                                         $code = $sheet->getCell($mergeCells[$i])->getValue();
                                         $courseList[$mergeCells[$i]] = $code;
                                     }
@@ -532,7 +548,7 @@ class ExamController extends MainController
                                     foreach ($courseListValid as $key => $value) {
                                         $currentColumnIndex = array_search($key, $courseColumnList);
                                         $neighborColumnIndex = $currentColumnIndex + 1;
-                                        for ($i=0; $i < count($courseColumnList); $i++) { 
+                                        for ($i=0; $i < count($courseColumnList); $i++) {
                                             $neighborColumn = $courseColumnList[$neighborColumnIndex];
                                         }
                                         $gradePointerColumn = $key;
@@ -599,7 +615,7 @@ class ExamController extends MainController
             // Check if user exist.
             if(User::where('username',  $request->studentID)->first()){
                 // Check if user is a student
-                if(User::where('username', $request->studentID)->first()->role == 'student'){ 
+                if(User::where('username', $request->studentID)->first()->role == 'student'){
                     $studentID = $request->studentID;
                     $studyLevel = $request->studyLevel;
                     $semester = $request->semester;
@@ -619,7 +635,7 @@ class ExamController extends MainController
         }
     }
     public function transcriptDownload(Request $request, $studentID, $studyLevel, $semester){
-        // Only the student, coordinator and admin could download. 
+        // Only the student, coordinator and admin could download.
         if(Gate::allows('authUser', $studentID) || Gate::allows('authCoordinator', $studentID) || Gate::allows('authAdmin')){
             // Check if user exist.
             if(User::where('username', $studentID)->first()){
@@ -639,7 +655,7 @@ class ExamController extends MainController
                             }elseif(Storage::disk('local')->exists('public/img/system/logo-def-300.png')){
                                 $collegeImageUrl = 'public/img/system/logo-def-300.png';
                             }else{
-                                $collegeImageUrl = '';  
+                                $collegeImageUrl = '';
                             }
                             $studentProgram = Program::where('code', $studentClassroom->programs_code)->first()->name;
                             $studyLevelName = StudyLevel::where('code', $studyLevel)->first()->name;
@@ -713,7 +729,7 @@ class ExamController extends MainController
                             PDF::MultiCell(30, 5, 'JAM KREDIT', 0, 'C', 0, 0, '', '', true);
                             PDF::MultiCell(30, 5, 'NILAI GRED', 0, 'C', 0, 0, '', '', true);
                             PDF::SetFont('helvetica', '', 9);
-                            foreach ($courseGrades as $courseGrade) { 
+                            foreach ($courseGrades as $courseGrade) {
                                 PDF::Ln();
                                 PDF::MultiCell(30, 10, strtoupper($courseGrade->code), 0, 'C', 0, 0, '', '', true);
                                 PDF::MultiCell(100, 10, strtoupper($courseGrade->name), 0, 'C', 0, 0, '', '', true);
@@ -721,7 +737,7 @@ class ExamController extends MainController
                                 PDF::MultiCell(30, 10, $courseGrade->grade_pointer, 0, 'C', 0, 0, '', '', true);
                             }
                             // Testing purposes
-                            // for ($i=0; $i < 15; $i++){ 
+                            // for ($i=0; $i < 15; $i++){
                             //     PDF::Ln();
                             //     PDF::MultiCell(30, 10, 'Test', 0, 'C', 0, 0, '', '', true);
                             //     PDF::MultiCell(100, 10, 'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Non corporis, voluptas enim quos est mollitia?', 0, 'C', 0, 0, '', '', true);
