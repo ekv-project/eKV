@@ -23,6 +23,13 @@
                             <div class="alert alert-danger">{{ $message }}</div>
                         @enderror
                     </div>
+                    <div class="form-floating mb-3">
+                        <input type="text" name="credit_hour" id="credit_hour" class="form-control" placeholder="credit_hour" value="@php if(old('credit_hour') !== null){echo old('credit_hour');}elseif(isset($course->credit_hour)){echo ucwords($course->credit_hour);}else{echo NULL;} @endphp">
+                        <label for="credit_hour" class="form-label">Jam Kredit</label>
+                        @error('credit_hour')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
                     <button type="submit" class="btn btn-primary w-100 hvr-shrink" name="info">Kemas Kini</button>
                 </form>
             </div>
