@@ -16,7 +16,7 @@
                 <div class="col-6">
                     <p><strong>Nama: </strong>{{ ucwords($studentDetails['name']) }}</p>
                     <p><strong>No. Kad Pengenalan: </strong>{{ $studentDetails['identificationNumber'] }}</p>
-                    <p><strong>Angka Giliran: </strong>{{ $studentDetails['matrixNumber'] }}</p>
+                    <p><strong>Angka Giliran: </strong>{{ strtoupper($studentDetails['matrixNumber']) }}</p>
                 </div>
                 <div class="col-6">
                     <p><strong>Peringkat Pengajian: </strong>{{ ucwords($studyLevelName) }}</p>
@@ -45,7 +45,7 @@
                                 </tr>
                             @endforeach
                         </tbody>
-                    </table> 
+                    </table>
                 </div>
             @else
                 <div class="row my-5 ">

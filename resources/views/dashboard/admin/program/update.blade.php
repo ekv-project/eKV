@@ -18,7 +18,7 @@
                     </div>
                     <div class="form-floating mb-3">
                         <input type="text" name="program_name" id="program_name" class="form-control" placeholder="program_name" value="@php if(old('program_name') !== null){echo old('program_name');}elseif(isset($program->name)){echo ucwords($program->name);}else{echo NULL;} @endphp">
-                        <label for="program_name" class="form-label">Nama Kursus</label>
+                        <label for="program_name" class="form-label">Nama Program</label>
                         @error('program_name')
                             <div class="alert alert-danger">{{ $message }}</div>
                         @enderror

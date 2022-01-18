@@ -402,11 +402,13 @@ class ExamController extends MainController
             abort(403, 'Anda tiada akses pada laman ini!');
         }
     }
+
+    // This method will be reworked
     public function transcriptBulkAdd(Request $request){
         /**
          * For adding student's exam transcript in bulk using Excel spreadsheet
          * Each student's transcript is seperated by sheets
-         * Maximum of 10 courses result can be added
+         * Maximum of 10 courses result can be added for maximum of 30 students
          * Data after an empty cell will not be added to the array of transcript to add(check by ID pelajar and Kod Kursus)
          * If there's a duplicated data, for example duplicated ID Pelajar and Kod Kursus, only the first data will be added.
          */
@@ -672,7 +674,7 @@ class ExamController extends MainController
                                 'identificationNumber' => $studentIdentificationNumber,
                                 'matrixNumber' => $studentID
                             ];
-                            $courseGrades = CourseGrade::join('courses', 'course_grades.courses_code', 'courses.code')->select('course_grades.credit_hour', 'course_grades.grade_pointer', 'courses.code', 'courses.name')->where('users_username', $studentID)->where('study_levels_code', $studyLevel)->where('semester', $semester)->get();
+                            $courseGrades = CourseGrade::join('courses', 'course_grades.courses_code', 'courses.code')->select('courses.credit_hour', 'course_grades.grade_pointer', 'courses.code', 'courses.name')->where('users_username', $studentID)->where('study_levels_code', $studyLevel)->where('semester', $semester)->get();
                             PDF::SetCreator('eKV');
                             PDF::SetAuthor('eKV');
                             PDF::SetTitle($title);
