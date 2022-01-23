@@ -6,21 +6,24 @@
                 <a href="{{ route('dashboard') }}" class="btn btn-primary"><i class="bi bi-arrow-return-left"></i>Dashboard</a>
             </div>
             <div class="col-6 my-3 text-end">
-                <a href="{{ route('transcript.template') }}" class="btn btn-primary"><i class="bi bi-download"></i>Muat Turun Templat</a>
+                <a href="{{ asset('storage/spreadsheet/Templat_Transkrip_Semester_eKV.xlsx'); }}" class="btn btn-primary"><i class="bi bi-download"></i>Muat Turun Templat</a>
             </div>
         </div>
         <div class="row rounded-3 shadow-lg mt-2 mb-5 w-100 d-flex flex-column align-items-center justify-content-center bg-light">
             <div class="col-11 col-lg-9">
                 <h2 class="text-center mt-5 mb-3">Tambah Transkrip Semester Pukal</h2>
                 <div class="d-flex flex-column align-items-center justify-content-center">
-                    @if(session()->has('excelErr'))
-                        @if(count(session('excelErr')) > 0)
-                            <div class="w-100 d-flex justify-content-center align-content-center mt-3">
-                                <div class="mt-3 col-11 col-lg-11 alert alert-danger">
-                                    <p class="fw-bold">Ralat:</p>
-                                    @for ($i = 0; $i < count(session('excelErr')); $i++)
-                                        <p class="mt-3">{{ $i + 1 . ": " }}{{ session('excelErr')[$i] }}</p>
-                                    @endfor
+                    @if(session()->has('spreadsheetErr'))
+                        @if(count(session('spreadsheetErr')) > 0)
+                            <div class="my-3 alert alert-danger w-100">
+                                <p class="fw-bold">Ralat ({{ count(session('spreadsheetErr')) }}):</p>
+                                <button class="btn btn-outline-danger" type="button" data-bs-toggle="collapse" data-bs-target="#errorCollapse" aria-expanded="false" aria-controls="errorCollapse"><i class="bi bi-arrows-expand"></i> Senarai Ralat</button>
+                                <div class="collapse mt-3" id="errorCollapse">
+                                    <div class="card card-body">
+                                        @for ($i = 0; $i < count(session('spreadsheetErr')); $i++)
+                                            <p class="mt-1">{{ $i + 1 . ": " }}{{ session('spreadsheetErr')[$i] }}</p>
+                                        @endfor
+                                    </div>
                                 </div>
                             </div>
                         @endif
@@ -45,6 +48,7 @@
                         <li><p class="mt-3">Borang ini digunakan untuk menambah transkrip semester pelajar secara pukal.</p></li>
                         <li><p class="mt-3">Muat turun templat yang diperlukan bagi menyenaraikan transkrip yang ingin ditambah.</p></li>
                         <li><p class="mt-3">Pastikan anda mengisi templat tersebut mengikut format yang ditetapkan.</p></li>
+                        <li><p class="mt-3">Hanya 30 transkrip dapat ditambah pada satu-satu masa.</p></li>
                         <li><p class="mt-3">Jika terdapat duplikasi data seperti ID Pelajar yang sama, hanya data yang pertama akan digunakan.</p></li>
                         <li><p class="mt-3">Jika terdapat sel kosong selepas sel yang mempunyai data, semua sel selepas sel kosong itu akan diabaikan.</p></li>
                     </ul>

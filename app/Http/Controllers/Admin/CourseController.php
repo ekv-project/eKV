@@ -54,18 +54,22 @@ class CourseController extends MainController
     public function add(Request $request){
         $validated = $request->validate([
             'course_code' => ['required'],
-            'course_name' => ['required']
+            'course_name' => ['required'],
+            'credit_hour' => ['required', 'integer', 'max:10']
         ]);
         $code = $request->course_code;
         $name = $request->course_name;
+        $creditHour = $request->credit_hour;
+
         // Check if course existed
         if(!Course::where('code', $code)->first()){
             Course::upsert([
                 [
                     'code' => strtolower($code),
-                    'name' => strtolower($name)
+                    'name' => strtolower($name),
+                    'credit_hour' => $creditHour
                 ]
-            ], ['code'], ['code', 'name']);
+            ], ['code'], ['code', 'name', 'credit_hour']);
             session()->flash('courseAddSuccess', 'Kursus berjaya ditambah!');
             return redirect()->back();
         }else{
@@ -77,18 +81,21 @@ class CourseController extends MainController
     public function update(Request $request){
         $validated = $request->validate([
             'course_code' => ['required'],
-            'course_name' => ['required']
+            'credit_hour' => ['required', 'integer', 'max:10']
         ]);
         $code = $request->course_code;
         $name = $request->course_name;
+        $creditHour = $request->credit_hour;
+
         // Check if course existed
         if(Course::where('code', $code)->first()){
             Course::upsert([
                 [
                     'code' => strtolower($code),
-                    'name' => strtolower($name)
+                    'name' => strtolower($name),
+                    'credit_hour' => $creditHour
                 ]
-            ], ['code'], ['code', 'name']);
+            ], ['code'], ['code', 'name', 'credit_hour']);
             session()->flash('courseUpdateSuccess', 'Kursus berjaya dikemas kini!');
             return redirect()->back();
         }else{
@@ -100,7 +107,7 @@ class CourseController extends MainController
     public function remove(Request $request){
         if(isset($request->code)){
             $code = $request->code;
-            if(Course::where('code', $code)->first()){   
+            if(Course::where('code', $code)->first()){
                 Course::where('code', $code)->delete();
                 session()->flash('deleteSuccess', 'Kursus berjaya dibuang!');
                 return redirect()->back();

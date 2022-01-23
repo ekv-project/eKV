@@ -1,7 +1,11 @@
 {
-    "/js/addRemoveField.js": "/js/addRemoveField.js",
     "/js/app.js": "/js/app.js",
-    "/css/app.css": "/css/app.css",
     "/js/liveSearch.js": "/js/liveSearch.js",
-    "/js/statistic.js": "/js/statistic.js"
+    "/js/addRemoveField.js": "/js/addRemoveField.js",
+    "/js/statistic.js": "/js/statistic.js",
+    "/css/app.css": "/css/app.css",
+    "/bootstraps-icons/bootstrap-icons.svg": "/bootstraps-icons/bootstrap-icons.svg",
+    "/bootstraps-icons/LICENSE.md": "/bootstraps-icons/LICENSE.md",
+    "/bootstraps-icons/package.json": "/bootstraps-icons/package.json",
+    "/bootstraps-icons/README.md": "/bootstraps-icons/README.md"
 }

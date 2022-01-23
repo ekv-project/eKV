@@ -60,7 +60,7 @@ return [
     'image' => 'The :attribute must be an image.',
     'in' => 'The selected :attribute is invalid.',
     'in_array' => 'The :attribute field does not exist in :other.',
-    'integer' => 'The :attribute must be an integer.',
+    'integer' => 'Ruangan ini mestilah integer.',
     'ip' => 'The :attribute must be a valid IP address.',
     'ipv4' => 'The :attribute must be a valid IPv4 address.',
     'ipv6' => 'The :attribute must be a valid IPv6 address.',
@@ -78,7 +78,7 @@ return [
         'array' => 'The :attribute must not have more than :value items.',
     ],
     'max' => [
-        'numeric' => ':attribute may not be greater than :max.',
+        'numeric' => 'Ruangan ini mestilah tidak melebihi nilai :max.',
         'file' => 'The :attribute may not be greater than :max kilobytes.',
         'string' => 'Ruangan ini mestilah tidak melebihi :max karakter.',
         'array' => 'The :attribute may not have more than :max items.',
