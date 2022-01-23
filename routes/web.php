@@ -78,7 +78,7 @@ Route::post('/dashboard/classroom/student/{classroomID}', [ClassroomController::
 Route::post('/dashboard/classroom/update/{classroomID}', [ClassroomController::class, 'classroomUpdate'])->middleware(['auth']);
 
 /**
-*   Exam Transcript  
+*   Exam Transcript
 */
     // Exam Transcript Excel Template
 Route::get('/dashboard/exam/transcript/template', [ExamController::class, 'downloadSpreadsheetTemplate'])->name('transcript.template')->middleware(['auth']);
@@ -88,14 +88,13 @@ Route::get('/dashboard/exam/transcript/{studentID}', [ExamController::class, 'se
 Route::get('/dashboard/exam/transcript/{studentID}/{studyLevel}/{semester}', [ExamController::class, 'transcriptView'])->name('transcript.view')->middleware(['auth']);
 Route::get('/dashboard/exam/transcript/add/{studentID}', [ExamController::class, 'transcriptAddView'])->name('transcript.add')->middleware('auth');
 Route::get('/dashboard/exam/transcript/update/{studentID}/{studyLevel}/{semester}', [ExamController::class, 'transcriptUpdateView'])->name('transcript.update')->middleware(['auth']);
-Route::get('/dashboard/exam/transcript/download/{studentID}/{studyLevel}/{semester}', [ExamController::class, 'transcriptDownload'])->name('transcript.download')->middleware(['auth']);
 Route::post('/dashboard/exam/transcript', [ExamController::class, 'transcriptBulkAdd'])->middleware(['auth']);
 Route::post('/dashboard/exam/transcript/{studentID}', [ExamController::class, 'transcriptRemove'])->middleware(['auth']);
 Route::post('/dashboard/exam/transcript/add/{studentID}', [ExamController::class, 'transcriptAddUpdate'])->middleware(['auth']);
 Route::post('/dashboard/exam/transcript/{studentID}/{studyLevel}/{semester}', [ExamController::class, 'transcriptView'])->middleware(['auth']);
 Route::post('/dashboard/exam/transcript/update/{studentID}/{studyLevel}/{semester}', [ExamController::class, 'transcriptAddUpdate'])->middleware(['auth']);
 
-/** 
+/**
  *  Administration Area
  */
 
