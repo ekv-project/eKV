@@ -13,7 +13,7 @@
             <div class="col-11 col-lg-9">
                 <h2 class="text-center mt-5 mb-3">Tambah Transkrip Semester Pukal</h2>
                 <div class="d-flex flex-column align-items-center justify-content-center">
-                    @if(session()->has('excelErr'))
+                    {{-- @if(session()->has('excelErr'))
                         @if(count(session('excelErr')) > 0)
                             <div class="w-100 d-flex justify-content-center align-content-center mt-3">
                                 <div class="mt-3 col-11 col-lg-11 alert alert-danger">
@@ -21,6 +21,21 @@
                                     @for ($i = 0; $i < count(session('excelErr')); $i++)
                                         <p class="mt-3">{{ $i + 1 . ": " }}{{ session('excelErr')[$i] }}</p>
                                     @endfor
+                                </div>
+                            </div>
+                        @endif
+                    @endif --}}
+                    @if(session()->has('spreadsheetErr'))
+                        @if(count(session('spreadsheetErr')) > 0)
+                            <div class="my-3 alert alert-danger w-100">
+                                <p class="fw-bold">Ralat ({{ count(session('spreadsheetErr')) }}):</p>
+                                <button class="btn btn-outline-danger" type="button" data-bs-toggle="collapse" data-bs-target="#errorCollapse" aria-expanded="false" aria-controls="errorCollapse"><i class="bi bi-arrows-expand"></i> Senarai Ralat</button>
+                                <div class="collapse mt-3" id="errorCollapse">
+                                    <div class="card card-body">
+                                        @for ($i = 0; $i < count(session('spreadsheetErr')); $i++)
+                                            <p class="mt-1">{{ $i + 1 . ": " }}{{ session('spreadsheetErr')[$i] }}</p>
+                                        @endfor
+                                    </div>
                                 </div>
                             </div>
                         @endif
