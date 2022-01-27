@@ -169,6 +169,161 @@ class ExamController extends MainController
         }
     }
 
+    public function transcriptDownload($studentID, $studyLevel, $semester){
+        // Only the student, coordinator and admin could download.
+        if(Gate::allows('authUser', $studentID) || Gate::allows('authCoordinator', $studentID) || Gate::allows('authAdmin')){
+            // Check if user exist.
+            if(User::where('username', $studentID)->first()){
+                // Check if user is a student
+                if(User::where('username', $studentID)->first()->role == 'student'){
+                    // Check if student is added into a classroom.
+                    if(ClassroomStudent::where('users_username', $studentID)->first()){
+                        error_reporting(E_ERROR);
+                        // Check if transcript exist based on semester grade table.
+                        if(SemesterGrade::where('users_username', $studentID)->where('study_levels_code', $studyLevel)->where('semester', $semester)->first()){
+                            $studyLevelName = StudyLevel::where('code', $studyLevel)->first()->name;
+                            $studentName = User::where('username', $studentID)->first()->fullname;
+                            $title = ucwords($studentName) . " - Transkrip Semester {$semester}  {$studyLevelName}";
+                            $studentClassroom = ClassroomStudent::where('users_username', $studentID)->first()->classroom;
+                            if(Storage::disk('local')->exists('public/img/system/logo-300.png')){
+                                $collegeImageUrl = 'public/img/system/logo-300.png';
+                            }elseif(Storage::disk('local')->exists('public/img/system/logo-def-300.png')){
+                                $collegeImageUrl = 'public/img/system/logo-def-300.png';
+                            }else{
+                                $collegeImageUrl = '';
+                            }
+                            $studentProgram = Program::where('code', $studentClassroom->programs_code)->first()->name;
+                            $studyLevelName = StudyLevel::where('code', $studyLevel)->first()->name;
+                            $semesterGrade = SemesterGrade::where('users_username', $studentID)->where('study_levels_code', $studyLevel)->where('semester', $semester)->first();
+                            // Student Details
+                            $studentName = User::select('fullname')->where('username', $studentID)->first()->fullname;
+                            if(UserProfile::select('identification_number')->where('users_username', $studentID)->first() != null){
+                                $studentIdentificationNumber = UserProfile::select('identification_number')->where('users_username', $studentID)->first()->identification_number;
+                            }else{
+                                $studentIdentificationNumber = "N/A";
+                            }
+                            $studentDetails = [
+                                'name' => $studentName,
+                                'identificationNumber' => $studentIdentificationNumber,
+                                'matrixNumber' => $studentID
+                            ];
+                            $courseGrades = CourseGrade::join('courses', 'course_grades.courses_code', 'courses.code')->select('courses.credit_hour', 'course_grades.grade_pointer', 'courses.code', 'courses.name')->where('users_username', $studentID)->where('study_levels_code', $studyLevel)->where('semester', $semester)->get();
+                            PDF::SetCreator('eKV');
+                            PDF::SetAuthor('eKV');
+                            PDF::SetTitle($title);
+                            PDF::AddPage();
+                            PDF::SetFont('helvetica', 'B', 10);
+                            $settings = $this->instituteSettings;
+                            if(isset($settings)){
+                                if(empty($settings['institute_name'])){
+                                    $instituteName = "Kolej Vokasional Malaysia";
+                                }else{
+                                    $instituteName = ucwords($settings['institute_name']);
+                                }
+                            }else{
+                                $instituteName = "Kolej Vokasional Malaysia";
+                            }
+                            if(Storage::disk('local')->exists('public/img/system/logo-300.png')){
+                                $logo = '.' . Storage::disk('local')->url('public/img/system/logo-300.png');
+                            }elseif(Storage::disk('local')->exists('public/img/system/logo-def-300.png')){
+                                $logo = '.' . Storage::disk('local')->url('public/img/system/logo-def-300.png');
+                            }
+                            // Header
+                            PDF::Image($logo, 15, 10, 26, 26);
+                            PDF::SetFont('helvetica', 'B', 12);
+                            PDF::Multicell(0, 6, strtoupper($instituteName), 0, 'L', 0, 2, 42, 10);
+                            PDF::SetFont('helvetica', '', 9);
+                            PDF::Multicell(0, 10, 'ALAMAT INSTITUSI: ' . strtoupper($settings['institute_address']), 0, 'L', 0, 2, 42, 16);
+                            PDF::Multicell(0, 5, 'ALAMAT E-MEL: ' . strtoupper($settings['institute_email_address']), 0, 'L', 0, 2, 42, 26);
+                            PDF::Multicell(0, 5, 'NO. TELEFON PEJABAT: ' . strtoupper($settings['institute_phone_number']), 0, 'L', 0, 2, 42, 31);
+                            PDF::Ln(1);
+                            PDF::writeHTML("<hr>", true, false, false, false, '');
+                            PDF::SetFont('helvetica', 'b', 10);
+                            PDF::Multicell(0, 5, 'TRANSKRIP SEMESTER', 0, 'C', 0, 2, 10, 38);
+                            PDF::Ln(1);
+                            PDF::writeHTML("<hr>", true, false, false, false, '');
+                            // Student Details
+                            PDF::SetXY(10, 46);
+                            PDF::SetFont('helvetica', '', 9);
+                            PDF::MultiCell(95, 13, 'NAMA: ' . strtoupper($studentDetails['name']), 0, 'L', 0, 0, '', '', true);
+                            PDF::MultiCell(95, 13, 'PERINGKAT PENGAJIAN: ' . strtoupper($studyLevelName), 0, 'L', 0, 0, '', '', true);
+                            PDF::Ln();
+                            PDF::MultiCell(95, 13, 'NO. K/P: ' . $studentDetails['identificationNumber'], 0, 'L', 0, 0, '', '', true);
+                            PDF::MultiCell(95, 13, 'PROGRAM: ' . strtoupper($studentProgram), 0, 'L', 0, 0, '', '', true);
+                            PDF::Ln();
+                            PDF::MultiCell(95, 13, 'ANGKA GILIRAN: ' . strtoupper($studentDetails['matrixNumber']), 0, 'L', 0, 0, '', '', true);
+                            PDF::MultiCell(95, 13, 'SEMESTER: ' . $semester, 0, 'L', 0, 0, '', '', true);
+                            // Course Grade List
+                            // Maximum: 15 courses
+                            PDF::SetXY(10, 87);
+                            PDF::writeHTML("<hr>", true, false, false, false, '');
+                            PDF::SetXY(10, 88);
+                            PDF::SetFont('helvetica', 'B', 9);
+                            PDF::MultiCell(30, 5, 'KOD KURSUS', 0, 'C', 0, 0, '', '', true);
+                            PDF::MultiCell(100, 5, 'NAMA KURSUS', 0, 'C', 0, 0, '', '', true);
+                            PDF::MultiCell(30, 5, 'JAM KREDIT', 0, 'C', 0, 0, '', '', true);
+                            PDF::MultiCell(30, 5, 'NILAI GRED', 0, 'C', 0, 0, '', '', true);
+                            PDF::SetFont('helvetica', '', 9);
+                            foreach ($courseGrades as $courseGrade) {
+                                PDF::Ln();
+                                PDF::MultiCell(30, 10, strtoupper($courseGrade->code), 0, 'C', 0, 0, '', '', true);
+                                PDF::MultiCell(100, 10, strtoupper($courseGrade->name), 0, 'C', 0, 0, '', '', true);
+                                PDF::MultiCell(30, 10, $courseGrade->credit_hour, 0, 'C', 0, 0, '', '', true);
+                                PDF::MultiCell(30, 10, $courseGrade->grade_pointer, 0, 'C', 0, 0, '', '', true);
+                            }
+                            // Testing purposes
+                            // for ($i=0; $i < 15; $i++){
+                            //     PDF::Ln();
+                            //     PDF::MultiCell(30, 10, 'Test', 0, 'C', 0, 0, '', '', true);
+                            //     PDF::MultiCell(100, 10, 'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Non corporis, voluptas enim quos est mollitia?', 0, 'C', 0, 0, '', '', true);
+                            //     PDF::MultiCell(30, 10, 'Test', 0, 'C', 0, 0, '', '', true);
+                            //     PDF::MultiCell(30, 10, 'Test', 0, 'C', 0, 0, '', '', true);
+                            // }
+                            // Semester Grade
+                            PDF::SetXY(50, 245);
+                            PDF::writeHTML("<hr>", true, false, false, false, '');
+                            PDF::SetXY(10, 248);
+                            PDF::SetFont('helvetica', 'B', 9);
+                            PDF::MultiCell(90, 5, 'KOMPONEN', 1, 'C', 0, 0, '', '', true);
+                            PDF::MultiCell(50, 5, 'JUMLAH NILAI KREDIT', 1, 'C', 0, 0, '', '', true);
+                            PDF::MultiCell(50, 5, 'JUMLAH NILAI GRED', 1, 'C', 0, 0, '', '', true);
+                            PDF::Ln();
+                            PDF::MultiCell(90, 5, 'PNG SEMESTER SEMASA (PNGS)', 1, 'C', 0, 0, '', '', true);
+                            PDF::SetFont('helvetica', '', 9);
+                            PDF::MultiCell(50, 5, $semesterGrade->total_credit_gpa, 1, 'C', 0, 0, '', '', true);
+                            PDF::MultiCell(50, 5, $semesterGrade->gpa, 1, 'C', 0, 0, '', '', true);
+                            PDF::Ln();
+                            PDF::SetFont('helvetica', 'B', 9);
+                            PDF::MultiCell(90, 5, 'PNG KUMULATIF KESELURUHAN (PNGKK)', 1, 'C', 0, 0, '', '', true);
+                            PDF::SetFont('helvetica', '', 9);
+                            PDF::MultiCell(50, 5, $semesterGrade->total_credit_cgpa, 1, 'C', 0, 0, '', '', true);
+                            PDF::MultiCell(50, 5, $semesterGrade->cgpa, 1, 'C', 0, 0, '', '', true);
+                            PDF::Ln();
+                            PDF::SetXY(10, 265);
+                            PDF::SetFont('helvetica', '', 8);
+                            PDF::MultiCell(0, 5, 'Transkrip ini adalah janaan komputer.', 0, 'C', 0, 0, '', '', true);
+                            PDF::Ln(3);
+                            PDF::MultiCell(0, 5, 'Tandatangan tidak diperlukan.', 0, 'C', 0, 0, '', '', true);
+                            PDF::Ln(3);
+                            PDF::MultiCell(0, 5, 'Dijana menggunakan sistem eKV.', 0, 'C', 0, 0, '', '', true);
+                            PDF::Output(strtoupper($studentName) . '_TRANSKRIP SEMESTER ' . $semester . '_' . strtoupper($studyLevelName) . '.pdf', 'D');
+                        }else{
+                            abort(404, 'Transkrip untuk pelajar ini tidak dijumpai!');
+                        }
+                    }else{
+                        abort(404, 'Pelajar tidak diletakkan dalam kelas!');
+                    }
+                }else{
+                    abort(404, 'Pengguna bukanlah seorang pelajar!');
+                }
+            }else{
+                abort(404, 'Tiada pengguna dijumpai!');
+            }
+        }else{
+            abort(403, 'Anda tiada akses pada laman ini!');
+        }
+    }
+
     /**
      * Handling POST Requests
      */
@@ -615,161 +770,6 @@ class ExamController extends MainController
                 }
             }else{
                 abort(404, 'Pengguna tidak dijumpai!');
-            }
-        }else{
-            abort(403, 'Anda tiada akses pada laman ini!');
-        }
-    }
-
-    public function transcriptDownload($studentID, $studyLevel, $semester){
-        // Only the student, coordinator and admin could download.
-        if(Gate::allows('authUser', $studentID) || Gate::allows('authCoordinator', $studentID) || Gate::allows('authAdmin')){
-            // Check if user exist.
-            if(User::where('username', $studentID)->first()){
-                // Check if user is a student
-                if(User::where('username', $studentID)->first()->role == 'student'){
-                    // Check if student is added into a classroom.
-                    if(ClassroomStudent::where('users_username', $studentID)->first()){
-                        error_reporting(E_ERROR);
-                        // Check if transcript exist based on semester grade table.
-                        if(SemesterGrade::where('users_username', $studentID)->where('study_levels_code', $studyLevel)->where('semester', $semester)->first()){
-                            $studyLevelName = StudyLevel::where('code', $studyLevel)->first()->name;
-                            $studentName = User::where('username', $studentID)->first()->fullname;
-                            $title = ucwords($studentName) . " - Transkrip Semester {$semester}  {$studyLevelName}";
-                            $studentClassroom = ClassroomStudent::where('users_username', $studentID)->first()->classroom;
-                            if(Storage::disk('local')->exists('public/img/system/logo-300.png')){
-                                $collegeImageUrl = 'public/img/system/logo-300.png';
-                            }elseif(Storage::disk('local')->exists('public/img/system/logo-def-300.png')){
-                                $collegeImageUrl = 'public/img/system/logo-def-300.png';
-                            }else{
-                                $collegeImageUrl = '';
-                            }
-                            $studentProgram = Program::where('code', $studentClassroom->programs_code)->first()->name;
-                            $studyLevelName = StudyLevel::where('code', $studyLevel)->first()->name;
-                            $semesterGrade = SemesterGrade::where('users_username', $studentID)->where('study_levels_code', $studyLevel)->where('semester', $semester)->first();
-                            // Student Details
-                            $studentName = User::select('fullname')->where('username', $studentID)->first()->fullname;
-                            if(UserProfile::select('identification_number')->where('users_username', $studentID)->first() != null){
-                                $studentIdentificationNumber = UserProfile::select('identification_number')->where('users_username', $studentID)->first()->identification_number;
-                            }else{
-                                $studentIdentificationNumber = "N/A";
-                            }
-                            $studentDetails = [
-                                'name' => $studentName,
-                                'identificationNumber' => $studentIdentificationNumber,
-                                'matrixNumber' => $studentID
-                            ];
-                            $courseGrades = CourseGrade::join('courses', 'course_grades.courses_code', 'courses.code')->select('courses.credit_hour', 'course_grades.grade_pointer', 'courses.code', 'courses.name')->where('users_username', $studentID)->where('study_levels_code', $studyLevel)->where('semester', $semester)->get();
-                            PDF::SetCreator('eKV');
-                            PDF::SetAuthor('eKV');
-                            PDF::SetTitle($title);
-                            PDF::AddPage();
-                            PDF::SetFont('helvetica', 'B', 10);
-                            $settings = $this->instituteSettings;
-                            if(isset($settings)){
-                                if(empty($settings['institute_name'])){
-                                    $instituteName = "Kolej Vokasional Malaysia";
-                                }else{
-                                    $instituteName = ucwords($settings['institute_name']);
-                                }
-                            }else{
-                                $instituteName = "Kolej Vokasional Malaysia";
-                            }
-                            if(Storage::disk('local')->exists('public/img/system/logo-300.png')){
-                                $logo = '.' . Storage::disk('local')->url('public/img/system/logo-300.png');
-                            }elseif(Storage::disk('local')->exists('public/img/system/logo-def-300.png')){
-                                $logo = '.' . Storage::disk('local')->url('public/img/system/logo-def-300.png');
-                            }
-                            // Header
-                            PDF::Image($logo, 15, 10, 26, 26);
-                            PDF::SetFont('helvetica', 'B', 12);
-                            PDF::Multicell(0, 6, strtoupper($instituteName), 0, 'L', 0, 2, 42, 10);
-                            PDF::SetFont('helvetica', '', 9);
-                            PDF::Multicell(0, 10, 'ALAMAT INSTITUSI: ' . strtoupper($settings['institute_address']), 0, 'L', 0, 2, 42, 16);
-                            PDF::Multicell(0, 5, 'ALAMAT E-MEL: ' . strtoupper($settings['institute_email_address']), 0, 'L', 0, 2, 42, 26);
-                            PDF::Multicell(0, 5, 'NO. TELEFON PEJABAT: ' . strtoupper($settings['institute_phone_number']), 0, 'L', 0, 2, 42, 31);
-                            PDF::Ln(1);
-                            PDF::writeHTML("<hr>", true, false, false, false, '');
-                            PDF::SetFont('helvetica', 'b', 10);
-                            PDF::Multicell(0, 5, 'TRANSKRIP SEMESTER', 0, 'C', 0, 2, 10, 38);
-                            PDF::Ln(1);
-                            PDF::writeHTML("<hr>", true, false, false, false, '');
-                            // Student Details
-                            PDF::SetXY(10, 46);
-                            PDF::SetFont('helvetica', '', 9);
-                            PDF::MultiCell(95, 13, 'NAMA: ' . strtoupper($studentDetails['name']), 0, 'L', 0, 0, '', '', true);
-                            PDF::MultiCell(95, 13, 'PERINGKAT PENGAJIAN: ' . strtoupper($studyLevelName), 0, 'L', 0, 0, '', '', true);
-                            PDF::Ln();
-                            PDF::MultiCell(95, 13, 'NO. K/P: ' . $studentDetails['identificationNumber'], 0, 'L', 0, 0, '', '', true);
-                            PDF::MultiCell(95, 13, 'PROGRAM: ' . strtoupper($studentProgram), 0, 'L', 0, 0, '', '', true);
-                            PDF::Ln();
-                            PDF::MultiCell(95, 13, 'ANGKA GILIRAN: ' . strtoupper($studentDetails['matrixNumber']), 0, 'L', 0, 0, '', '', true);
-                            PDF::MultiCell(95, 13, 'SEMESTER: ' . $semester, 0, 'L', 0, 0, '', '', true);
-                            // Course Grade List
-                            // Maximum: 15 courses
-                            PDF::SetXY(10, 87);
-                            PDF::writeHTML("<hr>", true, false, false, false, '');
-                            PDF::SetXY(10, 88);
-                            PDF::SetFont('helvetica', 'B', 9);
-                            PDF::MultiCell(30, 5, 'KOD KURSUS', 0, 'C', 0, 0, '', '', true);
-                            PDF::MultiCell(100, 5, 'NAMA KURSUS', 0, 'C', 0, 0, '', '', true);
-                            PDF::MultiCell(30, 5, 'JAM KREDIT', 0, 'C', 0, 0, '', '', true);
-                            PDF::MultiCell(30, 5, 'NILAI GRED', 0, 'C', 0, 0, '', '', true);
-                            PDF::SetFont('helvetica', '', 9);
-                            foreach ($courseGrades as $courseGrade) {
-                                PDF::Ln();
-                                PDF::MultiCell(30, 10, strtoupper($courseGrade->code), 0, 'C', 0, 0, '', '', true);
-                                PDF::MultiCell(100, 10, strtoupper($courseGrade->name), 0, 'C', 0, 0, '', '', true);
-                                PDF::MultiCell(30, 10, $courseGrade->credit_hour, 0, 'C', 0, 0, '', '', true);
-                                PDF::MultiCell(30, 10, $courseGrade->grade_pointer, 0, 'C', 0, 0, '', '', true);
-                            }
-                            // Testing purposes
-                            // for ($i=0; $i < 15; $i++){
-                            //     PDF::Ln();
-                            //     PDF::MultiCell(30, 10, 'Test', 0, 'C', 0, 0, '', '', true);
-                            //     PDF::MultiCell(100, 10, 'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Non corporis, voluptas enim quos est mollitia?', 0, 'C', 0, 0, '', '', true);
-                            //     PDF::MultiCell(30, 10, 'Test', 0, 'C', 0, 0, '', '', true);
-                            //     PDF::MultiCell(30, 10, 'Test', 0, 'C', 0, 0, '', '', true);
-                            // }
-                            // Semester Grade
-                            PDF::SetXY(50, 245);
-                            PDF::writeHTML("<hr>", true, false, false, false, '');
-                            PDF::SetXY(10, 248);
-                            PDF::SetFont('helvetica', 'B', 9);
-                            PDF::MultiCell(90, 5, 'KOMPONEN', 1, 'C', 0, 0, '', '', true);
-                            PDF::MultiCell(50, 5, 'JUMLAH NILAI KREDIT', 1, 'C', 0, 0, '', '', true);
-                            PDF::MultiCell(50, 5, 'JUMLAH NILAI GRED', 1, 'C', 0, 0, '', '', true);
-                            PDF::Ln();
-                            PDF::MultiCell(90, 5, 'PNG SEMESTER SEMASA (PNGS)', 1, 'C', 0, 0, '', '', true);
-                            PDF::SetFont('helvetica', '', 9);
-                            PDF::MultiCell(50, 5, $semesterGrade->total_credit_gpa, 1, 'C', 0, 0, '', '', true);
-                            PDF::MultiCell(50, 5, $semesterGrade->gpa, 1, 'C', 0, 0, '', '', true);
-                            PDF::Ln();
-                            PDF::SetFont('helvetica', 'B', 9);
-                            PDF::MultiCell(90, 5, 'PNG KUMULATIF KESELURUHAN (PNGKK)', 1, 'C', 0, 0, '', '', true);
-                            PDF::SetFont('helvetica', '', 9);
-                            PDF::MultiCell(50, 5, $semesterGrade->total_credit_cgpa, 1, 'C', 0, 0, '', '', true);
-                            PDF::MultiCell(50, 5, $semesterGrade->cgpa, 1, 'C', 0, 0, '', '', true);
-                            PDF::Ln();
-                            PDF::SetXY(10, 265);
-                            PDF::SetFont('helvetica', '', 8);
-                            PDF::MultiCell(0, 5, 'Transkrip ini adalah janaan komputer.', 0, 'C', 0, 0, '', '', true);
-                            PDF::Ln(3);
-                            PDF::MultiCell(0, 5, 'Tandatangan tidak diperlukan.', 0, 'C', 0, 0, '', '', true);
-                            PDF::Ln(3);
-                            PDF::MultiCell(0, 5, 'Dijana menggunakan sistem eKV.', 0, 'C', 0, 0, '', '', true);
-                            PDF::Output(strtoupper($studentName) . '_TRANSKRIP SEMESTER ' . $semester . '_' . strtoupper($studyLevelName) . '.pdf', 'D');
-                        }else{
-                            abort(404, 'Transkrip untuk pelajar ini tidak dijumpai!');
-                        }
-                    }else{
-                        abort(404, 'Pelajar tidak diletakkan dalam kelas!');
-                    }
-                }else{
-                    abort(404, 'Pengguna bukanlah seorang pelajar!');
-                }
-            }else{
-                abort(404, 'Tiada pengguna dijumpai!');
             }
         }else{
             abort(403, 'Anda tiada akses pada laman ini!');
