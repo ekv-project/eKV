@@ -208,8 +208,8 @@
         </div>
         <div class="d-flex align-items-center justify-content-center">
             <div class="mx-2"><a href="#" class="text-light text-center" data-bs-toggle="modal" data-bs-target="#licenseModal">Lesen dan Kredit</a></div>
-            <div class="mx-2"><a href="#" class="text-light text-center">Laman Sesawang</a></div>
-            <div class="mx-2"><a href="#" class="text-light text-center">Dokumentasi</a></div>
+            <div class="mx-2"><a href="https://ekv.readthedocs.io" class="text-light text-center" target="_blank">Dokumentasi</a></div>
+            <div class="mx-2"><a href="https://github.com/hadiirfan/eKV" class="text-light text-center" target="_blank">Kod Sumber</a></div>
         </div>
         <x-copyright-notice colorScheme="light" />
     </footer>
