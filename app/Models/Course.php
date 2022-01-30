@@ -2,23 +2,24 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Course extends Model
 {
     use HasFactory;
     protected $table = 'courses';
-    protected $primaryKey = "code";
+    protected $primaryKey = 'code';
     public $incrementing = false;
     protected $fillable = [
         'code',
-        'name'
+        'name',
     ];
-    
+
     // Relationships
 
-    public function courseGrades(){
+    public function courseGrades()
+    {
         return $this->hasMany(CourseGrade::class);
     }
 }

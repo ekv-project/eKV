@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 class ChangePlaceOfBirthAndHomeNumberToNullableInUserProfilesTable extends Migration
 {
@@ -27,7 +27,6 @@ class ChangePlaceOfBirthAndHomeNumberToNullableInUserProfilesTable extends Migra
     public function down()
     {
         Schema::table('nullable_in_user_profiles', function (Blueprint $table) {
-            //
         });
     }
 }

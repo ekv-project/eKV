@@ -12,15 +12,13 @@ class UserIsSuperAdmin
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
      * @return mixed
      */
     public function handle(Request $request, Closure $next)
     {
-        if(Gate::allows('authSuperAdmin', Auth::user()->username)){
-            return $next($request);   
-        }elseif(Gate::denies('authSuperAdmin', Auth::user()->username)){
+        if (Gate::allows('authSuperAdmin', Auth::user()->username)) {
+            return $next($request);
+        } elseif (Gate::denies('authSuperAdmin', Auth::user()->username)) {
             abort(403, 'Anda tiada akses pada laman ini!');
         }
     }

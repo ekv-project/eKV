@@ -10,44 +10,51 @@ use Illuminate\Support\Facades\Artisan;
 
 class InstallationController extends Controller
 {
-    public function installView(Request $request){
+    public function installView(Request $request)
+    {
         // If user table exist, redirect to success page.
-        if(Schema::hasTable('users')){
+        if (Schema::hasTable('users')) {
             return redirect()->route('install.success');
-        }else{
+        } else {
             // If admin user not exist, render install main page.
-            if(Schema::hasTable('users')){
-                if(!User::where('username', 'admin')->first()){
+            if (Schema::hasTable('users')) {
+                if (!User::where('username', 'admin')->first()) {
                     return view('install.main');
-                }else{
+                } else {
                     return redirect()->route('install.success');
                 }
-            }else{
+            } else {
                 return view('install.main');
             }
         }
     }
-    public function installConfigView(Request $request){
+
+    public function installConfigView(Request $request)
+    {
         // If user table exist, redirect to success page.
-        if(Schema::hasTable('users')){
+        if (Schema::hasTable('users')) {
             return redirect()->route('install.success');
-        }else{
+        } else {
             // If admin user not exist, render install main page.
-            if(Schema::hasTable('users')){
-                if(!User::where('username', 'admin')->first()){
+            if (Schema::hasTable('users')) {
+                if (!User::where('username', 'admin')->first()) {
                     return view('install.config');
-                }else{
+                } else {
                     return redirect()->route('install.success');
                 }
-            }else{
+            } else {
                 return view('install.config');
             }
         }
     }
-    public function installSuccessView(Request $request){
+
+    public function installSuccessView(Request $request)
+    {
         return view('install.success');
     }
-    public function install(Request $request){
+
+    public function install(Request $request)
+    {
         $validated = $request->validate([
             'adminFullName' => 'required',
             'adminEmailAddress' => 'required|email',
@@ -68,8 +75,8 @@ class InstallationController extends Controller
         $instituteFaxNumber = $request->instituteFaxNumber;
         // Create admin user and migrate the database.
         Artisan::call('install', [
-            'password' => $password, 'fullname' => $adminFullname, 'email' => $adminEmailAddress
-        ]); 
+            'password' => $password, 'fullname' => $adminFullname, 'email' => $adminEmailAddress,
+        ]);
         // Update institute details.
         InstituteSetting::updateOrCreate(
             ['id' => 1],
@@ -78,7 +85,7 @@ class InstallationController extends Controller
                 'institute_address' => strtolower($instituteAddress),
                 'institute_email_address' => strtolower($instituteEmailAddress),
                 'institute_phone_number' => strtolower($institutePhoneNumber),
-                'institute_fax' => strtolower($instituteFaxNumber)
+                'institute_fax' => strtolower($instituteFaxNumber),
             ]
         );
         // Return to installation success page.

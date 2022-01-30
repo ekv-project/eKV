@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class LoginActivity extends Model
 {
@@ -12,6 +12,6 @@ class LoginActivity extends Model
     protected $fillable = [
         'users_username',
         'ip_address',
-        'user_agent'
+        'user_agent',
     ];
 }

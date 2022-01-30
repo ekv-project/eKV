@@ -4,8 +4,8 @@ namespace App\Console\Commands;
 
 use App\Models\User;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Artisan;
 
 class Install extends Command
 {
@@ -45,11 +45,12 @@ class Install extends Command
         User::updateOrCreate(
             ['username' => 'admin'],
             [
-            'fullname' => $this->argument('fullname'),
-            'email' => $this->argument('email'),
-            'password' => Hash::make($this->argument('password')),
-            'role' => 'superadmin',
-            ]);
+                'fullname' => $this->argument('fullname'),
+                'email' => $this->argument('email'),
+                'password' => Hash::make($this->argument('password')),
+                'role' => 'superadmin',
+            ]
+        );
         Artisan::call('storage:link'); // Create symbolic links
         $this->info('A user with the admin user was successfully created or updated!');
         $this->info('System was successfully installed!');

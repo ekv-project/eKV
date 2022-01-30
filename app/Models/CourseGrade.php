@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class CourseGrade extends Model
 {
@@ -15,16 +15,22 @@ class CourseGrade extends Model
         'study_levels_code',
         'semester',
         'credit_hour',
-        'grade_pointer'
+        'grade_pointer',
     ];
+
     // Relationships
-    public function user(){
+    public function user()
+    {
         return $this->hasOne(User::class, 'users_username');
     }
-    public function course(){
+
+    public function course()
+    {
         return $this->belongsTo(Course::class, 'courses_code');
     }
-    public function studyLevel(){
+
+    public function studyLevel()
+    {
         return $this->hasOne(StudyLevel::class, 'code');
     }
 }

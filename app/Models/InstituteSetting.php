@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class InstituteSetting extends Model
 {
@@ -14,6 +14,6 @@ class InstituteSetting extends Model
         'institute_address',
         'institute_email_address',
         'institute_phone_number',
-        'institute_fax'
+        'institute_fax',
     ];
 }

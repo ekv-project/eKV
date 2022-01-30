@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Classroom extends Model
 {
@@ -15,16 +15,22 @@ class Classroom extends Model
         'programs_code',
         'admission_year',
         'study_year',
-        'study_levels_code'
+        'study_levels_code',
     ];
+
     // Relationships
-    public function students(){
+    public function students()
+    {
         return $this->hasMany(ClassroomStudent::class, 'classrooms_id');
     }
-    public function coordinator(){
+
+    public function coordinator()
+    {
         return $this->hasOne(ClassroomCoordinator::class, 'classrooms_id');
     }
-    public function program(){
+
+    public function program()
+    {
         return $this->hasOne(Program::class, 'code');
     }
 }

@@ -2,14 +2,10 @@
 
 namespace App\Http\Controllers\LiveSearch;
 
-use App\Http\Controllers\Controller;
-use App\Models\Classroom;
-use App\Models\ClassroomStudent;
 use App\Models\User;
-use App\Models\InstituteSetting;
+use App\Models\Classroom;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Controllers\Controller;
 
 class LiveSearchController extends Controller
 {
@@ -69,9 +65,9 @@ class LiveSearchController extends Controller
     //                     'emptyErr' => 'Error: Query is empty!'
     //                 ];
     //                 return response()->json($error);
-    //             }   
+    //             }
     //         }
-            
+
     //     }
     // }
 }

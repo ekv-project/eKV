@@ -23,7 +23,7 @@ class DeleteConfirmation extends Component
     /**
      * Form increment value..
      *
-     * @var integer
+     * @var int
      */
     public $increment;
 

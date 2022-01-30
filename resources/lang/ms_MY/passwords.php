@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Password Reset Language Lines
@@ -17,6 +16,5 @@ return [
     'sent' => 'Kami telah e-melkan pautan tetapan semula kata laluan!',
     'throttled' => 'Sila tunggu sebelum mencuba.',
     'token' => 'Token tetapan semula kata laluan ini tidak sah.',
-    'user' => "Kami tidak dapat jumpa pengguna dengan alamat e-mel tersebut.",
-
+    'user' => 'Kami tidak dapat jumpa pengguna dengan alamat e-mel tersebut.',
 ];

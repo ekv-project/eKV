@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class SemesterGrade extends Model
 {
@@ -16,16 +16,22 @@ class SemesterGrade extends Model
         'total_credit_gpa',
         'total_credit_cgpa',
         'gpa',
-        'cgpa'
+        'cgpa',
     ];
+
     // Relationships
-    public function user(){
+    public function user()
+    {
         return $this->hasOne(User::class, 'users_username');
     }
-    public function course(){
+
+    public function course()
+    {
         return $this->hasOne(Course::class, 'code');
     }
-    public function studyLevel(){
+
+    public function studyLevel()
+    {
         return $this->hasOne(StudyLevel::class, 'code');
     }
 }

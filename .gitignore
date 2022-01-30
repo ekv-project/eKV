@@ -6,6 +6,7 @@
 /public/public
 /public/bootstraps-icons
 /storage/*.key
+/tools/php-cs-fixer/vendor
 /vendor
 .env
 .env.backup

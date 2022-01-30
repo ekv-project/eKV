@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class UserProfile extends Model
 {
@@ -19,12 +19,12 @@ class UserProfile extends Model
         'home_address',
         'home_number',
         'guardian_name',
-        'guardian_phone_number'
+        'guardian_phone_number',
     ];
 
-
     // Relationships
-    public function user(){
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 }

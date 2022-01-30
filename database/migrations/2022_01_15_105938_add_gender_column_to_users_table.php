@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 class AddGenderColumnToUsersTable extends Migration
 {
@@ -14,7 +14,7 @@ class AddGenderColumnToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            /**
+            /*
              * 0 == Male
              * 1 == Female
              * 2 == Rather not say

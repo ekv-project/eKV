@@ -14,78 +14,90 @@ use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 class UserController extends MainController
 {
     /**
-     * Handling Views
+     * Handling Views.
      */
-    public function adminUserView(Request $request){
+    public function adminUserView(Request $request)
+    {
         $pagination = 15;
         $user = User::paginate($pagination)->withQueryString();
-            // Check for filters and search
-        if($request->has('sort_by') AND $request->has('sort_order') AND $request->has('search')){
+        // Check for filters and search
+        if ($request->has('sort_by') and $request->has('sort_order') and $request->has('search')) {
             $sortBy = $request->sort_by;
             $sortOrder = $request->sort_order;
             $search = $request->search;
-            if($search != NULL){
+            if (null != $search) {
                 $user = User::where('username', 'LIKE', "%{$search}%")->orWhere('fullname', 'LIKE', "%{$search}%")->orWhere('email', 'LIKE', "%{$search}%")->orWhere('role', 'LIKE', "%{$search}%")->orderBy($sortBy, $sortOrder)->paginate($pagination)->withQueryString();
-            }else{
+            } else {
                 $user = User::orderBy($sortBy, $sortOrder)->paginate($pagination)->withQueryString();
             }
             $filterAndSearch = [
                 'sortBy' => $sortBy,
                 'sortOrder' => $sortOrder,
-                'search' => $search
+                'search' => $search,
             ];
+
             return view('dashboard.admin.user.view')->with(['settings' => $this->instituteSettings, 'page' => 'Senarai Pengguna', 'user' => $user, 'filterAndSearch' => $filterAndSearch]);
-        }else{
+        } else {
             return view('dashboard.admin.user.view')->with(['settings' => $this->instituteSettings, 'page' => 'Senarai Pengguna', 'user' => $user]);
         }
     }
-    public function adminAddUserView(){
+
+    public function adminAddUserView()
+    {
         return view('dashboard.admin.user.add')->with(['page' => 'Tambah Pengguna']);
     }
-    public function adminUpdateUserView($username){
-        if(User::where('username', $username)->first()){
+
+    public function adminUpdateUserView($username)
+    {
+        if (User::where('username', $username)->first()) {
             $user = User::where('username', $username)->first();
+
             return view('dashboard.admin.user.update')->with(['settings' => $this->instituteSettings, 'page' => 'Kemas Kini Pengguna', 'user' => $user]);
-        }else{
+        } else {
             abort(404, 'Pengguna tidak dijumpai!');
         }
     }
+
     /**
-     * Handling POST Request
+     * Handling POST Request.
      */
-    public function login(Request $request){
+    public function login(Request $request)
+    {
         $username = strtolower($request->username);
-        if(User::where('username', '=', $username)->count() > 0){
+        if (User::where('username', '=', $username)->count() > 0) {
             $credentials = [
                 'username' => $username,
-                'password' => $request->password
+                'password' => $request->password,
             ];
-            if(Auth::attempt($credentials)) {
+            if (Auth::attempt($credentials)) {
                 $request->session()->regenerate();
                 LoginActivity::create([
                     'users_username' => $username,
                     'ip_address' => $request->ip(),
-                    'user_agent' => $request->server('HTTP_USER_AGENT')
+                    'user_agent' => $request->server('HTTP_USER_AGENT'),
                 ]);
                 $id = User::select('id')->where('username', '=', $username)->first()->id;
                 $user = User::find($id);
                 $token = $user->createToken('apitoken');
                 // Add Bearer API Token to session
                 $request->session()->put('bearerAPIToken', $token->plainTextToken);
+
                 return redirect()->intended('dashboard');
-            }else{
+            } else {
                 return back()->withInput()->withErrors([
-                    'password' => 'Kata Laluan Salah.'
+                    'password' => 'Kata Laluan Salah.',
                 ]);
             }
-        }else{
+        } else {
             return back()->withInput()->withErrors([
-                'username' => 'Pengguna tidak wujud.'
+                'username' => 'Pengguna tidak wujud.',
             ]);
         }
     }
-    public function logout(Request $request){
-        if(auth()->user()->tokens() != NULL){
+
+    public function logout(Request $request)
+    {
+        if (null != auth()->user()->tokens()) {
             auth()->user()->tokens()->delete();
         }
         // Remove Bearer API Token from session
@@ -95,37 +107,36 @@ class UserController extends MainController
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+
         return redirect()->route('login');
     }
-    public function adminAddUser(Request $request){
-        if($request->has("addOne")){
-            /**
-             * Add one user at a time
-             */
 
+    public function adminAddUser(Request $request)
+    {
+        if ($request->has('addOne')) {
+            /**
+             * Add one user at a time.
+             */
             $validated = $request->validate([
                 'username' => ['required'],
                 'fullname' => ['required'],
                 'gender' => ['required'],
                 'email' => ['required', 'email:rfc'],
                 'password' => ['required', 'confirmed'],
-                'role' => ['required']
+                'role' => ['required'],
             ]);
 
             $username = strtolower($request->username);
-            if(User::where('username', $username)->first()){
+            if (User::where('username', $username)->first()) {
                 return back()->withInput()->withErrors([
                     'userExist' => 'Pengguna telah wujud!',
                 ]);
-
-            }else{
-
-                if(User::where('email', strtolower($request->email))->first()){
+            } else {
+                if (User::where('email', strtolower($request->email))->first()) {
                     return back()->withInput()->withErrors([
                         'email' => 'Pengguna dengan e-mel tersebut telah wujud!',
                     ]);
                 }
-
 
                 switch ($request->input('gender')) {
                     case 'male':
@@ -139,7 +150,7 @@ class UserController extends MainController
                         break;
                     default:
                         return redirect()->back()->withInput()->withErrors([
-                            'gender' => 'Input tidak diketahui!'
+                            'gender' => 'Input tidak diketahui!',
                         ]);
                         break;
                 }
@@ -154,12 +165,13 @@ class UserController extends MainController
                 ]);
 
                 session()->flash('userAddSuccess', 'Pengguna berjaya ditambah!');
+
                 return redirect()->back();
             }
-        }elseif($request->has("addBulk")){
+        } elseif ($request->has('addBulk')) {
             /**
              * Add multiple users at a time with XLSX template
-             * Handle XLSX with Phpspreadsheet library
+             * Handle XLSX with Phpspreadsheet library.
              */
             $validated = $request->validate([
                 'user-xlsx' => ['required', 'mimes:xlsx'],
@@ -182,6 +194,7 @@ class UserController extends MainController
                 $error = 'Sekurang-kurangnya satu data pengguna diperlukan!';
                 array_push($spreadsheetErr, $error);
                 $request->session()->flash('spreadsheetErr', $spreadsheetErr);
+
                 return back();
             }
 
@@ -242,7 +255,7 @@ class UserController extends MainController
                                 if (User::where('email', strtolower($email))->first()) {
                                     $error = '[C' . $currentRow . '] ' . 'Pengguna dengan e-mel tersebut telah wujud!';
                                     array_push($spreadsheetErr, $error);
-                                }else{
+                                } else {
                                     $emailValid = $email;
                                 }
                             }
@@ -263,7 +276,7 @@ class UserController extends MainController
                             // Pelajar = S
                             // Lecturer = L
                             // Admin = A
-                            switch($role){
+                            switch ($role) {
                                 case 'S':
                                     $roleValid = 'student';
                                     break;
@@ -321,21 +334,24 @@ class UserController extends MainController
             // If if there's no problem with the spreadsheet, if doesn't, proceed to add the users.
             if (count($spreadsheetErr) > 0) {
                 $request->session()->flash('spreadsheetErr', $spreadsheetErr);
+
                 return back();
             } else {
                 User::upsert($validUserList, ['username'], ['fullname', 'email', 'password', 'role', 'gender']);
                 $request->session()->flash('userBulkAddSuccess', count($validUserList) . ' pengguna berjaya ditambah secara pukal!');
+
                 return back();
             }
         }
     }
 
-    public function adminUpdateUser(Request $request){
+    public function adminUpdateUser(Request $request)
+    {
         $validated = $request->validate([
             'username' => ['required'],
             'fullname' => ['required'],
             'gender' => ['required'],
-            'email' => ['required', 'email:rfc']
+            'email' => ['required', 'email:rfc'],
         ]);
         $username = $request->username;
         $fullname = $request->fullname;
@@ -353,37 +369,42 @@ class UserController extends MainController
                 break;
             default:
                 return redirect()->back()->withInput()->withErrors([
-                    'gender' => 'Input tidak diketahui!'
+                    'gender' => 'Input tidak diketahui!',
                 ]);
                 break;
         }
 
         // Check if user existed
-        if(User::where('username', $username)->first()){
+        if (User::where('username', $username)->first()) {
             User::where('username', $username)->update([
                 'username' => strtolower($username),
                 'fullname' => strtolower($fullname),
                 'gender' => strtolower($userGender),
-                'email' => strtolower($email)
+                'email' => strtolower($email),
             ]);
             session()->flash('userBulkAddSuccess', 'Pengguna berjaya dikemas kini!');
+
             return redirect()->back();
-        }else{
+        } else {
             return redirect()->back()->withInput()->withErrors([
-                'notExisted' => 'Pengguna tidak wujud!'
+                'notExisted' => 'Pengguna tidak wujud!',
             ]);
         }
     }
-    public function remove(Request $request){
-        if(isset($request->username)){
+
+    public function remove(Request $request)
+    {
+        if (isset($request->username)) {
             $username = $request->username;
-            if($username == 'admin'){
+            if ('admin' == $username) {
                 session()->flash('deleteError', 'Pengguna ini tidak boleh dibuang!');
+
                 return redirect()->back();
-            }else{
-                if(User::where('username', $username)->first()){
+            } else {
+                if (User::where('username', $username)->first()) {
                     User::where('username', $username)->delete();
                     session()->flash('deleteSuccess', 'Pengguna berjaya dibuang!');
+
                     return redirect()->back();
                 }
             }

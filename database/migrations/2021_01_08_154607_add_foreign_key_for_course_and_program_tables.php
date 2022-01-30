@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 class AddForeignKeyForCourseAndProgramTables extends Migration
 {
@@ -15,22 +15,22 @@ class AddForeignKeyForCourseAndProgramTables extends Migration
     {
         Schema::table('course_grades', function (Blueprint $table) {
             $table->foreign('users_username')->references('username')->on('users')
-            ->onUpdate('cascade')
-            ->onDelete('cascade');
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
             $table->foreign('courses_code')->references('code')->on('courses')
-            ->onUpdate('cascade')
-            ->onDelete('cascade');    
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
             $table->foreign('study_levels_code')->references('code')->on('study_levels')
-            ->onUpdate('cascade')
-            ->onDelete('cascade');   
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
         });
         Schema::table('semester_grades', function (Blueprint $table) {
             $table->foreign('users_username')->references('username')->on('users')
-            ->onUpdate('cascade')
-            ->onDelete('cascade'); 
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
             $table->foreign('study_levels_code')->references('code')->on('study_levels')
-            ->onUpdate('cascade')
-            ->onDelete('cascade');   
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
         });
     }
 
@@ -41,6 +41,5 @@ class AddForeignKeyForCourseAndProgramTables extends Migration
      */
     public function down()
     {
-        //
     }
 }

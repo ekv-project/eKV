@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 class UpdateClassroomIDtype extends Migration
 {
@@ -25,16 +25,15 @@ class UpdateClassroomIDtype extends Migration
         Schema::table('classroom_students', function (Blueprint $table) {
             $table->string('classrooms_id', 10)->change();
             $table->foreign('classrooms_id')->references('id')->on('classrooms')
-            ->onUpdate('cascade')
-            ->onDelete('cascade');
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
         });
         Schema::table('classroom_coordinators', function (Blueprint $table) {
             $table->string('classrooms_id', 10)->change();
             $table->foreign('classrooms_id')->references('id')->on('classrooms')
-            ->onUpdate('cascade')
-            ->onDelete('cascade');
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
         });
-
     }
 
     /**
@@ -44,6 +43,5 @@ class UpdateClassroomIDtype extends Migration
      */
     public function down()
     {
-        //
     }
 }

@@ -2,31 +2,33 @@
 
 namespace App\Http\Controllers\API;
 
-use DateTime;
 use Carbon\Carbon;
 use App\Models\User;
 use Illuminate\Http\Request;
-use App\Models\LoginActivity;
 use App\Http\Controllers\Controller;
 
 class StatisticController extends Controller
 {
     /**
-     * Display the total count of login statistics by role
+     * Display the total count of login statistics by role.
      */
-    public function showLoginStatisticsByDayCount(Request $request){
+    public function showLoginStatisticsByDayCount(Request $request)
+    {
         $adminActivities = User::join('login_activities', 'users.username', '=', 'login_activities.users_username')->select('users_username', 'login_activities.created_at')->where('users.role', 'admin')->orWhere('users.role', 'superadmin')->get();
         $lecturerActivities = User::join('login_activities', 'users.username', '=', 'login_activities.users_username')->select('users_username', 'login_activities.created_at')->where('users.role', 'lecturer')->get();
         $studentActivities = User::join('login_activities', 'users.username', '=', 'login_activities.users_username')->select('users_username', 'login_activities.created_at')->where('users.role', 'student')->get();
-        function checkPeriod($activities){
+        function checkPeriod($activities)
+        {
             $validatedActivities = [];
-            foreach ($activities as $key => $value){
-                if($value->created_at->format('d') == date('d')){
+            foreach ($activities as $key => $value) {
+                if ($value->created_at->format('d') == date('d')) {
                     array_push($validatedActivities, $value->id);
                 }
             }
+
             return count($validatedActivities);
         }
+
         return response()->json([
             'time_period' => 'day',
             'total' => checkPeriod($adminActivities) + checkPeriod($lecturerActivities) + checkPeriod($studentActivities),
@@ -36,7 +38,8 @@ class StatisticController extends Controller
         ]);
     }
 
-    public function showLoginStatisticsByWeekCount(Request $request){
+    public function showLoginStatisticsByWeekCount(Request $request)
+    {
         // I just discovered the existance of Carbon library LOL. This will help for dealing with date and time.
         Carbon::useMonthsOverflow(false);
         $monday = Carbon::now('Asia/Kuala_Lumpur')->startOfWeek();
@@ -51,18 +54,20 @@ class StatisticController extends Controller
         $lecturerActivities = User::join('login_activities', 'users.username', '=', 'login_activities.users_username')->select('users_username', 'login_activities.created_at')->where('users.role', 'lecturer')->get();
         $studentActivities = User::join('login_activities', 'users.username', '=', 'login_activities.users_username')->select('users_username', 'login_activities.created_at')->where('users.role', 'student')->get();
 
-        function checkPeriod($activities, $dayList){
+        function checkPeriod($activities, $dayList)
+        {
             $validatedActivities = [];
             foreach ($activities as $key => $value) {
                 foreach ($dayList as $date) {
-                    if($value->created_at->format('d-m-Y') == $date){
+                    if ($value->created_at->format('d-m-Y') == $date) {
                         array_push($validatedActivities, $value->users_username);
                     }
                 }
             }
+
             return count($validatedActivities);
         }
-        
+
         return response()->json([
             'time_period' => 'week',
             'total' => checkPeriod($adminActivities, $dayList) + checkPeriod($lecturerActivities, $dayList) + checkPeriod($studentActivities, $dayList),
@@ -72,19 +77,23 @@ class StatisticController extends Controller
         ]);
     }
 
-    public function showLoginStatisticsByMonthCount(Request $request){
+    public function showLoginStatisticsByMonthCount(Request $request)
+    {
         $adminActivities = User::join('login_activities', 'users.username', '=', 'login_activities.users_username')->select('users_username', 'login_activities.created_at')->where('users.role', 'admin')->orWhere('users.role', 'superadmin')->get();
         $lecturerActivities = User::join('login_activities', 'users.username', '=', 'login_activities.users_username')->select('users_username', 'login_activities.created_at')->where('users.role', 'lecturer')->get();
         $studentActivities = User::join('login_activities', 'users.username', '=', 'login_activities.users_username')->select('users_username', 'login_activities.created_at')->where('users.role', 'student')->get();
-        function checkPeriod($activities){
+        function checkPeriod($activities)
+        {
             $validatedActivities = [];
-            foreach ($activities as $key => $value){
-                if($value->created_at->format('m') == date('m')){
+            foreach ($activities as $key => $value) {
+                if ($value->created_at->format('m') == date('m')) {
                     array_push($validatedActivities, $value->id);
                 }
             }
+
             return count($validatedActivities);
         }
+
         return response()->json([
             'time_period' => 'month',
             'total' => checkPeriod($adminActivities) + checkPeriod($lecturerActivities) + checkPeriod($studentActivities),
@@ -94,19 +103,23 @@ class StatisticController extends Controller
         ]);
     }
 
-    public function showLoginStatisticsByYearCount(Request $request){
+    public function showLoginStatisticsByYearCount(Request $request)
+    {
         $adminActivities = User::join('login_activities', 'users.username', '=', 'login_activities.users_username')->select('users_username', 'login_activities.created_at')->where('users.role', 'admin')->orWhere('users.role', 'superadmin')->get();
         $lecturerActivities = User::join('login_activities', 'users.username', '=', 'login_activities.users_username')->select('users_username', 'login_activities.created_at')->where('users.role', 'lecturer')->get();
         $studentActivities = User::join('login_activities', 'users.username', '=', 'login_activities.users_username')->select('users_username', 'login_activities.created_at')->where('users.role', 'student')->get();
-        function checkPeriod($activities){
+        function checkPeriod($activities)
+        {
             $validatedActivities = [];
-            foreach ($activities as $key => $value){
-                if($value->created_at->format('Y') == date('Y')){
+            foreach ($activities as $key => $value) {
+                if ($value->created_at->format('Y') == date('Y')) {
                     array_push($validatedActivities, $value->id);
                 }
             }
+
             return count($validatedActivities);
         }
+
         return response()->json([
             'time_period' => 'year',
             'total' => checkPeriod($adminActivities) + checkPeriod($lecturerActivities) + checkPeriod($studentActivities),
@@ -215,5 +228,5 @@ class StatisticController extends Controller
     //         'role' => $role,
     //         'count' => $count,
     //     ]);
-    // }   
+    // }
 }

@@ -2,19 +2,18 @@
 
 namespace App\Models;
 
-use App\Models\UserProfile;
-use App\Models\AnnouncementPost;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens;
+    use HasFactory;
+    use Notifiable;
     protected $table = 'users';
-    protected $primaryKey = "id";
+    protected $primaryKey = 'id';
     public $incrementing = true;
     /**
      * The attributes that are mass assignable.
@@ -27,7 +26,7 @@ class User extends Authenticatable
         'gender',
         'email',
         'password',
-        'role'
+        'role',
     ];
     /**
      * The attributes that should be hidden for arrays.
@@ -49,10 +48,13 @@ class User extends Authenticatable
     ];
 
     // Relationships
-    public function profile(){
+    public function profile()
+    {
         return $this->hasOne(UserProfile::class, 'users_username');
     }
-    public function announcementPosts(){
+
+    public function announcementPosts()
+    {
         return $this->hasMany(AnnouncementPost::class);
     }
 }
