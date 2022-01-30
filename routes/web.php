@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\StudyLevelController;
 use App\Http\Controllers\InstituteSettingController;
 use App\Http\Controllers\User\UserProfileController;
 use App\Http\Controllers\Classroom\ClassroomController;
+use App\Http\Controllers\SemesterRegistrationController;
 use App\Http\Controllers\Admin\AnnouncementPostController;
 use App\Http\Controllers\Admin\ClassroomController as AdminClassroomController;
 
@@ -76,6 +77,10 @@ Route::post('/dashboard/exam/transcript/{studentID}', [ExamController::class, 't
 Route::post('/dashboard/exam/transcript/add/{studentID}', [ExamController::class, 'transcriptAddUpdate'])->middleware(['auth']);
 Route::post('/dashboard/exam/transcript/{studentID}/{studyLevel}/{semester}', [ExamController::class, 'transcriptView'])->middleware(['auth']);
 Route::post('/dashboard/exam/transcript/update/{studentID}/{studyLevel}/{semester}', [ExamController::class, 'transcriptAddUpdate'])->middleware(['auth']);
+
+// Semester Registration
+Route::get('/dashboard/semester/registration', [SemesterRegistrationController::class, 'registrationMainView'])->name('semester.register.view')->middleware(['auth']);
+Route::get('/dashboard/semester/registration/view/{id}', [SemesterRegistrationController::class, 'registrationIndividualViewPDF'])->name('semester.register.view')->middleware(['auth']);
 
 // Administration Area
 

@@ -6,7 +6,6 @@ use PDF;
 use App\Models\User;
 use App\Models\Course;
 use App\Models\Program;
-use App\Models\Classroom;
 use App\Models\StudyLevel;
 use App\Models\CourseGrade;
 use App\Models\UserProfile;
@@ -17,8 +16,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\MainController;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx as XlsxReader;
 
 class ExamController extends MainController
@@ -190,13 +187,6 @@ class ExamController extends MainController
                             $studentName = User::where('username', $studentID)->first()->fullname;
                             $title = ucwords($studentName) . " - Transkrip Semester {$semester}  {$studyLevelName}";
                             $studentClassroom = ClassroomStudent::where('users_username', $studentID)->first()->classroom;
-                            if (Storage::disk('local')->exists('public/img/system/logo-300.png')) {
-                                $collegeImageUrl = 'public/img/system/logo-300.png';
-                            } elseif (Storage::disk('local')->exists('public/img/system/logo-def-300.png')) {
-                                $collegeImageUrl = 'public/img/system/logo-def-300.png';
-                            } else {
-                                $collegeImageUrl = '';
-                            }
                             $studentProgram = Program::where('code', $studentClassroom->programs_code)->first()->name;
                             $studyLevelName = StudyLevel::where('code', $studyLevel)->first()->name;
                             $semesterGrade = SemesterGrade::where('users_username', $studentID)->where('study_levels_code', $studyLevel)->where('semester', $semester)->first();
