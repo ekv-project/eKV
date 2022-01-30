@@ -85,10 +85,10 @@
                                     @if(session()->has('successRemove'))
                                         <div class="alert alert-success">{{ session('successRemove') }}</div>
                                     @endif
-                                    <th class="col-1">NO</th>
-                                    <th class="col-3">KOD KURSUS</th>
+                                    <th class="col-2">KOD KURSUS</th>
                                     <th class="col-4">NAMA KURSUS</th>
                                     <th class="col-2">JAM KREDIT</th>
+                                    <th class="col-2">JAM PERTEMUAN</th>
                                     <th class="col-2">KEMAS KINI</th>
                                     <th class="col-1">BUANG</th>
                                 </tr>
@@ -99,14 +99,10 @@
                                 @endphp
                                 @foreach ($course as $c)
                                     <tr>
-                                        <td>
-                                            @php
-                                                echo $i;
-                                            @endphp
-                                        </td>
                                         <td>{{ strtoupper($c->code) }}</td>
                                         <td>{{ strtoupper($c->name) }}</td>
                                         <td>{{ strtoupper($c->credit_hour) }}</td>
+                                        <td>{{ strtoupper($c->total_hour) }}</td>
                                         <td><a class="btn btn-primary hvr-shrink" href="{{ route('admin.course.update', ['code' => strtolower($c->code)]) }}"><i class="bi bi-pencil-square"></i></a></td>
                                         <td>
                                             <!-- Delete Static Backdrop Confirmation -->
@@ -117,9 +113,6 @@
                                             <x-delete-confirmation-button :increment="$i"/>
                                         </td>
                                     </tr>
-                                    @php
-                                        $i = $i + 1;
-                                    @endphp
                                 @endforeach
                             </tbody>
                         </table>

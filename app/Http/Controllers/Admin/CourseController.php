@@ -62,10 +62,12 @@ class CourseController extends MainController
             'course_code' => ['required'],
             'course_name' => ['required'],
             'credit_hour' => ['required', 'integer', 'max:10'],
+            'total_hour' => ['required', 'integer', 'max:10'],
         ]);
         $code = $request->course_code;
         $name = $request->course_name;
         $creditHour = $request->credit_hour;
+        $totalHour = $request->total_hour;
 
         // Check if course existed
         if (!Course::where('code', $code)->first()) {
@@ -74,8 +76,9 @@ class CourseController extends MainController
                     'code' => strtolower($code),
                     'name' => strtolower($name),
                     'credit_hour' => $creditHour,
+                    'total_hour' => $totalHour,
                 ],
-            ], ['code'], ['code', 'name', 'credit_hour']);
+            ], ['code'], ['code', 'name', 'credit_hour', 'total_hour']);
             session()->flash('courseAddSuccess', 'Kursus berjaya ditambah!');
 
             return redirect()->back();
@@ -91,10 +94,12 @@ class CourseController extends MainController
         $validated = $request->validate([
             'course_code' => ['required'],
             'credit_hour' => ['required', 'integer', 'max:10'],
+            'total_hour' => ['required', 'integer', 'max:10'],
         ]);
         $code = $request->course_code;
         $name = $request->course_name;
         $creditHour = $request->credit_hour;
+        $totalHour = $request->total_hour;
 
         // Check if course existed
         if (Course::where('code', $code)->first()) {
@@ -103,8 +108,9 @@ class CourseController extends MainController
                     'code' => strtolower($code),
                     'name' => strtolower($name),
                     'credit_hour' => $creditHour,
+                    'total_hour' => $totalHour,
                 ],
-            ], ['code'], ['code', 'name', 'credit_hour']);
+            ], ['code'], ['code', 'name', 'credit_hour', 'total_hour']);
             session()->flash('courseUpdateSuccess', 'Kursus berjaya dikemas kini!');
 
             return redirect()->back();

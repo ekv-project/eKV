@@ -33,6 +33,13 @@
                             <div class="alert alert-danger">{{ $message }}</div>
                         @enderror
                     </div>
+                    <div class="form-floating mb-3">
+                        <input type="text" name="total_hour" id="total_hour" class="form-control" placeholder="total_hour" value="@php if(old('total_hour') !== null){echo old('total_hour');}else{echo NULL;} @endphp">
+                        <label for="total_hour" class="form-label">Jumlah Jam Pertemuan</label>
+                        @error('total_hour')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
                     <button type="submit" class="btn btn-primary w-100 hvr-shrink" name="info">Tambah</button>
                 </form>
             </div>
