@@ -73,9 +73,9 @@ class CourseController extends MainController
                 'search' => $search,
             ];
 
-            return view('dashboard.admin.course.set.view')->with(['settings' => $this->instituteSettings, 'page' => 'Senarai Kursus', 'course' => $course, 'filterAndSearch' => $filterAndSearch]);
+            return view('dashboard.admin.course.set.view')->with(['settings' => $this->instituteSettings, 'page' => 'Senarai Set Kursus', 'course' => $course, 'filterAndSearch' => $filterAndSearch]);
         } else {
-            return view('dashboard.admin.course.set.view')->with(['settings' => $this->instituteSettings, 'page' => 'Senarai Kursus', 'course' => $course]);
+            return view('dashboard.admin.course.set.view')->with(['settings' => $this->instituteSettings, 'page' => 'Senarai Set Kursus', 'course' => $course]);
         }
     }
 
@@ -89,11 +89,18 @@ class CourseController extends MainController
             'course_name' => ['required'],
             'credit_hour' => ['required', 'integer', 'max:10'],
             'total_hour' => ['required', 'integer', 'max:10'],
+            'category' => ['required', 'integer', 'max:10'],
         ]);
         $code = $request->course_code;
         $name = $request->course_name;
         $creditHour = $request->credit_hour;
         $totalHour = $request->total_hour;
+        // 1 = Pengajian Umum
+        // 2 = Teras
+        // 3 = Pengkhususan
+        // 4 = Elektif
+        // 5 = On-The-Job Training
+        $category = $request->category;
 
         // Check if course existed
         if (!Course::where('code', $code)->first()) {
@@ -103,8 +110,9 @@ class CourseController extends MainController
                     'name' => strtolower($name),
                     'credit_hour' => $creditHour,
                     'total_hour' => $totalHour,
+                    'category' => $category,
                 ],
-            ], ['code'], ['code', 'name', 'credit_hour', 'total_hour']);
+            ], ['code'], ['code', 'name', 'credit_hour', 'total_hour', 'category']);
             session()->flash('courseAddSuccess', 'Kursus berjaya ditambah!');
 
             return redirect()->back();
@@ -121,12 +129,18 @@ class CourseController extends MainController
             'course_code' => ['required'],
             'credit_hour' => ['required', 'integer', 'max:10'],
             'total_hour' => ['required', 'integer', 'max:10'],
+            'category' => ['required', 'integer', 'max:10'],
         ]);
         $code = $request->course_code;
         $name = $request->course_name;
         $creditHour = $request->credit_hour;
         $totalHour = $request->total_hour;
-
+        // 1 = Pengajian Umum
+        // 2 = Teras
+        // 3 = Pengkhususan
+        // 4 = Elektif
+        // 5 = On-The-Job Training
+        $category = $request->category;
         // Check if course existed
         if (Course::where('code', $code)->first()) {
             Course::upsert([
@@ -135,8 +149,9 @@ class CourseController extends MainController
                     'name' => strtolower($name),
                     'credit_hour' => $creditHour,
                     'total_hour' => $totalHour,
+                    'category' => $category,
                 ],
-            ], ['code'], ['code', 'name', 'credit_hour', 'total_hour']);
+            ], ['code'], ['code', 'name', 'credit_hour', 'total_hour', 'category']);
             session()->flash('courseUpdateSuccess', 'Kursus berjaya dikemas kini!');
 
             return redirect()->back();

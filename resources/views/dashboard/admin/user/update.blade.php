@@ -85,7 +85,7 @@
                         </div>
                         <div class="form-floating mb-3">
                             <input type="text" name="email" id="email" class="form-control" placeholder="email" value="@php if(old('email') !== null){echo old('email');}elseif(isset($user->email)){echo $user->email;}else{echo NULL;} @endphp">
-                            <label for="emailr" class="form-label">E-mel Pengguna</label>
+                            <label for="email" class="form-label">E-mel Pengguna</label>
                             @error('email')
                                 <div class="alert alert-danger">{{ $message }}</div>
                             @enderror
