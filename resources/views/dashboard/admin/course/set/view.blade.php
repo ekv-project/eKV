@@ -2,7 +2,7 @@
 @section('content')
     <div class="w-100 h-100 mt-3">
         <div class="row text-center">
-            <h1>Senarai Program</h1>
+            <h1>Senarai Set Kursus</h1>
         </div>
         <div class="row d-flex justify-content-center align-items-center mb-5">
             <div class="row d-flex justify-content-center align-items-center col-12 col-lg-10">
@@ -12,8 +12,8 @@
                             <div class="col mb-2">
                                 <div class="form-floating">
                                     <select class="form-select" id="sort_by" name="sort_by" aria-label="sortby">
-                                        <option value="code">Kod Program</option>
-                                        <option value="name">Nama Program</option>
+                                        <option value="code">Kod Kursus</option>
+                                        <option value="name">Nama Kursus</option>
                                     </select>
                                     <label for="sort_by">Susun Mengikut:</label>
                                 </div>
@@ -73,7 +73,7 @@
                         <div class="col-11 col-lg-11 alert alert-success">{{ session('deleteSuccess') }}</div>
                     </div>
                 @endif
-                @if($program->count() < 1)
+                @if($course->count() < 1)
                     <div class="row d-flex justify-content-center align-content-center mt-3">
                         <p class="text-center mt-3 fs-5">Tiada rekod dijumpai.</p>
                     </div>
@@ -85,46 +85,39 @@
                                     @if(session()->has('successRemove'))
                                         <div class="alert alert-success">{{ session('successRemove') }}</div>
                                     @endif
-                                    <th class="col-1 align-middle">NO</th>
-                                    <th class="col-2 align-middle">KOD PROGRAM</th>
-                                    <th class="col-3 align-middle">NAMA PROGRAM</th>
-                                    <th class="col-3 align-middle">NAMA JABATAN</th>
-                                    <th class="col-2 align-middle">KEMAS KINI</th>
-                                    <th class="col-1 align-middle">BUANG</th>
+                                    <th class="col-2">KOD KURSUS</th>
+                                    <th class="col-4">NAMA KURSUS</th>
+                                    <th class="col-2">JAM KREDIT</th>
+                                    <th class="col-2">JAM PERTEMUAN</th>
+                                    <th class="col-2">KEMAS KINI</th>
+                                    <th class="col-1">BUANG</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @php
                                     $i = 1;
                                 @endphp
-                                @foreach ($program as $p)
+                                @foreach ($course as $c)
                                     <tr>
-                                        <td>
-                                            @php
-                                                echo $i;
-                                            @endphp
-                                        </td>
-                                        <td>{{ strtoupper($p->code) }}</td>
-                                        <td>{{ strtoupper($p->name) }}</td>
-                                        <td>{{ strtoupper($p->department_name) }}</td>
-                                        <td><a class="btn btn-primary hvr-shrink" href="{{ route('admin.program.update', ['code' => strtolower($p->code)]) }}"><i class="bi bi-pencil-square"></i></a></td>
+                                        <td>{{ strtoupper($c->code) }}</td>
+                                        <td>{{ strtoupper($c->name) }}</td>
+                                        <td>{{ strtoupper($c->credit_hour) }}</td>
+                                        <td>{{ strtoupper($c->total_hour) }}</td>
+                                        <td><a class="btn btn-primary hvr-shrink" href="{{ route('admin.course.update', ['code' => strtolower($c->code)]) }}"><i class="bi bi-pencil-square"></i></a></td>
                                         <td>
                                             <!-- Delete Static Backdrop Confirmation -->
                                             @php
-                                                $deleteFormData = [array("nameAttr" => "code", "valueAttr" => strtolower($p->code))];
+                                                $deleteFormData = [array("nameAttr" => "code", "valueAttr" => strtolower($c->code))];
                                             @endphp
-                                            <x-delete-confirmation name="program" :formData="$deleteFormData" :increment="$i"/>
+                                            <x-delete-confirmation name="kursus" :formData="$deleteFormData" :increment="$i"/>
                                             <x-delete-confirmation-button :increment="$i"/>
                                         </td>
                                     </tr>
-                                    @php
-                                        $i = $i + 1;
-                                    @endphp
                                 @endforeach
                             </tbody>
                         </table>
                     </div>
-                    {{ $program->links() }}
+                    {{ $course->links() }}
                 @endif
             </div>
         </div>

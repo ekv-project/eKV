@@ -53,6 +53,32 @@ class CourseController extends MainController
         }
     }
 
+    public function setView(Request $request)
+    {
+        $pagination = 15;
+        $course = Course::paginate($pagination)->withQueryString();
+        // Check for filters and search
+        if ($request->has('sort_by') and $request->has('sort_order') and $request->has('search')) {
+            $sortBy = $request->sort_by;
+            $sortOrder = $request->sort_order;
+            $search = $request->search;
+            if (null != $search) {
+                $course = Course::where('code', 'LIKE', "%{$search}%")->orWhere('name', 'LIKE', "%{$search}%")->orderBy($sortBy, $sortOrder)->paginate($pagination)->withQueryString();
+            } else {
+                $course = Course::orderBy($sortBy, $sortOrder)->paginate($pagination)->withQueryString();
+            }
+            $filterAndSearch = [
+                'sortBy' => $sortBy,
+                'sortOrder' => $sortOrder,
+                'search' => $search,
+            ];
+
+            return view('dashboard.admin.course.set.view')->with(['settings' => $this->instituteSettings, 'page' => 'Senarai Kursus', 'course' => $course, 'filterAndSearch' => $filterAndSearch]);
+        } else {
+            return view('dashboard.admin.course.set.view')->with(['settings' => $this->instituteSettings, 'page' => 'Senarai Kursus', 'course' => $course]);
+        }
+    }
+
     /**
      * Handling POST Request.
      */

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddTotalHourColumnToCoursesTable extends Migration
+class AddDepartmentNameColumnToProgramsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddTotalHourColumnToCoursesTable extends Migration
      */
     public function up()
     {
-        Schema::table('courses', function (Blueprint $table) {
-            $table->string('total_hour', 2)->after('credit_hour')->default('0');
+        Schema::table('programs', function (Blueprint $table) {
+            $table->string('department_name')->after('name');
         });
     }
 
@@ -25,8 +25,8 @@ class AddTotalHourColumnToCoursesTable extends Migration
      */
     public function down()
     {
-        Schema::table('courses', function (Blueprint $table) {
-            $table->dropColumn('total_hour');
+        Schema::table('programs', function (Blueprint $table) {
+            $table->dropColumn('department_name');
         });
     }
 }

@@ -26,9 +26,16 @@
                             <div class="alert alert-danger">{{ $message }}</div>
                         @enderror
                     </div>
+                    <div class="form-floating mb-3">
+                        <input type="text" name="department_name" id="department_name" class="form-control" placeholder="department_name" value="@php if(old('department_name') !== null){echo old('department_name');}else{echo NULL;} @endphp">
+                        <label for="department_name" class="form-label">Nama Jabatan</label>
+                        @error('department_name')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
                     <button type="submit" class="btn btn-primary w-100 hvr-shrink" name="info">Tambah</button>
                 </form>
             </div>
         </div>
-    </div>    
+    </div>
 @endsection

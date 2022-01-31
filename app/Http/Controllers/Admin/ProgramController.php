@@ -61,17 +61,21 @@ class ProgramController extends MainController
         $validated = $request->validate([
             'program_code' => ['required'],
             'program_name' => ['required'],
+            'department_name' => ['required'],
         ]);
         $code = $request->program_code;
         $name = $request->program_name;
+        $departmentName = $request->department_name;
+
         // Check if program existed
         if (!Program::where('code', $code)->first()) {
             Program::upsert([
                 [
                     'code' => strtolower($code),
                     'name' => strtolower($name),
+                    'department_name' => strtolower($departmentName),
                 ],
-            ], ['code'], ['code', 'name']);
+            ], ['code'], ['code', 'name', 'department_name']);
             session()->flash('programAddSuccess', 'Program berjaya ditambah!');
 
             return redirect()->back();
@@ -90,14 +94,17 @@ class ProgramController extends MainController
         ]);
         $code = $request->program_code;
         $name = $request->program_name;
+        $departmentName = $request->department_name;
+
         // Check if course existed
         if (Program::where('code', $code)->first()) {
             Program::upsert([
                 [
                     'code' => strtolower($code),
                     'name' => strtolower($name),
+                    'department_name' => strtolower($departmentName),
                 ],
-            ], ['code'], ['code', 'name']);
+            ], ['code'], ['code', 'name', 'department_name']);
             session()->flash('programUpdateSuccess', 'Program berjaya dikemas kini!');
 
             return redirect()->back();
