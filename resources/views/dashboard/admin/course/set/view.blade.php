@@ -115,9 +115,9 @@
                                         <td>
                                             <!-- Delete Static Backdrop Confirmation -->
                                             @php
-                                                $deleteFormData = [array("nameAttr" => "code", "valueAttr" => strtolower($c->code))];
+                                                $deleteFormData = [array("nameAttr" => "id", "valueAttr" => strtolower($c->id))];
                                             @endphp
-                                            <x-delete-confirmation name="kursus" :formData="$deleteFormData" :increment="$i"/>
+                                            <x-delete-confirmation name="set kursus" :formData="$deleteFormData" :increment="$i"/>
                                             <x-delete-confirmation-button :increment="$i"/>
                                         </td>
                                     </tr>
