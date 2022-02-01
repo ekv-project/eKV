@@ -71,12 +71,13 @@ class UserProfileController extends MainController
             if ($request->has('profile')) {
                 // User's profile update
                 $validated = $request->validate([
-                    'identification_number' => ['required'],
-                    'phone_number' => ['required'],
+                    'identification_number' => ['required', 'regex:/\d{6}-\d{2}-\d{4}/'],
                     'date_of_birth' => ['required'],
                     'home_address' => ['required'],
                     'guardian_name' => ['required'],
-                    'guardian_phone_number' => ['required'],
+                    'phone_number' => ['required', 'regex:/\d{3}-\d{7,8}/'],
+                    'home_number' => ['regex:/\d{2}-\d{7,8}/'],
+                    'guardian_phone_number' => ['required', 'regex:/\d{3}-\d{7,8}/'],
                 ]);
 
                 // Place of birth and home number is optional
