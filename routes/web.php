@@ -97,9 +97,11 @@ Route::get('/dashboard/admin/course', [CourseController::class, 'view'])->name('
 Route::get('/dashboard/admin/course/add', [CourseController::class, 'addView'])->name('admin.course.add')->middleware(['auth', 'userIsAdmin']);
 Route::get('/dashboard/admin/course/update/{code}', [CourseController::class, 'updateView'])->name('admin.course.update')->middleware(['auth', 'userIsAdmin']);
 Route::get('/dashboard/admin/course/set', [CourseController::class, 'setView'])->name('admin.course.set.view')->middleware(['auth', 'userIsAdmin']);
+Route::get('/dashboard/admin/course/set/add', [CourseController::class, 'setAddView'])->name('admin.course.set.add')->middleware(['auth', 'userIsAdmin']);
 Route::post('/dashboard/admin/course/add', [CourseController::class, 'add'])->middleware(['auth', 'userIsAdmin']);
 Route::post('/dashboard/admin/course/update/{code}', [CourseController::class, 'update'])->middleware(['auth', 'userIsAdmin']);
 Route::post('/dashboard/admin/course', [CourseController::class, 'remove'])->middleware(['auth', 'userIsAdmin']);
+Route::post('/dashboard/admin/course/set/add', [CourseController::class, 'setAdd'])->middleware(['auth', 'userIsAdmin']);
 
 Route::get('/dashboard/admin/program', [ProgramController::class, 'view'])->name('admin.program')->middleware(['auth', 'userIsAdmin']);
 Route::get('/dashboard/admin/program/add', [ProgramController::class, 'addView'])->name('admin.program.add')->middleware(['auth', 'userIsAdmin']);

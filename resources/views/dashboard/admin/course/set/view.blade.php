@@ -12,8 +12,10 @@
                             <div class="col mb-2">
                                 <div class="form-floating">
                                     <select class="form-select" id="sort_by" name="sort_by" aria-label="sortby">
-                                        <option value="code">Kod Kursus</option>
-                                        <option value="name">Nama Kursus</option>
+                                        <option value="id">ID</option>
+                                        <option value="study_levels_code">Kod Tahap Pengajian</option>
+                                        <option value="programs_code">Kod Program</option>
+                                        <option value="semester">Semester</option>
                                     </select>
                                     <label for="sort_by">Susun Mengikut:</label>
                                 </div>
@@ -46,10 +48,14 @@
                         <div class="row">
                             @if($filterAndSearch['sortBy'] != NULL AND $filterAndSearch['sortOrder'] != NULL)
                                 <div class="col-6">
-                                    @if($filterAndSearch['sortBy'] == 'code')
-                                        <p>Susun Mengikut: <span class="fst-italic">Kod Kursus</span></p>
-                                    @elseif($filterAndSearch['sortBy'] == 'nama')
-                                        <p>Susun Mengikut: <span class="fst-italic">Nama Kursus</span></p>
+                                    @if($filterAndSearch['sortBy'] == 'id')
+                                        <p>Susun Mengikut: <span class="fst-italic">ID</span></p>
+                                    @elseif($filterAndSearch['sortBy'] == 'study_levels_code')
+                                        <p>Susun Mengikut: <span class="fst-italic">Kod Tahap Pengajian</span></p>
+                                    @elseif($filterAndSearch['sortBy'] == 'programs_code')
+                                        <p>Susun Mengikut: <span class="fst-italic">Kod Program</span></p>
+                                    @elseif($filterAndSearch['sortBy'] == 'semester')
+                                        <p>Susun Mengikut: <span class="fst-italic">Semester</span></p>
                                     @endif
                                 </div>
                                 <div class="col-6">
@@ -85,10 +91,10 @@
                                     @if(session()->has('successRemove'))
                                         <div class="alert alert-success">{{ session('successRemove') }}</div>
                                     @endif
-                                    <th class="col-2">KOD KURSUS</th>
-                                    <th class="col-4">NAMA KURSUS</th>
-                                    <th class="col-2">JAM KREDIT</th>
-                                    <th class="col-2">JAM PERTEMUAN</th>
+                                    <th class="col-2">ID</th>
+                                    <th class="col-2">TAHAP PENGAJIAN</th>
+                                    <th class="col-2">PROGRAM</th>
+                                    <th class="col-2">SEMESTER</th>
                                     <th class="col-2">KEMAS KINI</th>
                                     <th class="col-1">BUANG</th>
                                 </tr>
@@ -99,11 +105,13 @@
                                 @endphp
                                 @foreach ($course as $c)
                                     <tr>
-                                        <td>{{ strtoupper($c->code) }}</td>
-                                        <td>{{ strtoupper($c->name) }}</td>
-                                        <td>{{ strtoupper($c->credit_hour) }}</td>
-                                        <td>{{ strtoupper($c->total_hour) }}</td>
-                                        <td><a class="btn btn-primary hvr-shrink" href="{{ route('admin.course.update', ['code' => strtolower($c->code)]) }}"><i class="bi bi-pencil-square"></i></a></td>
+                                        <td>{{ strtoupper($c->id) }}</td>
+                                        <td>{{ strtoupper($c->study_levels_code) }}</td>
+                                        <td>{{ strtoupper($c->programs_code) }}</td>
+                                        <td>{{ strtoupper($c->semester) }}</td>
+                                        <td>
+                                            {{-- <a class="btn btn-primary hvr-shrink" href="{{ route('admin.course.update', ['code' => strtolower($c->code)]) }}"><i class="bi bi-pencil-square"></i></a> --}}
+                                        </td>
                                         <td>
                                             <!-- Delete Static Backdrop Confirmation -->
                                             @php

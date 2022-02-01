@@ -3,7 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Course;
+use App\Models\Program;
+use App\Models\CourseSet;
+use App\Models\StudyLevel;
 use Illuminate\Http\Request;
+use App\Models\CourseSetCourse;
 use App\Http\Controllers\MainController;
 
 class CourseController extends MainController
@@ -56,16 +60,16 @@ class CourseController extends MainController
     public function setView(Request $request)
     {
         $pagination = 15;
-        $course = Course::paginate($pagination)->withQueryString();
+        $course = CourseSet::paginate($pagination)->withQueryString();
         // Check for filters and search
         if ($request->has('sort_by') and $request->has('sort_order') and $request->has('search')) {
             $sortBy = $request->sort_by;
             $sortOrder = $request->sort_order;
             $search = $request->search;
             if (null != $search) {
-                $course = Course::where('code', 'LIKE', "%{$search}%")->orWhere('name', 'LIKE', "%{$search}%")->orderBy($sortBy, $sortOrder)->paginate($pagination)->withQueryString();
+                $course = CourseSet::where('id', 'LIKE', "%{$search}%")->orWhere('study_levels_code', 'LIKE', "%{$search}%")->orWhere('programs_code', 'LIKE', "%{$search}%")->orWhere('semester', 'LIKE', "%{$search}%")->orderBy($sortBy, $sortOrder)->paginate($pagination)->withQueryString();
             } else {
-                $course = Course::orderBy($sortBy, $sortOrder)->paginate($pagination)->withQueryString();
+                $course = CourseSet::orderBy($sortBy, $sortOrder)->paginate($pagination)->withQueryString();
             }
             $filterAndSearch = [
                 'sortBy' => $sortBy,
@@ -77,6 +81,13 @@ class CourseController extends MainController
         } else {
             return view('dashboard.admin.course.set.view')->with(['settings' => $this->instituteSettings, 'page' => 'Senarai Set Kursus', 'course' => $course]);
         }
+    }
+
+    public function setAddView()
+    {
+        $studyLevels = StudyLevel::select('code', 'name', 'total_semester')->get();
+        $maxSemester = StudyLevel::select('total_semester')->get()->max()['total_semester'];
+        return view('dashboard.admin.course.set.add')->with(['settings' => $this->instituteSettings, 'page' => 'Tambah Set Kursus', 'studyLevels' => $studyLevels, 'maxSemester' => $maxSemester]);
     }
 
     /**
@@ -172,6 +183,68 @@ class CourseController extends MainController
 
                 return redirect()->back();
             }
+        }
+    }
+
+    public function setAdd(Request $request){
+        $validated = $request->validate([
+            'study_level' => ['required'],
+            'semester' => ['required', 'integer', 'max:10'],
+            'program' => ['required'],
+        ]);
+        if(!empty($request->input('course_code'))){
+            if(Program::where('code', $request->input('program'))->first()){
+                $courses = $request->input('course_code');
+                $courseErr = [];
+                foreach($courses as $course){
+                    if(!Course::where('code', $course)->first()){
+                        // Course not found
+                        $error = '[Kod Kursus: ' . $course . ']' . ' Kursus tidak wujud!';
+                        array_push($courseErr, $error);
+                    }
+                }
+
+                if (count($courseErr) > 0) {
+                    // Return errors if available
+                    $request->session()->flash('courseErr', $courseErr);
+                    return redirect()->back()->withInput();
+                }else{
+                    $studyLevelCode = $request->input('study_level');
+                    $programCode = $request->input('program');
+                    $semester = $request->input('semester');
+
+                    if(!CourseSet::where('study_levels_code', $studyLevelCode)->where('programs_code', $programCode)->where('semester', $semester)->first()){
+                        $courseSet = CourseSet::create([
+                            'study_levels_code' => strtolower($studyLevelCode),
+                            'programs_code' => strtolower($programCode),
+                            'semester' => $semester,
+                        ]);
+
+                        foreach($courses as $course){
+                            CourseSetCourse::create([
+                                'course_sets_id' => $courseSet->id,
+                                'courses_code' => strtolower($course),
+                            ]);
+                        }
+
+                        session()->flash('courseSetAddSuccess', 'Set kursus berjaya ditambah!');
+                        return redirect()->back();
+                    }else{
+                        return redirect()->back()->withInput()->withErrors([
+                            'existed' => 'Set Kursus dengan tahap pengajian, kod program dan semester yang sama telah wujud!',
+                        ]);
+                    }
+
+                }
+            }else{
+                return redirect()->back()->withInput()->withErrors([
+                    'program' => 'Program tidak dijumpai!',
+                ]);
+            }
+        }else{
+            return redirect()->back()->withInput()->withErrors([
+                'courses_empty' => 'Tiada kursus ditambah!',
+            ]);
         }
     }
 }

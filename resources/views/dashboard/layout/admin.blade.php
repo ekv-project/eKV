@@ -48,7 +48,9 @@
                                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                     <li><a class="dropdown-item" href="{{ route('admin.course') }}">Senarai</a></li>
                                     <li><a class="dropdown-item" href="{{ route('admin.course.add') }}">Tambah</a></li>
-                                    <li><a class="dropdown-item" href="{{ route('admin.course.set.view') }}">Set Kursus</a></li>
+                                    <div class="dropdown-divider"></div>
+                                    <li><a class="dropdown-item" href="{{ route('admin.course.set.view') }}">Senarai Set Kursus</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('admin.course.set.add') }}">Tambah Set Kursus</a></li>
                                 </ul>
                             </li>
                             <li class="nav-item dropdown">
