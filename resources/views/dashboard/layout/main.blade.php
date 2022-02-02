@@ -47,7 +47,7 @@
                 @endcan
             </div>
         </div>
-        <div class="col-md-5 m-0 d-flex align-items-center justify-content-center">
+        <div class="col-md-7 m-0 d-flex align-items-center justify-content-center">
             <div class="w-100 d-flex align-items-center justify-content-start offset-1">
                 @if(Storage::disk('local')->exists('public/img/system/logo-300.png'))
                     <a href="{{ route('dashboard') }}" class="ms-3">
@@ -60,16 +60,16 @@
                 @endif
                 @isset($settings)
                     @empty($settings['institute_name'])
-                        <a class="text-light text-center fw-bold fs-4 text-decoration-none" href="{{ route('dashboard') }}">Kolej Vokasional Malaysia</a>
+                        <a class="text-light text-center fw-bold fs-5 text-decoration-none" href="{{ route('dashboard') }}">Kolej Vokasional Malaysia</a>
                     @else
-                        <a class="text-light text-center fw-bold fs-4 text-decoration-none" href="{{ route('dashboard') }}">{{ ucwords($settings['institute_name']) }}</a>
+                        <a class="text-light text-center fw-bold fs-5 text-decoration-none" href="{{ route('dashboard') }}">{{ ucwords($settings['institute_name']) }}</a>
                     @endempty
                 @else
-                    <a class="text-light text-center fw-bold fs-4 text-decoration-none" href="{{ route('dashboard') }}">Kolej Vokasional Malaysia</a>
+                    <a class="text-light text-center fw-bold fs-5 text-decoration-none" href="{{ route('dashboard') }}">Kolej Vokasional Malaysia</a>
                 @endisset
             </div>
         </div>
-        <div class="col-md-4 m-0 invisible"></div>
+        <div class="col-md-2 m-0 invisible"></div>
         <div class="col-md-3 m-0 d-flex align-items-center justify-content-between">
           <div class="offset-sm-1 p-4 text-nowrap">
             @if(Storage::disk('local')->exists('public/img/profile/'. Auth::user()->username . '.png'))
