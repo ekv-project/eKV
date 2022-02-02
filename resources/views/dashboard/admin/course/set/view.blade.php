@@ -110,7 +110,7 @@
                                         <td>{{ strtoupper($c->programs_code) }}</td>
                                         <td>{{ strtoupper($c->semester) }}</td>
                                         <td>
-                                            {{-- <a class="btn btn-primary hvr-shrink" href="{{ route('admin.course.update', ['code' => strtolower($c->code)]) }}"><i class="bi bi-pencil-square"></i></a> --}}
+                                            <a class="btn btn-primary hvr-shrink" href="{{ route('admin.course.set.update', ['id' => strtolower($c->id)]) }}"><i class="bi bi-pencil-square"></i></a>
                                         </td>
                                         <td>
                                             <!-- Delete Static Backdrop Confirmation -->

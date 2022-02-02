@@ -5,9 +5,9 @@
             <div class="col-12 col-lg-10">
                 <form action="" method="post" class="mt-3 mb-5">
                     @csrf
-                    <h2>Tambah Set Kursus</h2>
-                    @if(session()->has('courseSetAddSuccess'))
-                        <div class="alert alert-success">{{ session('courseSetAddSuccess') }}</div>
+                    <h2>Kemas Kini Set Kursus</h2>
+                    @if(session()->has('courseSetUpdateSuccess'))
+                        <div class="alert alert-success">{{ session('courseSetUpdateSuccess') }}</div>
                     @endif
                     @error('courses_empty')
                         <div class="alert alert-danger">{{ $message }}</div>
@@ -41,6 +41,12 @@
                                             @else
                                                 <option value="{{ $sl->code }}">{{ strtoupper($sl->name) }}</option>
                                             @endif
+                                        @elseif(!empty($courseSet))
+                                            @if($courseSet->study_levels_code == $sl->code)
+                                                <option value="{{ $sl->code }}" selected>{{ strtoupper($sl->name) }}</option>
+                                            @else
+                                                <option value="{{ $sl->code }}">{{ strtoupper($sl->name) }}</option>
+                                            @endif
                                         @else
                                             <option value="{{ $sl->code }}">{{ strtoupper($sl->name) }}</option>
                                         @endif
@@ -62,6 +68,12 @@
                                             @else
                                                 <option value="{{ $i }}">{{ $i }}</option>
                                             @endif
+                                        @elseif(!empty($courseSet))
+                                            @if($courseSet->semester == $i)
+                                                <option value="{{ $i }}" selected>{{ $i }}</option>
+                                            @else
+                                                <option value="{{ $i }}">{{ $i }}</option>
+                                            @endif
                                         @else
                                             <option value="{{ $i }}">{{ $i }}</option>
                                         @endif
@@ -75,7 +87,16 @@
                         </div>
                         <div class="col-lg-4 col-md-12">
                             <div class="form-floating mb-3">
-                                <input type="text" name="program" id="program" class="form-control" placeholder="program" value="@php if(old('program') !== null){echo old('program');}else{echo NULL;} @endphp">
+                                @php
+                                    if(!empty(old('program'))){
+                                        $programsCode = old('program');
+                                    }elseif(!empty($courseSet->programs_code)){
+                                        $programsCode = $courseSet->programs_code;
+                                    }else{
+                                        $programsCode = '';
+                                    }
+                                @endphp
+                                <input type="text" name="program" id="program" class="form-control" placeholder="program" value="{{ $programsCode }}">
                                 <label for="program" class="form-label">Kod Program</label>
                                 @error('program')
                                     <div class="alert alert-danger">{{ $message }}</div>
@@ -99,9 +120,18 @@
                                     </div>
                                 @endif
                             @endfor
+                        @elseif(!empty($courseList))
+                            @foreach ($courseList as $course)
+                                <div class="col-6 col-lg-4">
+                                    <div class="form-floating mb-3">
+                                        <input type="text" name="course_code[]" id="course_code[]" class="form-control" placeholder="course_code[]" value="{{ $course->courses_code }}">
+                                        <label for="course_code[]" class="form-label">Kod Kursus</label>
+                                    </div>
+                                </div>
+                            @endforeach
                         @endif
                     </div>
-                    <button type="submit" class="btn btn-primary w-100 hvr-shrink mt-5">Tambah</button>
+                    <button type="submit" class="btn btn-primary w-100 hvr-shrink mt-5">Kemas Kini</button>
                 </form>
             </div>
         </div>

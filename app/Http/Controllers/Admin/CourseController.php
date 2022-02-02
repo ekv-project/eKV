@@ -91,6 +91,20 @@ class CourseController extends MainController
         return view('dashboard.admin.course.set.add')->with(['settings' => $this->instituteSettings, 'page' => 'Tambah Set Kursus', 'studyLevels' => $studyLevels, 'maxSemester' => $maxSemester]);
     }
 
+    public function setUpdateView($id)
+    {
+        if (CourseSet::where('id', $id)->first()) {
+            $studyLevels = StudyLevel::select('code', 'name', 'total_semester')->get();
+            $maxSemester = StudyLevel::select('total_semester')->get()->max()['total_semester'];
+            $courseSet = CourseSet::where('id', $id)->first();
+            $courseList = CourseSetCourse::where('course_sets_id', $id)->get();
+
+            return view('dashboard.admin.course.set.update')->with(['settings' => $this->instituteSettings, 'page' => 'Kemas Kini Set Kursus', 'studyLevels' => $studyLevels, 'maxSemester' => $maxSemester, 'courseSet' => $courseSet, 'courseList' => $courseList]);
+        } else {
+            abort(404, 'Set kursus tidak dijumpai!');
+        }
+    }
+
     /**
      * Handling POST Request.
      */
@@ -199,7 +213,11 @@ class CourseController extends MainController
                 $courses = $request->input('course_code');
                 $courseErr = [];
                 foreach ($courses as $course) {
-                    if (!Course::where('code', $course)->first()) {
+                    if (empty($course)) {
+                        // Course empty
+                        $error = 'Ruangan kursus kosong!';
+                        array_push($courseErr, $error);
+                    } elseif (!Course::where('code', $course)->first()) {
                         // Course not found
                         $error = '[Kod Kursus: ' . $course . ']' . ' Kursus tidak wujud!';
                         array_push($courseErr, $error);
@@ -238,6 +256,93 @@ class CourseController extends MainController
                         return redirect()->back()->withInput()->withErrors([
                             'existed' => 'Set Kursus dengan tahap pengajian, kod program dan semester yang sama telah wujud!',
                         ]);
+                    }
+                }
+            } else {
+                return redirect()->back()->withInput()->withErrors([
+                    'program' => 'Program tidak dijumpai!',
+                ]);
+            }
+        } else {
+            return redirect()->back()->withInput()->withErrors([
+                'courses_empty' => 'Tiada kursus ditambah!',
+            ]);
+        }
+    }
+
+    public function setUpdate(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'study_level' => ['required'],
+            'semester' => ['required', 'integer', 'max:10'],
+            'program' => ['required'],
+        ]);
+        if (!empty($request->input('course_code'))) {
+            if (Program::where('code', $request->input('program'))->first()) {
+                $courses = $request->input('course_code');
+                $courseErr = [];
+                foreach ($courses as $course) {
+                    if (empty($course)) {
+                        // Course empty
+                        $error = 'Ruangan kursus kosong!';
+                        array_push($courseErr, $error);
+                    } elseif (!Course::where('code', $course)->first()) {
+                        // Course not found
+                        $error = '[Kod Kursus: ' . $course . ']' . ' Kursus tidak wujud!';
+                        array_push($courseErr, $error);
+                    }
+                }
+
+                if (count($courseErr) > 0) {
+                    // Return errors if available
+                    $request->session()->flash('courseErr', $courseErr);
+
+                    return redirect()->back()->withInput();
+                } else {
+                    $studyLevelCode = $request->input('study_level');
+                    $programCode = $request->input('program');
+                    $semester = $request->input('semester');
+
+                    if (!CourseSet::where('study_levels_code', $studyLevelCode)->where('programs_code', $programCode)->where('semester', $semester)->first()) {
+                        CourseSet::where('id', $id)->update([
+                            'study_levels_code' => strtolower($studyLevelCode),
+                            'programs_code' => strtolower($programCode),
+                            'semester' => $semester,
+                        ]);
+
+                        CourseSetCourse::where('course_sets_id', $id)->delete(); // Deletes all the courses first
+                        $courses = array_unique($courses); // Only one of the same course could be added to the set
+                        foreach ($courses as $course) {
+                            CourseSetCourse::create([
+                                'course_sets_id' => $id,
+                                'courses_code' => strtolower($course),
+                            ]);
+                        }
+
+                        session()->flash('courseSetUpdateSuccess', 'Set Kursus berjaya dikemas kini!');
+
+                        return redirect()->back();
+                    } else {
+                        $courseSetAvailable = CourseSet::where('study_levels_code', $studyLevelCode)->where('programs_code', $programCode)->where('semester', $semester)->first();
+                        // If the course set is the current set
+                        if ($courseSetAvailable->id == $id) {
+                            CourseSetCourse::where('course_sets_id', $id)->delete(); // Deletes all the courses first
+                            $courses = array_unique($courses); // Only one of the same course could be added to the set
+                            foreach ($courses as $course) {
+                                CourseSetCourse::create([
+                                    'course_sets_id' => $id,
+                                    'courses_code' => strtolower($course),
+                                ]);
+                            }
+
+                            session()->flash('courseSetUpdateSuccess', 'Set Kursus berjaya dikemas kini!');
+
+                            return redirect()->back();
+                        } else {
+                            return redirect()->back()->withInput()->withErrors([
+                                'existed' => 'Set Kursus dengan tahap pengajian, kod program dan semester yang sama telah wujud!',
+                            ]);
+                        }
                     }
                 }
             } else {
