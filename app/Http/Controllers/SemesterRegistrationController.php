@@ -383,4 +383,16 @@ class SemesterRegistrationController extends MainController
             'existed' => 'Sesi Pendaftaran Semester dengan Set Kursus, Sesi dan Tahun yang sama telah wujud!',
         ]);
     }
+
+    public function adminSemesterRegistrationRemove(Request $request)
+    {
+        if (isset($request->id)) {
+            $id = $request->id;
+            SemesterSession::where('id', $id)->delete();
+
+            session()->flash('deleteSuccess', 'Sesi Pendaftaran Semester berjaya dibuang!');
+
+            return redirect()->back();
+        }
+    }
 }

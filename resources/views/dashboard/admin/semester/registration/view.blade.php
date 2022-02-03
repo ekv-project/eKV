@@ -133,11 +133,11 @@
                                         </td>
                                         <td>
                                             <!-- Delete Static Backdrop Confirmation -->
-                                            {{-- @php
-                                                $deleteFormData = [array("nameAttr" => "code", "valueAttr" => strtolower($p->code))];
+                                            @php
+                                                $deleteFormData = [array("nameAttr" => "id", "valueAttr" => strtolower($ss->id))];
                                             @endphp
-                                            <x-delete-confirmation name="program" :formData="$deleteFormData" :increment="$i"/>
-                                            <x-delete-confirmation-button :increment="$i"/> --}}
+                                            <x-delete-confirmation name="sesi pendaftaran semester" :formData="$deleteFormData" :increment="$i"/>
+                                            <x-delete-confirmation-button :increment="$i"/>
                                         </td>
                                     </tr>
                                     @php

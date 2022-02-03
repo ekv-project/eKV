@@ -143,6 +143,7 @@ Route::post('/dashboard/admin/institute/update', [InstituteSettingController::cl
 Route::get('/dashboard/admin/semester/registration', [SemesterRegistrationController::class, 'adminSemesterRegistrationView'])->name('admin.semester.registration')->middleware(['auth', 'userIsAdmin']);
 Route::get('/dashboard/admin/semester/registration/add', [SemesterRegistrationController::class, 'adminSemesterRegistrationAddView'])->name('admin.semester.registration.add')->middleware(['auth', 'userIsAdmin']);
 Route::get('/dashboard/admin/semester/registration/update/{id}', [SemesterRegistrationController::class, 'adminSemesterRegistrationUpdateView'])->name('admin.semester.registration.update')->middleware(['auth', 'userIsAdmin']);
+Route::post('/dashboard/admin/semester/registration', [SemesterRegistrationController::class, 'adminSemesterRegistrationRemove'])->middleware(['auth', 'userIsAdmin']);
 Route::post('/dashboard/admin/semester/registration/update/{id}', [SemesterRegistrationController::class, 'adminSemesterRegistrationUpdate'])->middleware(['auth', 'userIsAdmin']);
 Route::post('/dashboard/admin/semester/registration/add', [SemesterRegistrationController::class, 'adminSemesterRegistrationAdd'])->middleware(['auth', 'userIsAdmin']);
 
