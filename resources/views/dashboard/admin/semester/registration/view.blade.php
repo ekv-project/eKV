@@ -100,13 +100,13 @@
                                     @if(session()->has('successRemove'))
                                         <div class="alert alert-success">{{ session('successRemove') }}</div>
                                     @endif
-                                    <th class="col-2 align-middle">ID Set Kursus</th>
-                                    <th class="col-2 align-middle">Kod Tahap Pengajian</th>
-                                    <th class="col-2 align-middle">Kod Program</th>
-                                    <th class="col-1 align-middle">Semester</th>
-                                    <th class="col-3 align-middle">Sesi/Tahun</th>
-                                    <th class="col-3 align-middle">Status</th>
-                                    <th class="col-2 align-middle">KEMAS KINI</th>
+                                    <th class="col-2 align-middle">ID SET KURSUS</th>
+                                    <th class="col-3 align-middle">KOD TAHAP PENGAJIAN</th>
+                                    <th class="col-2 align-middle">KOD PROGRAM</th>
+                                    <th class="col-1 align-middle">SEMESTER</th>
+                                    <th class="col-1 align-middle">SESI/TAHUN</th>
+                                    <th class="col-1 align-middle">STATUS</th>
+                                    <th class="col-1 align-middle">KEMAS KINI</th>
                                     <th class="col-1 align-middle">BUANG</th>
                                 </tr>
                             </thead>
@@ -129,7 +129,7 @@
                                         @endif
                                         </td>
                                         <td>
-                                            {{-- <a class="btn btn-primary hvr-shrink" href="{{ route('admin.program.update', ['code' => strtolower($p->code)]) }}"><i class="bi bi-pencil-square"></i></a> --}}
+                                            <a class="btn btn-primary hvr-shrink" href="{{ route('admin.semester.registration.update', ['id' => $ss->id]) }}"><i class="bi bi-pencil-square"></i></a>
                                         </td>
                                         <td>
                                             <!-- Delete Static Backdrop Confirmation -->

@@ -13,18 +13,16 @@ class SemesterRegistrationController extends MainController
 {
     public function adminSemesterRegistrationView(Request $request)
     {
-
         $pagination = 15;
-        $semesterSessions = SemesterSession::select('semester_sessions.course_sets_id', 'semester_sessions.session', 'semester_sessions.year', 'semester_sessions.status', 'course_sets.study_levels_code', 'course_sets.programs_code', 'course_sets.semester')
-        ->join('course_sets', 'semester_sessions.course_sets_id', '=', 'course_sets.id')
-        ->paginate($pagination)->withQueryString();
+        $semesterSessions = SemesterSession::select('semester_sessions.id', 'semester_sessions.course_sets_id', 'semester_sessions.session', 'semester_sessions.year', 'semester_sessions.status', 'course_sets.study_levels_code', 'course_sets.programs_code', 'course_sets.semester')
+            ->join('course_sets', 'semester_sessions.course_sets_id', '=', 'course_sets.id')
+            ->paginate($pagination)->withQueryString();
         // Check for filters and search
         if ($request->has('sort_by') and $request->has('sort_order') and $request->has('search')) {
             $sortBy = $request->sort_by;
             $sortOrder = $request->sort_order;
             $search = $request->search;
             if (null != $search) {
-
                 switch (strtolower($search)) {
                     case 'buka':
                         $search = 'open';
@@ -64,15 +62,13 @@ class SemesterRegistrationController extends MainController
                         break;
                 }
 
-                $semesterSessions = SemesterSession::select('semester_sessions.course_sets_id', 'semester_sessions.session', 'semester_sessions.year', 'semester_sessions.status', 'course_sets.study_levels_code', 'course_sets.programs_code', 'course_sets.semester')
-                ->join('course_sets', 'semester_sessions.course_sets_id', '=', 'course_sets.id')
-                ->orderBy($sortByColumn, $sortOrder)
-                ->where('semester_sessions.course_sets_id', 'LIKE', "%{$search}%")->orWhere('semester_sessions.session', 'LIKE', "%{$search}%")->orWhere('semester_sessions.year', 'LIKE', "%{$search}%")
-                ->orWhere('semester_sessions.status', 'LIKE', "%{$search}%")->orWhere('course_sets.study_levels_code', 'LIKE', "%{$search}%")->orWhere('course_sets.programs_code', 'LIKE', "%{$search}%")->orWhere('course_sets.semester', 'LIKE', "%{$search}%")
-                ->paginate($pagination)->withQueryString();
-
+                $semesterSessions = SemesterSession::select('semester_sessions.id', 'semester_sessions.course_sets_id', 'semester_sessions.session', 'semester_sessions.year', 'semester_sessions.status', 'course_sets.study_levels_code', 'course_sets.programs_code', 'course_sets.semester')
+                    ->join('course_sets', 'semester_sessions.course_sets_id', '=', 'course_sets.id')
+                    ->orderBy($sortByColumn, $sortOrder)
+                    ->where('semester_sessions.course_sets_id', 'LIKE', "%{$search}%")->orWhere('semester_sessions.session', 'LIKE', "%{$search}%")->orWhere('semester_sessions.year', 'LIKE', "%{$search}%")
+                    ->orWhere('semester_sessions.status', 'LIKE', "%{$search}%")->orWhere('course_sets.study_levels_code', 'LIKE', "%{$search}%")->orWhere('course_sets.programs_code', 'LIKE', "%{$search}%")->orWhere('course_sets.semester', 'LIKE', "%{$search}%")
+                    ->paginate($pagination)->withQueryString();
             } else {
-
                 switch ($sortBy) {
                     case 'course_set_id':
                         $sortByColumn = 'semester_sessions.course_sets_id';
@@ -100,10 +96,9 @@ class SemesterRegistrationController extends MainController
                         break;
                 }
 
-                $semesterSessions = SemesterSession::select('semester_sessions.course_sets_id', 'semester_sessions.session', 'semester_sessions.year', 'semester_sessions.status', 'course_sets.study_levels_code', 'course_sets.programs_code', 'course_sets.semester')
-                ->join('course_sets', 'semester_sessions.course_sets_id', '=', 'course_sets.id')
-                ->orderBy($sortByColumn, $sortOrder)->paginate($pagination)->withQueryString();
-
+                $semesterSessions = SemesterSession::select('semester_sessions.id', 'semester_sessions.course_sets_id', 'semester_sessions.session', 'semester_sessions.year', 'semester_sessions.status', 'course_sets.study_levels_code', 'course_sets.programs_code', 'course_sets.semester')
+                    ->join('course_sets', 'semester_sessions.course_sets_id', '=', 'course_sets.id')
+                    ->orderBy($sortByColumn, $sortOrder)->paginate($pagination)->withQueryString();
             }
             $filterAndSearch = [
                 'sortBy' => $sortBy,
@@ -115,11 +110,6 @@ class SemesterRegistrationController extends MainController
         } else {
             return view('dashboard.admin.semester.registration.view')->with(['settings' => $this->instituteSettings, 'page' => 'Senarai Sesi Pendaftaran Semester', 'semesterSessions' => $semesterSessions]);
         }
-
-        // $semesterSessions = SemesterSession::select('semester_sessions.course_sets_id', 'semester_sessions.session', 'semester_sessions.year', 'semester_sessions.status', 'course_sets.study_levels_code', 'course_sets.programs_code', 'course_sets.semester')
-        // ->join('course_sets', 'semester_sessions.course_sets_id', '=', 'course_sets.id')
-        // ->get();
-        // return view('dashboard.admin.semester.registration.view')->with(['settings' => $this->instituteSettings, 'page' => 'Senarai Sesi Pendaftaran Semester', 'semesterSessions' => $semesterSessions]);
     }
 
     public function adminSemesterRegistrationAddView(Request $request)
@@ -129,7 +119,21 @@ class SemesterRegistrationController extends MainController
         $nextYear = Carbon::now()->addYear()->format('Y');
         $previousYear = Carbon::now()->subYear()->format('Y');
         $years = [$previousYear, $currentYear, $nextYear];
+
         return view('dashboard.admin.semester.registration.add')->with(['settings' => $this->instituteSettings, 'page' => 'Tambah Sesi Pendaftaran Semester', 'sessions' => $sessions, 'years' => $years]);
+    }
+
+    public function adminSemesterRegistrationUpdateView(Request $request, $id)
+    {
+        $sessions = ['1', '2'];
+        $currentYear = Carbon::now()->format('Y');
+        $nextYear = Carbon::now()->addYear()->format('Y');
+        $previousYear = Carbon::now()->subYear()->format('Y');
+        $years = [$previousYear, $currentYear, $nextYear];
+
+        $semesterSession = SemesterSession::where('id', $id)->first();
+
+        return view('dashboard.admin.semester.registration.update')->with(['settings' => $this->instituteSettings, 'page' => 'Kemas Kini Sesi Pendaftaran Semester', 'sessions' => $sessions, 'years' => $years, 'semesterSession' => $semesterSession]);
     }
 
     public function registrationIndividualViewPDF(Request $request)
@@ -281,9 +285,8 @@ class SemesterRegistrationController extends MainController
 
         // Check if session existed
         if (!SemesterSession::where('course_sets_id', $courseSetID)->where('session', $session)->where('year', $year)->first()) {
-
             // Check if course set existed
-            if(CourseSet::where('id', $courseSetID)->first()){
+            if (CourseSet::where('id', $courseSetID)->first()) {
                 SemesterSession::upsert([
                     [
                         'course_sets_id' => strtolower($courseSetID),
@@ -293,7 +296,7 @@ class SemesterRegistrationController extends MainController
                     ],
                 ], ['course_sets_id', 'session', 'year'], ['course_sets_id', 'session', 'year', 'status']);
                 session()->flash('semesterRegistrationSessionAddSuccess', 'Sesi Pendaftaran Semester berjaya ditambah!');
-            }else{
+            } else {
                 return redirect()->back()->withInput()->withErrors([
                     'course_set' => 'Set Kursus tidak wujud!',
                 ]);
@@ -305,5 +308,79 @@ class SemesterRegistrationController extends MainController
                 'existed' => 'Sesi Pendaftaran Semester telah wujud!',
             ]);
         }
+    }
+
+    public function adminSemesterRegistrationUpdate(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'course_set_id' => ['required'],
+            'session' => ['required', 'integer'],
+            'year' => ['required', 'integer'],
+            'status' => ['required'],
+        ]);
+        $courseSetID = $request->course_set_id;
+        $session = $request->session;
+        $year = $request->year;
+        $status = $request->status;
+
+        // Checks if semester session existed
+        if (SemesterSession::where('id', $id)->first()) {
+            // Checks if requested course set, session and year already used by a semester session
+            if (SemesterSession::where('course_sets_id', $courseSetID)->where('session', $session)->where('year', $year)->first()) {
+                // Checks if that semester session is this semester session
+                if (SemesterSession::where('course_sets_id', $courseSetID)->where('session', $session)->where('year', $year)->first()->id == $id) {
+                    // Update
+                    // Check if course set existed
+                    if (CourseSet::where('id', $courseSetID)->first()) {
+                        SemesterSession::where('id', $id)
+                            ->update([
+                                'course_sets_id' => $courseSetID,
+                                'session' => $session,
+                                'year' => $year,
+                                'status' => $status,
+                            ]);
+                        session()->flash('semesterRegistrationSessionUpdateSuccess', 'Sesi Pendaftaran Semester berjaya dikemas kini!');
+
+                        return redirect()->back();
+                    } else {
+                        return redirect()->back()->withInput()->withErrors([
+                            'course_set' => 'Set Kursus tidak wujud!',
+                        ]);
+                    }
+                } else {
+                    // Return error
+                    return redirect()->back()->withInput()->withErrors([
+                        'existed' => 'Sesi Pendaftaran Semester dengan Set Kursus, Sesi dan Tahun yang sama telah wujud!',
+                    ]);
+                }
+            } else {
+                // Update
+                // Check if course set existed
+                if (CourseSet::where('id', $courseSetID)->first()) {
+                    SemesterSession::where('id', $id)
+                        ->update([
+                            'course_sets_id' => $courseSetID,
+                            'session' => $session,
+                            'year' => $year,
+                            'status' => $status,
+                        ]);
+                    session()->flash('semesterRegistrationSessionUpdateSuccess', 'Sesi Pendaftaran Semester berjaya dikemas kini!');
+
+                    return redirect()->back();
+                } else {
+                    return redirect()->back()->withInput()->withErrors([
+                        'course_set' => 'Set Kursus tidak wujud!',
+                    ]);
+                }
+            }
+        } else {
+            return redirect()->back()->withInput()->withErrors([
+                'not_existed' => 'Sesi Pendaftaran Semester tidak wujud!',
+            ]);
+        }
+
+        return redirect()->back()->withInput()->withErrors([
+            'existed' => 'Sesi Pendaftaran Semester dengan Set Kursus, Sesi dan Tahun yang sama telah wujud!',
+        ]);
     }
 }
