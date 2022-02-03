@@ -13,7 +13,113 @@ class SemesterRegistrationController extends MainController
 {
     public function adminSemesterRegistrationView(Request $request)
     {
-        return view('dashboard.admin.semester.registration.view')->with(['settings' => $this->instituteSettings, 'page' => 'Senarai Sesi Pendaftaran Semester']);
+
+        $pagination = 15;
+        $semesterSessions = SemesterSession::select('semester_sessions.course_sets_id', 'semester_sessions.session', 'semester_sessions.year', 'semester_sessions.status', 'course_sets.study_levels_code', 'course_sets.programs_code', 'course_sets.semester')
+        ->join('course_sets', 'semester_sessions.course_sets_id', '=', 'course_sets.id')
+        ->paginate($pagination)->withQueryString();
+        // Check for filters and search
+        if ($request->has('sort_by') and $request->has('sort_order') and $request->has('search')) {
+            $sortBy = $request->sort_by;
+            $sortOrder = $request->sort_order;
+            $search = $request->search;
+            if (null != $search) {
+
+                switch (strtolower($search)) {
+                    case 'buka':
+                        $search = 'open';
+                        break;
+                    case 'tutup':
+                        $search = 'close';
+                        break;
+                    default:
+                        $search = strtolower($search);
+                        break;
+                }
+
+                switch ($sortBy) {
+                    case 'course_set_id':
+                        $sortByColumn = 'semester_sessions.course_sets_id';
+                        break;
+                    case 'study_level':
+                        $sortByColumn = 'course_sets.study_levels_code';
+                        break;
+                    case 'program':
+                        $sortByColumn = 'course_sets.programs_code';
+                        break;
+                    case 'semester':
+                        $sortByColumn = 'course_sets.semester';
+                        break;
+                    case 'status':
+                        $sortByColumn = 'semester_sessions.status';
+                        break;
+                    case 'session':
+                        $sortByColumn = 'semester_sessions.session';
+                        break;
+                    case 'year':
+                        $sortByColumn = 'semester_sessions.year';
+                        break;
+                    default:
+                        $sortByColumn = 'semester_sessions.course_sets_id';
+                        break;
+                }
+
+                $semesterSessions = SemesterSession::select('semester_sessions.course_sets_id', 'semester_sessions.session', 'semester_sessions.year', 'semester_sessions.status', 'course_sets.study_levels_code', 'course_sets.programs_code', 'course_sets.semester')
+                ->join('course_sets', 'semester_sessions.course_sets_id', '=', 'course_sets.id')
+                ->orderBy($sortByColumn, $sortOrder)
+                ->where('semester_sessions.course_sets_id', 'LIKE', "%{$search}%")->orWhere('semester_sessions.session', 'LIKE', "%{$search}%")->orWhere('semester_sessions.year', 'LIKE', "%{$search}%")
+                ->orWhere('semester_sessions.status', 'LIKE', "%{$search}%")->orWhere('course_sets.study_levels_code', 'LIKE', "%{$search}%")->orWhere('course_sets.programs_code', 'LIKE', "%{$search}%")->orWhere('course_sets.semester', 'LIKE', "%{$search}%")
+                ->paginate($pagination)->withQueryString();
+
+            } else {
+
+                switch ($sortBy) {
+                    case 'course_set_id':
+                        $sortByColumn = 'semester_sessions.course_sets_id';
+                        break;
+                    case 'study_level':
+                        $sortByColumn = 'course_sets.study_levels_code';
+                        break;
+                    case 'program':
+                        $sortByColumn = 'course_sets.programs_code';
+                        break;
+                    case 'semester':
+                        $sortByColumn = 'course_sets.semester';
+                        break;
+                    case 'status':
+                        $sortByColumn = 'semester_sessions.status';
+                        break;
+                    case 'session':
+                        $sortByColumn = 'semester_sessions.session';
+                        break;
+                    case 'year':
+                        $sortByColumn = 'semester_sessions.year';
+                        break;
+                    default:
+                        $sortByColumn = 'semester_sessions.course_sets_id';
+                        break;
+                }
+
+                $semesterSessions = SemesterSession::select('semester_sessions.course_sets_id', 'semester_sessions.session', 'semester_sessions.year', 'semester_sessions.status', 'course_sets.study_levels_code', 'course_sets.programs_code', 'course_sets.semester')
+                ->join('course_sets', 'semester_sessions.course_sets_id', '=', 'course_sets.id')
+                ->orderBy($sortByColumn, $sortOrder)->paginate($pagination)->withQueryString();
+
+            }
+            $filterAndSearch = [
+                'sortBy' => $sortBy,
+                'sortOrder' => $sortOrder,
+                'search' => $search,
+            ];
+
+            return view('dashboard.admin.semester.registration.view')->with(['settings' => $this->instituteSettings, 'page' => 'Senarai Sesi Pendaftaran Semester', 'semesterSessions' => $semesterSessions, 'filterAndSearch' => $filterAndSearch]);
+        } else {
+            return view('dashboard.admin.semester.registration.view')->with(['settings' => $this->instituteSettings, 'page' => 'Senarai Sesi Pendaftaran Semester', 'semesterSessions' => $semesterSessions]);
+        }
+
+        // $semesterSessions = SemesterSession::select('semester_sessions.course_sets_id', 'semester_sessions.session', 'semester_sessions.year', 'semester_sessions.status', 'course_sets.study_levels_code', 'course_sets.programs_code', 'course_sets.semester')
+        // ->join('course_sets', 'semester_sessions.course_sets_id', '=', 'course_sets.id')
+        // ->get();
+        // return view('dashboard.admin.semester.registration.view')->with(['settings' => $this->instituteSettings, 'page' => 'Senarai Sesi Pendaftaran Semester', 'semesterSessions' => $semesterSessions]);
     }
 
     public function adminSemesterRegistrationAddView(Request $request)

@@ -2,7 +2,7 @@
 @section('content')
     <div class="w-100 h-100 mt-3">
         <div class="row text-center">
-            <h1>Senarai Program</h1>
+            <h1>Senarai Sesi Pendaftaran</h1>
         </div>
         <div class="row d-flex justify-content-center align-items-center mb-5">
             <div class="row d-flex justify-content-center align-items-center col-12 col-lg-10">
@@ -12,8 +12,13 @@
                             <div class="col mb-2">
                                 <div class="form-floating">
                                     <select class="form-select" id="sort_by" name="sort_by" aria-label="sortby">
-                                        <option value="code">Kod Program</option>
-                                        <option value="name">Nama Program</option>
+                                        <option value="course_set_id">ID Set Kursus</option>
+                                        <option value="study_level">Kod Tahap Pengajian</option>
+                                        <option value="program">Kod Program</option>
+                                        <option value="semester">Semester</option>
+                                        <option value="status">Status</option>
+                                        <option value="session">Sesi</option>
+                                        <option value="year">Tahun</option>
                                     </select>
                                     <label for="sort_by">Susun Mengikut:</label>
                                 </div>
@@ -46,10 +51,20 @@
                         <div class="row">
                             @if($filterAndSearch['sortBy'] != NULL AND $filterAndSearch['sortOrder'] != NULL)
                                 <div class="col-6">
-                                    @if($filterAndSearch['sortBy'] == 'code')
-                                        <p>Susun Mengikut: <span class="fst-italic">Kod Kursus</span></p>
-                                    @elseif($filterAndSearch['sortBy'] == 'nama')
-                                        <p>Susun Mengikut: <span class="fst-italic">Nama Kursus</span></p>
+                                    @if($filterAndSearch['sortBy'] == 'course_set_id')
+                                        <p>Susun Mengikut: <span class="fst-italic">ID Set Kursus</span></p>
+                                    @elseif($filterAndSearch['sortBy'] == 'study_level')
+                                        <p>Susun Mengikut: <span class="fst-italic">Kod Tahap Pengajian</span></p>
+                                    @elseif($filterAndSearch['sortBy'] == 'program')
+                                        <p>Susun Mengikut: <span class="fst-italic">Kod Program</span></p>
+                                    @elseif($filterAndSearch['sortBy'] == 'semester')
+                                        <p>Susun Mengikut: <span class="fst-italic">Semester</span></p>
+                                    @elseif($filterAndSearch['sortBy'] == 'status')
+                                        <p>Susun Mengikut: <span class="fst-italic">Status</span></p>
+                                    @elseif($filterAndSearch['sortBy'] == 'session')
+                                        <p>Susun Mengikut: <span class="fst-italic">Sesi</span></p>
+                                    @elseif($filterAndSearch['sortBy'] == 'year')
+                                        <p>Susun Mengikut: <span class="fst-italic">Tahun</span></p>
                                     @endif
                                 </div>
                                 <div class="col-6">
@@ -73,7 +88,7 @@
                         <div class="col-11 col-lg-11 alert alert-success">{{ session('deleteSuccess') }}</div>
                     </div>
                 @endif
-                @if($program->count() < 1)
+                @if($semesterSessions->count() < 1)
                     <div class="row d-flex justify-content-center align-content-center mt-3">
                         <p class="text-center mt-3 fs-5">Tiada rekod dijumpai.</p>
                     </div>
@@ -85,10 +100,10 @@
                                     @if(session()->has('successRemove'))
                                         <div class="alert alert-success">{{ session('successRemove') }}</div>
                                     @endif
-                                    <th class="col-1 align-middle">ID Set Kursus</th>
-                                    <th class="col-2 align-middle">Tahap Pengajian</th>
-                                    <th class="col-3 align-middle">Program</th>
-                                    <th class="col-3 align-middle">Semester</th>
+                                    <th class="col-2 align-middle">ID Set Kursus</th>
+                                    <th class="col-2 align-middle">Kod Tahap Pengajian</th>
+                                    <th class="col-2 align-middle">Kod Program</th>
+                                    <th class="col-1 align-middle">Semester</th>
                                     <th class="col-3 align-middle">Sesi/Tahun</th>
                                     <th class="col-3 align-middle">Status</th>
                                     <th class="col-2 align-middle">KEMAS KINI</th>
@@ -99,26 +114,30 @@
                                 @php
                                     $i = 1;
                                 @endphp
-                                @foreach ($program as $p)
+                                @foreach ($semesterSessions as $ss)
                                     <tr>
+                                        <td>{{ strtoupper($ss->course_sets_id) }}</td>
+                                        <td>{{ strtoupper($ss->study_levels_code) }}</td>
+                                        <td>{{ strtoupper($ss->programs_code) }}</td>
+                                        <td>{{ strtoupper($ss->semester) }}</td>
+                                        <td>{{ strtoupper($ss->session) }}/{{ strtoupper($ss->year) }}</td>
                                         <td>
-                                            @php
-                                                echo $i;
-                                            @endphp
+                                            @if($ss->status == 'open')
+                                                <p class="btn btn-success text-light w-100">Buka</p>
+                                            @elseif($ss->status == 'close')
+                                                <p class="btn btn-danger text-light w-100">Tutup</p>
+                                        @endif
                                         </td>
-                                        <td>{{ strtoupper($p->code) }}</td>
-                                        <td>{{ strtoupper($p->name) }}</td>
-                                        <td>{{ strtoupper($p->department_name) }}</td>
-                                        <td>{{ strtoupper($p->department_name) }}</td>
-                                        <td>{{ strtoupper($p->department_name) }}</td>
-                                        <td><a class="btn btn-primary hvr-shrink" href="{{ route('admin.program.update', ['code' => strtolower($p->code)]) }}"><i class="bi bi-pencil-square"></i></a></td>
+                                        <td>
+                                            {{-- <a class="btn btn-primary hvr-shrink" href="{{ route('admin.program.update', ['code' => strtolower($p->code)]) }}"><i class="bi bi-pencil-square"></i></a> --}}
+                                        </td>
                                         <td>
                                             <!-- Delete Static Backdrop Confirmation -->
-                                            @php
+                                            {{-- @php
                                                 $deleteFormData = [array("nameAttr" => "code", "valueAttr" => strtolower($p->code))];
                                             @endphp
                                             <x-delete-confirmation name="program" :formData="$deleteFormData" :increment="$i"/>
-                                            <x-delete-confirmation-button :increment="$i"/>
+                                            <x-delete-confirmation-button :increment="$i"/> --}}
                                         </td>
                                     </tr>
                                     @php
@@ -128,7 +147,7 @@
                             </tbody>
                         </table>
                     </div>
-                    {{ $program->links() }}
+                    {{-- {{ $semesterSessions->links() }} --}}
                 @endif
             </div>
         </div>
