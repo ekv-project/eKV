@@ -12,7 +12,7 @@
         <div class="row rounded-3 shadow-lg mt-2 mb-2 w-100 bg-light">
             {{-- If admin,  --}}
             @if(Gate::allows('authAdmin'))
-                <h1 class="fs-2 text-center my-3">Pembukaan Pendaftaran Semester Pelajar</h1>
+                <h1 class="fs-2 text-center my-3">Pendaftaran Semester Pelajar</h1>
 
             @else
                 test1

@@ -62,25 +62,25 @@ Route::get('/dashboard/classroom/update/{classroomID}', [ClassroomController::cl
 Route::post('/dashboard/classroom/student/{classroomID}', [ClassroomController::class, 'studentUpdate'])->middleware(['auth']);
 Route::post('/dashboard/classroom/update/{classroomID}', [ClassroomController::class, 'classroomUpdate'])->middleware(['auth']);
 
-// Exam Transcript
-    // Exam Transcript Excel Template
-Route::get('/dashboard/exam/transcript/template', [ExamController::class, 'downloadSpreadsheetTemplate'])->name('transcript.template')->middleware(['auth']);
+// Semester Transcript
+    // Semester Transcript Excel Template
+Route::get('/dashboard/semester/transcript/template', [ExamController::class, 'downloadSpreadsheetTemplate'])->name('transcript.template')->middleware(['auth']);
     // ETC
-Route::get('/dashboard/exam/transcript', [ExamController::class, 'transcript'])->name('transcript')->middleware(['auth']);
-Route::get('/dashboard/exam/transcript/{studentID}', [ExamController::class, 'semesterView'])->name('transcript.student')->middleware(['auth']);
-Route::get('/dashboard/exam/transcript/{studentID}/{studyLevel}/{semester}', [ExamController::class, 'transcriptView'])->name('transcript.view')->middleware(['auth']);
-Route::get('/dashboard/exam/transcript/add/{studentID}', [ExamController::class, 'transcriptAddView'])->name('transcript.add')->middleware('auth');
-Route::get('/dashboard/exam/transcript/update/{studentID}/{studyLevel}/{semester}', [ExamController::class, 'transcriptUpdateView'])->name('transcript.update')->middleware(['auth']);
-Route::get('/dashboard/exam/transcript/download/{studentID}/{studyLevel}/{semester}', [ExamController::class, 'transcriptDownload'])->name('transcript.download')->middleware(['auth']);
-Route::post('/dashboard/exam/transcript', [ExamController::class, 'transcriptBulkAdd'])->middleware(['auth']);
-Route::post('/dashboard/exam/transcript/{studentID}', [ExamController::class, 'transcriptRemove'])->middleware(['auth']);
-Route::post('/dashboard/exam/transcript/add/{studentID}', [ExamController::class, 'transcriptAddUpdate'])->middleware(['auth']);
-Route::post('/dashboard/exam/transcript/{studentID}/{studyLevel}/{semester}', [ExamController::class, 'transcriptView'])->middleware(['auth']);
-Route::post('/dashboard/exam/transcript/update/{studentID}/{studyLevel}/{semester}', [ExamController::class, 'transcriptAddUpdate'])->middleware(['auth']);
+Route::get('/dashboard/semester/transcript', [ExamController::class, 'transcript'])->name('transcript')->middleware(['auth']);
+Route::get('/dashboard/semester/transcript/{studentID}', [ExamController::class, 'semesterView'])->name('transcript.student')->middleware(['auth']);
+Route::get('/dashboard/semester/transcript/{studentID}/{studyLevel}/{semester}', [ExamController::class, 'transcriptView'])->name('transcript.view')->middleware(['auth']);
+Route::get('/dashboard/semester/transcript/add/{studentID}', [ExamController::class, 'transcriptAddView'])->name('transcript.add')->middleware('auth');
+Route::get('/dashboard/semester/transcript/update/{studentID}/{studyLevel}/{semester}', [ExamController::class, 'transcriptUpdateView'])->name('transcript.update')->middleware(['auth']);
+Route::get('/dashboard/semester/transcript/download/{studentID}/{studyLevel}/{semester}', [ExamController::class, 'transcriptDownload'])->name('transcript.download')->middleware(['auth']);
+Route::post('/dashboard/semester/transcript', [ExamController::class, 'transcriptBulkAdd'])->middleware(['auth']);
+Route::post('/dashboard/semester/transcript/{studentID}', [ExamController::class, 'transcriptRemove'])->middleware(['auth']);
+Route::post('/dashboard/semester/transcript/add/{studentID}', [ExamController::class, 'transcriptAddUpdate'])->middleware(['auth']);
+Route::post('/dashboard/semester/transcript/{studentID}/{studyLevel}/{semester}', [ExamController::class, 'transcriptView'])->middleware(['auth']);
+Route::post('/dashboard/semester/transcript/update/{studentID}/{studyLevel}/{semester}', [ExamController::class, 'transcriptAddUpdate'])->middleware(['auth']);
 
 // Semester Registration
-Route::get('/dashboard/semester/registration', [SemesterRegistrationController::class, 'registrationMainView'])->name('semester.register.view')->middleware(['auth']);
-Route::get('/dashboard/semester/registration/view/{id}', [SemesterRegistrationController::class, 'registrationIndividualViewPDF'])->name('semester.register.view')->middleware(['auth']);
+Route::get('/dashboard/semester/registration', [SemesterRegistrationController::class, 'registrationMainView'])->name('semester.registration.view')->middleware(['auth']);
+Route::get('/dashboard/semester/registration/view/{id}', [SemesterRegistrationController::class, 'registrationIndividualViewPDF'])->name('semester.registration.view')->middleware(['auth']);
 
 // Administration Area
 
@@ -139,5 +139,9 @@ Route::post('/dashboard/admin/announcement', [AnnouncementPostController::class,
 Route::get('/dashboard/admin/institute', [InstituteSettingController::class, 'view'])->name('admin.institute')->middleware(['auth', 'userIsAdmin']);
 Route::get('/dashboard/admin/institute/update', [InstituteSettingController::class, 'updateView'])->name('admin.institute.update')->middleware(['auth', 'userIsAdmin']);
 Route::post('/dashboard/admin/institute/update', [InstituteSettingController::class, 'updateSettings'])->middleware(['auth', 'userIsAdmin']);
+
+Route::get('/dashboard/admin/semester/registration', [SemesterRegistrationController::class, 'adminSemesterRegistrationView'])->name('admin.semester.registration')->middleware(['auth', 'userIsAdmin']);
+Route::get('/dashboard/admin/semester/registration/add', [SemesterRegistrationController::class, 'adminSemesterRegistrationAddView'])->name('admin.semester.registration.add')->middleware(['auth', 'userIsAdmin']);
+Route::post('/dashboard/admin/semester/registration/add', [SemesterRegistrationController::class, 'adminSemesterRegistrationAdd'])->middleware(['auth', 'userIsAdmin']);
 
 Route::get('/dashboard/admin/statistic', [StatisticController::class, 'view'])->name('admin.statistic')->middleware(['auth', 'userIsAdmin']);

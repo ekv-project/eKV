@@ -3,14 +3,27 @@
 namespace App\Http\Controllers;
 
 use PDF;
+use Carbon\Carbon;
+use App\Models\CourseSet;
 use Illuminate\Http\Request;
+use App\Models\SemesterSession;
 use Illuminate\Support\Facades\Storage;
 
 class SemesterRegistrationController extends MainController
 {
-    public function registerView(Request $request)
+    public function adminSemesterRegistrationView(Request $request)
     {
-        return view('dashboard.semester.registration.view')->with(['settings' => $this->instituteSettings, 'page' => 'Pendaftaran Semester']);
+        return view('dashboard.admin.semester.registration.view')->with(['settings' => $this->instituteSettings, 'page' => 'Senarai Sesi Pendaftaran Semester']);
+    }
+
+    public function adminSemesterRegistrationAddView(Request $request)
+    {
+        $sessions = ['1', '2'];
+        $currentYear = Carbon::now()->format('Y');
+        $nextYear = Carbon::now()->addYear()->format('Y');
+        $previousYear = Carbon::now()->subYear()->format('Y');
+        $years = [$previousYear, $currentYear, $nextYear];
+        return view('dashboard.admin.semester.registration.add')->with(['settings' => $this->instituteSettings, 'page' => 'Tambah Sesi Pendaftaran Semester', 'sessions' => $sessions, 'years' => $years]);
     }
 
     public function registrationIndividualViewPDF(Request $request)
@@ -143,5 +156,48 @@ class SemesterRegistrationController extends MainController
         PDF::SetFont('helvetica', 'B', 9);
         PDF::MultiCell(0, 5, '*PENGESAHAN HANYA BOLEH DIBUAT OLEH PENGARAH, TPA, KETUA JABATAN ATAU KETUA PROGRAM', 0, 'C', 0, 0, '', '', true);
         PDF::Output($pdfTitle . '.pdf', 'I');
+    }
+
+    /**
+     * Handling POST Request.
+     */
+    public function adminSemesterRegistrationAdd(Request $request)
+    {
+        $validated = $request->validate([
+            'course_set_id' => ['required'],
+            'session' => ['required', 'integer'],
+            'year' => ['required', 'integer'],
+        ]);
+        $courseSetID = $request->course_set_id;
+        $session = $request->session;
+        $year = $request->year;
+        $status = 'open';
+
+        // Check if session existed
+        if (!SemesterSession::where('course_sets_id', $courseSetID)->where('session', $session)->where('year', $year)->first()) {
+
+            // Check if course set existed
+            if(CourseSet::where('id', $courseSetID)->first()){
+                SemesterSession::upsert([
+                    [
+                        'course_sets_id' => strtolower($courseSetID),
+                        'session' => $session,
+                        'year' => $year,
+                        'status' => $status,
+                    ],
+                ], ['course_sets_id', 'session', 'year'], ['course_sets_id', 'session', 'year', 'status']);
+                session()->flash('semesterRegistrationSessionAddSuccess', 'Sesi Pendaftaran Semester berjaya ditambah!');
+            }else{
+                return redirect()->back()->withInput()->withErrors([
+                    'course_set' => 'Set Kursus tidak wujud!',
+                ]);
+            }
+
+            return redirect()->back();
+        } else {
+            return redirect()->back()->withInput()->withErrors([
+                'existed' => 'Sesi Pendaftaran Semester telah wujud!',
+            ]);
+        }
     }
 }

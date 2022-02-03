@@ -91,6 +91,15 @@
                             </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Semester
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li><a class="dropdown-item" href="{{ route('admin.semester.registration') }}">Senarai Sesi Pendaftaran Semester</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('admin.semester.registration.add') }}">Tambah Sesi Pendaftaran Semester</a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     Institut
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
