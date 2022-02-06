@@ -3,7 +3,7 @@
     <div class="container-fluid mt-1 w-100 h-100 d-flex flex-column align-items-center">
         <div class="row rounded-3 shadow-lg mt-5 w-100 bg-light">
             <div class="col-6 my-3 text-start">
-                <a href="{{ route('dashboard') }}" class="btn btn-primary"><i class="bi bi-arrow-return-left"></i>Dashboard</a>
+                <a href="{{ route('semester.registration.view', ['username' => Auth::user()->username]) }}" class="btn btn-primary"><i class="bi bi-arrow-return-left"></i> Kembali</a>
             </div>
             <div class="col-6 my-3 text-end">
             </div>
@@ -106,7 +106,7 @@
                     @case(1)
                         <div class="row w-100 my-3">
                             <div class="col-2">
-                                <a href="{{ route('semester.registration.view', ['username' => Auth::user()->username, 'id' => $semesterSession->id]) }}" class="btn btn-primary hvr-shrink"><i class="bi bi-download"> Muat Turun</i></a>
+                                <a href="{{ route('semester.registration.view.pdf', ['username' => Auth::user()->username, 'id' => $semesterSession->id]) }}" class="btn btn-primary hvr-shrink"><i class="bi bi-download"> Muat Turun</i></a>
                             </div>
                         </div>
                         @break

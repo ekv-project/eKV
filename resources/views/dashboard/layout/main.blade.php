@@ -29,32 +29,48 @@
 </head>
 <body class="d-flex flex-column">
     <div id="background-image"></div>
-    {{-- Hamburger Menu Button --}}
-    <div class="border-end border-5 border-light d-flex d-lg-none d-md-flex position-fixed top-0 start-0 hamburger-menu m-3" style="z-index: 100">
-        <div class="hamburger-layer"></div>
-        <div class="hamburger-layer"></div>
-        <div class="hamburger-layer"></div>
-    </div>
-    <header class="container-fluid m-0 row d-flex align-items-center bg-primary" style="z-index: 80">
-        {{-- Desktop Navbar --}}
-        <div class="container-fluid d-flex align-items-center">
-            <div class="container-fluid row d-none d-lg-flex d-sm-none justify-content-around">
-                <div class="col-md-3 d-flex justify-content-center align-content-center"><a href="{{ route('dashboard') }}" class="btn button-transparent fs-5 text-light fw-normal">Dashboard</a></div>
-                <div class="col-md-3 d-flex justify-content-center align-content-center"><a href="{{ route('transcript') }}" class="btn button-transparent fs-5 text-light fw-normal">Transkrip</a></div>
-                <div class="col-md-3 d-flex justify-content-center align-content-center"><a href="{{ route('classroom') }}" class="btn button-transparent fs-5 text-light fw-normal">Kelas</a></div>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item me-5">
+                    <a class="nav-link fs-5" aria-current="page" href="{{ route('dashboard') }}">Dashboard</a>
+                </li>
+                <li class="nav-item dropdown me-5">
+                    <a class="nav-link dropdown-toggle fs-5" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Semester
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item fs-5" href="{{ route('transcript') }}">Transkrip</a></li>
+                        @can('authStudent')
+                            <li><a class="dropdown-item fs-5" href="{{ route('semester.registration.view', ['username' => Auth::user()->username]) }}">Pendaftaran Semester</a></li>
+                        @endcan
+                    </ul>
+                </li>
+                <li class="nav-item me-5">
+                    <a class="nav-link fs-5" aria-current="page" href="{{ route('classroom') }}">Kelas</a>
+                </li>
                 @can('authAdmin')
-                    <div class="col-md-3 d-flex justify-content-center align-content-center"><a href="{{ route('admin') }}" class="btn button-transparent fs-5 text-light fw-normal">Pentadbir</a></div>
+                    <li class="nav-item me-5">
+                        <a class="nav-link fs-5" aria-current="page" href="{{ route('admin') }}">Pentadbir</a>
+                    </li>
                 @endcan
-            </div>
+            </ul>
+          </div>
         </div>
+    </nav>
+    <header class="container-fluid m-0 row d-flex align-items-center bg-primary" style="z-index: 80">
         <div class="col-md-7 m-0 d-flex align-items-center justify-content-center">
             <div class="w-100 d-flex align-items-center justify-content-start offset-1">
                 @if(Storage::disk('local')->exists('public/img/system/logo-300.png'))
-                    <a href="{{ route('dashboard') }}" class="ms-3">
+                    <a href="{{ route('dashboard') }}">
                         <img style="width: 2.5em; height: 2.5em; margin: 1em;" src="{{ asset('storage/img/system/logo-300.png') }}" alt="Insitite Logo">
                     </a>
                 @elseif(Storage::disk('local')->exists('public/img/system/logo-def-300.png'))
-                    <a href="{{ route('dashboard') }}" class="ms-3">
+                    <a href="{{ route('dashboard') }}">
                         <img style="width: 2.5em; height: 2.5em; margin: 0.5em;" src="{{ asset('storage/img/system/logo-def-300.png') }}" alt="Insitite Logo">
                     </a>
                 @endif
@@ -89,16 +105,7 @@
             </form>
         </div>
     </header>
-    {{-- Mobile Navbar --}}
-    <div class="d-flex flex-column d-lg-none invisible position-fixed top-0 start-0 bg-primary vh-100 w-100 m-0 justify-content-around align-items-center overflow-auto hamburger-menu-list" style="z-index: 80">
-        <div class="col-md-3 d-flex justify-content-center align-content-center"><a href="{{ route('dashboard') }}" class="btn button-transparent fs-5 text-light fw-normal">Dashboard</a></div>
-        <div class="col-md-3 d-flex justify-content-center align-content-center"><a href="{{ route('transcript') }}" class="btn button-transparent fs-5 text-light fw-normal">Transkrip</a></div>
-        <div class="col-md-3 d-flex justify-content-center align-content-center"><a href="{{ route('classroom') }}" class="btn button-transparent fs-5 text-light fw-normal">Kelas</a></div>
-        @can('authAdmin')
-            <div class="col-md-3 d-flex justify-content-center align-content-center"><a href="{{ route('admin') }}" class="btn button-transparent fs-5 text-light fw-normal">Pentadbir</a></div>
-        @endcan
-    </div>
-    {{-- mt-5 mt-sm-6 mt-md-4 mt-lg-5 --}}
+
     <div class="mt-1 mx-0 w-100 min-vh-100">
         @yield('content')
     </div>

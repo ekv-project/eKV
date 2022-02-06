@@ -57,7 +57,7 @@
                                     </td>
                                     <td>
                                         @if($session['registrationStatus'] == 1)
-                                            <a href="{{ route('semester.registration.view', ['username' => Auth::user()->username, 'id' => $session['id']]) }}" class="btn btn-primary hvr-shrink"><i class="bi bi-download"></i></a>
+                                            <a href="{{ route('semester.registration.view.pdf', ['username' => Auth::user()->username, 'id' => $session['id']]) }}" class="btn btn-primary hvr-shrink"><i class="bi bi-download"></i></a>
                                         @else
                                             <button class="btn btn-primary hvr-shrink" disabled><i class="bi bi-slash-circle"></i></button>
                                         @endif
