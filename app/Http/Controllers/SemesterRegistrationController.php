@@ -104,8 +104,13 @@ class SemesterRegistrationController extends MainController
             $program = Program::where('code', $programsCode)->first();
             $semesterSession = SemesterSession::where('id', $id)->first();
             $semester = $courseSet->semester;
+            if(SemesterRegistration::where('semester_sessions_id', $id)->where('users_username', Auth::user()->username)->first()){
+                $registrationStatus = 1;
+            }else{
+                $registrationStatus = 0;
+            }
 
-            return view('dashboard.semester.registration.apply')->with(['settings' => $this->instituteSettings, 'page' => 'Pendaftaran Semester', 'courseSetCourses' => $courseSetCourses, 'userProfile' => $userProfile, 'program' => $program, 'semesterSession' => $semesterSession, 'semester' => $semester]);
+            return view('dashboard.semester.registration.apply')->with(['settings' => $this->instituteSettings, 'page' => 'Pendaftaran Semester', 'courseSetCourses' => $courseSetCourses, 'userProfile' => $userProfile, 'program' => $program, 'semesterSession' => $semesterSession, 'semester' => $semester, 'registrationStatus' => $registrationStatus]);
         }
     }
 
@@ -234,12 +239,54 @@ class SemesterRegistrationController extends MainController
         return view('dashboard.admin.semester.registration.update')->with(['settings' => $this->instituteSettings, 'page' => 'Kemas Kini Sesi Pendaftaran Semester', 'sessions' => $sessions, 'years' => $years, 'semesterSession' => $semesterSession]);
     }
 
-    public function registrationIndividualViewPDF(Request $request)
+    public function registrationIndividualViewPDF($username, $id)
     {
-        $semester = 1;
-        $studyLevelName = 'DVM';
-        $studentID = 'Hanis Irfan';
-        $pdfTitle = 'Pendaftaran Semester ' . $semester . ' ' . $studyLevelName . ' ' . ucwords($studentID);
+        $courseSetID = SemesterSession::where('id', $id)->first()->course_sets_id;
+        $courseSetCourses = CourseSetCourse::where('course_sets_id', $courseSetID)
+        ->join('courses', 'course_set_courses.courses_code', '=', 'courses.code')
+        ->select('courses.code', 'courses.name', 'courses.credit_hour', 'courses.total_hour', 'courses.category')
+        ->get();
+
+        if(UserProfile::where('users_username', Auth::user()->username)->first()){
+            $userProfile = UserProfile::where('users_username', Auth::user()->username)->first();
+        }else{
+            $userProfile = '';
+        }
+
+        $courseSet = CourseSet::where('id', $courseSetID)->first();
+        $programsCode = $courseSet->programs_code;
+        $studyLevelsCode = $courseSet->study_levels_code;
+        $program = Program::where('code', $programsCode)->first();
+        $semesterSession = SemesterSession::where('id', $id)->first();
+        $semester = $courseSet->semester;
+
+        $registrationDepartment = strtoupper($program->department_name);
+        $registrationProgram = strtoupper($program->name);
+        switch ($semester) {
+            case '1':
+                $studyYear = '1';
+                break;
+            case '2':
+                $studyYear = '1';
+                break;
+            case '3':
+                $studyYear = '2';
+                break;
+            case '4':
+                $studyYear = '2';
+                break;
+            default:
+                $studyYear = '';
+                break;
+        }
+        $registrationStudyYear = $studyYear;
+        $registrationSemester = $semester;
+        $registrationSessionYear = $semesterSession->session . '/' . $semesterSession->year;
+        $studentName = User::where('username', $username)->first()->fullname;
+        $studentICNo = $userProfile->identification_number;
+        $studentMatrixNumber = User::where('username', $username)->first()->username;
+
+        $pdfTitle = 'Pendaftaran Semester ' . $semester . ' ' . strtoupper($studyLevelsCode) . ' ' . ucwords($studentName);
         PDF::SetCreator('eKV');
         PDF::SetAuthor('eKV');
         PDF::SetTitle($pdfTitle);
@@ -285,25 +332,17 @@ class SemesterRegistrationController extends MainController
         PDF::MultiCell(95, 13, 'A: MAKLUMAT PERMOHONAN', 0, 'L', 0, 0, '', '', true);
         PDF::Ln(5);
         PDF::SetFont('helvetica', '', 9);
-        $registrationDepartment = 'Jabatan Teknologi Maklumat';
-        $registrationProgram = 'Diploma Teknologi Maklumat';
-        $registrationStudyYear = '1';
-        $registrationSemester = '1';
-        $registrationSessionYear = '1/2022';
-        $studentName = 'Muhammad Ali Bin Abu';
-        $studentICNo = '012345-67-8901';
-        $studentMatrixNumber = 'K151GKSK001';
         PDF::MultiCell(0, 0, 'NAMA KOLEJ:               ' . strtoupper($instituteName), 0, 'L', 0, 0, '', '', true);
         PDF::Ln();
         PDF::MultiCell(0, 0, 'JABATAN:                     ' . strtoupper($registrationDepartment), 0, 'L', 0, 0, '', '', true);
         PDF::Ln();
         PDF::MultiCell(0, 0, 'PROGRAM:                   ' . strtoupper($registrationProgram), 0, 'L', 0, 0, '', '', true);
         PDF::Ln();
-        PDF::MultiCell(0, 0, 'TAHUN PENGAJIAN:   ' . strtoupper($registrationStudyYear), 0, 'L', 0, 0, '', '', true);
+        PDF::MultiCell(0, 0, 'TAHUN PENGAJIAN:    ' . strtoupper($registrationStudyYear), 0, 'L', 0, 0, '', '', true);
         PDF::Ln();
-        PDF::MultiCell(0, 0, 'SEMESTER:                 ' . strtoupper($registrationSemester), 0, 'L', 0, 0, '', '', true);
+        PDF::MultiCell(0, 0, 'SEMESTER:                  ' . strtoupper($registrationSemester), 0, 'L', 0, 0, '', '', true);
         PDF::Ln();
-        PDF::MultiCell(0, 0, 'SESI / TAHUN:             ' . strtoupper($registrationSessionYear), 0, 'L', 0, 0, '', '', true);
+        PDF::MultiCell(0, 0, 'SESI / TAHUN:              ' . strtoupper($registrationSessionYear), 0, 'L', 0, 0, '', '', true);
         PDF::Ln();
         PDF::MultiCell(0, 0, 'NAMA PELAJAR:          ' . strtoupper($studentName), 0, 'L', 0, 0, '', '', true);
         PDF::Ln();
@@ -336,13 +375,33 @@ class SemesterRegistrationController extends MainController
         //     PDF::MultiCell(24, 10, '10', 1, 'C', 0, 0, '', '', true);
         // }
 
-        for ($i = 0; $i < 12; ++$i) {
+        for ($i = 0; $i < count($courseSetCourses); ++$i) {
             PDF::Ln();
-            PDF::MultiCell(25, 10, 'DKB1113', 1, 'C', 0, 0, '', '', true);
-            PDF::MultiCell(72, 10, 'INTRODUCTION TO COMPUTER SYSTEM AND NETWORK', 1, 'C', 0, 0, '', '', true);
-            PDF::MultiCell(45, 10, 'ON-THE-JOB TRAINING', 1, 'C', 0, 0, '', '', true);
-            PDF::MultiCell(24, 10, '10', 1, 'C', 0, 0, '', '', true);
-            PDF::MultiCell(24, 10, '10', 1, 'C', 0, 0, '', '', true);
+            PDF::MultiCell(25, 10, strtoupper($courseSetCourses[$i]->code), 1, 'C', 0, 0, '', '', true);
+            PDF::MultiCell(72, 10, strtoupper($courseSetCourses[$i]->name), 1, 'C', 0, 0, '', '', true);
+            switch ($courseSetCourses[$i]->category) {
+                case 1:
+                    $category = 'PENGAJIAN UMUM';
+                    break;
+                case 2:
+                    $category = 'TERAS';
+                    break;
+                case 3:
+                    $category = 'PENGKHUSUSAN';
+                    break;
+                case 4:
+                    $category = 'ELEKTIF';
+                    break;
+                case 5:
+                    $category = 'ON-THE-JOB TRAINING';
+                    break;
+                default:
+                    $category = '';
+                    break;
+            }
+            PDF::MultiCell(45, 10, strtoupper($category), 1, 'C', 0, 0, '', '', true);
+            PDF::MultiCell(24, 10, strtoupper($courseSetCourses[$i]->credit_hour), 1, 'C', 0, 0, '', '', true);
+            PDF::MultiCell(24, 10, strtoupper($courseSetCourses[$i]->total_hour), 1, 'C', 0, 0, '', '', true);
         }
 
         // Signature
@@ -363,12 +422,25 @@ class SemesterRegistrationController extends MainController
         PDF::Ln(3);
         PDF::SetFont('helvetica', 'B', 9);
         PDF::MultiCell(0, 5, '*PENGESAHAN HANYA BOLEH DIBUAT OLEH PENGARAH, TPA, KETUA JABATAN ATAU KETUA PROGRAM', 0, 'C', 0, 0, '', '', true);
-        PDF::Output($pdfTitle . '.pdf', 'I');
+        PDF::Output($pdfTitle . '.pdf', 'D');
     }
 
     /**
      * Handling POST Request.
      */
+
+    public function registrationApply($username, $id){
+        if($this->applyChecks($username, $id)){
+            // idk why I even made a form if there's also the same data in the URL. Maybe just to have a POST request.
+            SemesterRegistration::updateOrCreate(
+                ['semester_sessions_id' => $id, 'users_username' => $username],
+                ['semester_sessions_id' => $id, 'users_username' => $username]
+            );
+            session()->flash('semesterRegistrationSuccess', 'Pendaftaran Semester berjaya!');
+            return redirect()->back();
+        }
+    }
+
     public function adminSemesterRegistrationAdd(Request $request)
     {
         $validated = $request->validate([
@@ -515,12 +587,7 @@ class SemesterRegistrationController extends MainController
                             // Checks if semester registration for that session is still open
                             if(SemesterSession::where('id', $id)->first()){
                                 if(SemesterSession::where('id', $id)->first()->status === 'open'){
-                                    // Checks if user already registered for that session
-                                    if(SemesterRegistration::where('semester_sessions_id', $id)->where('users_username', $username)->first()){
-                                        abort(409, 'Pelajar sudah mendaftar untuk Sesi Semester ini!');
-                                    }else{
-                                        return true;
-                                    }
+                                    return true;
                                 }else{
                                     abort(500, 'Sesi Pendaftaran Semester tersebut sudah ditutup!');
                                 }

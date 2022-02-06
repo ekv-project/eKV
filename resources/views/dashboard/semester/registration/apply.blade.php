@@ -21,6 +21,9 @@
         @endphp
         <div class="row d-flex justify-content-center rounded-3 shadow-lg mt-2 mb-2 w-100 bg-light">
             <div class="row w-100 mt-3">
+                @if(session()->has('semesterRegistrationSuccess'))
+                    <div class="alert alert-success">{{ session('semesterRegistrationSuccess') }}</div>
+                @endif
                 <div class="col-12">
                     <h1 class="fs-6 fw-bold">A: MAKLUMAT PERMOHONAN</h1>
                     <p>NAMA KOLEJ: {{ strtoupper($instituteName) }}</p>
@@ -29,23 +32,23 @@
                     @php
                         switch ($semester) {
                             case '1':
-                                $studyLevel = '1';
+                                $studyYear = '1';
                                 break;
                             case '2':
-                                $studyLevel = '1';
+                                $studyYear = '1';
                                 break;
                             case '3':
-                                $studyLevel = '2';
+                                $studyYear = '2';
                                 break;
                             case '4':
-                                $studyLevel = '2';
+                                $studyYear = '2';
                                 break;
                             default:
-                                $studyLevel = '';
+                                $studyYear = '';
                                 break;
                         }
                     @endphp
-                    <p>TAHUN PENGAJIAN: {{ $studyLevel }}</p>
+                    <p>TAHUN PENGAJIAN: {{ $studyYear }}</p>
                     <p>SEMESTER: {{ $semester }}</p>
                     <p>SESI/TAHUN: {{ $semesterSession->session }}/{{ $semesterSession->year }}</p>
                     <p>NAMA PELAJAR: {{ strtoupper(Auth::user()->fullname) }}</p>
@@ -99,12 +102,25 @@
                         </table>
                     </div>
                 </div>
-                <form action="" method="post" class="my-3">
-                    @csrf
-                    <input type="hidden" name="username" value="">
-                    <input type="hidden" name="semester_session" value="">
-                    <button class="btn btn-primary hvr-shrink" type="submit"><i class="bi bi-pen"></i> Mohon</button>
-                </form>
+                @switch($registrationStatus)
+                    @case(1)
+                        <div class="row w-100 my-3">
+                            <div class="col-2">
+                                <a href="{{ route('semester.registration.view', ['username' => Auth::user()->username, 'id' => $semesterSession->id]) }}" class="btn btn-primary hvr-shrink"><i class="bi bi-download"> Muat Turun</i></a>
+                            </div>
+                        </div>
+                        @break
+                    @case(0)
+                        <form action="" method="post" class="my-3">
+                            @csrf
+                            <input type="hidden" name="username" value="{{ Auth::user()->username }}">
+                            <input type="hidden" name="semester_session" value="{{ $semesterSession->id }}">
+                            <button class="btn btn-primary hvr-shrink" type="submit"><i class="bi bi-pen"></i> Mohon</button>
+                        </form>
+                        @break
+                    @default
+                        @break
+                @endswitch
             </div>
         </div>
     </div>

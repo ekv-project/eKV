@@ -16,17 +16,13 @@
                     <table class="table table-hover table-bordered border-secondary text-center">
                         <thead class="table-dark">
                             <tr>
-                                <th class="col-2">Kod Tahap Pengajian</th>
-                                <th class="col-2">Kod Program</th>
-                                <th class="col-2">Sesi/Tahun</th>
-                                <th class="col-2">Status Sesi</th>
-                                <th class="col-2">Status Permohonan</th>
+                                <th class="col-1">Kod Tahap Pengajian</th>
+                                <th class="col-1">Kod Program</th>
+                                <th class="col-1">Sesi/Tahun</th>
+                                <th class="col-1">Status Sesi</th>
+                                <th class="col-1">Status Permohonan</th>
                                 <th class="col-1">Mohon</th>
                                 <th class="col-1">Muat Turun Permohonan</th>
-                                {{-- @if(Gate::allows('authAdmin') || Gate::allows('authCoordinator', $studentID))
-                                    <th class="col-2">Kemas Kini</th>
-                                    <th class="col-2">Buang</th>
-                                @endif --}}
                             </tr>
                         </thead>
                         <tbody>
@@ -61,27 +57,11 @@
                                     </td>
                                     <td>
                                         @if($session['registrationStatus'] == 1)
-                                            <a href="" class="btn btn-primary hvr-shrink"><i class="bi bi-download"></i></a>
+                                            <a href="{{ route('semester.registration.view', ['username' => Auth::user()->username, 'id' => $session['id']]) }}" class="btn btn-primary hvr-shrink"><i class="bi bi-download"></i></a>
                                         @else
                                             <button class="btn btn-primary hvr-shrink" disabled><i class="bi bi-slash-circle"></i></button>
                                         @endif
-
                                     </td>
-                                    {{-- @if(Gate::allows('authAdmin') || Gate::allows('authCoordinator', $studentID))
-                                        <td>
-                                            <a href="{{ route('transcript.update', ['studentID' => $studentID, 'studyLevel' => $semesterGrade->study_levels_code, 'semester' => $semesterGrade->semester]) }}" class="btn btn-primary hvr-shrink"><i class="bi bi-pencil-square"></i></a>
-                                        </td>
-                                        <td>
-                                            <!-- Delete Static Backdrop Confirmation -->
-                                            @php
-                                                $deleteFormData = [array("nameAttr" => "studentID", "valueAttr" => $studentID),
-                                                                array("nameAttr" => "studyLevel", "valueAttr" => $semesterGrade->study_levels_code),
-                                                                array("nameAttr" => "semester", "valueAttr" => $semesterGrade->semester)];
-                                            @endphp
-                                            <x-delete-confirmation name="transkrip" :formData="$deleteFormData" :increment="$i"/>
-                                            <x-delete-confirmation-button :increment="$i"/>
-                                        </td>
-                                    @endif --}}
                                 </tr>
                                 @php
                                     $i = $i + 1;

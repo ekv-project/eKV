@@ -82,6 +82,7 @@ Route::post('/dashboard/semester/transcript/update/{studentID}/{studyLevel}/{sem
 Route::get('/dashboard/semester/registration/{username}', [SemesterRegistrationController::class, 'registrationMainView'])->name('semester.registration.view')->middleware(['auth']);
 Route::get('/dashboard/semester/registration/view/{username}/{id}', [SemesterRegistrationController::class, 'registrationIndividualViewPDF'])->name('semester.registration.view')->middleware(['auth']);
 Route::get('/dashboard/semester/registration/apply/{username}/{id}', [SemesterRegistrationController::class, 'registrationApplyView'])->name('semester.registration.apply')->middleware(['auth']);
+Route::post('/dashboard/semester/registration/apply/{username}/{id}', [SemesterRegistrationController::class, 'registrationApply'])->middleware(['auth']);
 
 Route::get('/dashboard/admin/semester/registration', [SemesterRegistrationController::class, 'adminSemesterRegistrationView'])->name('admin.semester.registration')->middleware(['auth', 'userIsAdmin']);
 Route::get('/dashboard/admin/semester/registration/add', [SemesterRegistrationController::class, 'adminSemesterRegistrationAddView'])->name('admin.semester.registration.add')->middleware(['auth', 'userIsAdmin']);
