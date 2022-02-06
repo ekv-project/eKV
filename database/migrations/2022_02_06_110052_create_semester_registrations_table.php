@@ -16,7 +16,7 @@ class CreateSemesterRegistrationsTable extends Migration
         Schema::create('semester_registrations', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('semester_sessions_id');
-            $table->foreign('semester_sessions_id')->references('id')->on('course_sets')
+            $table->foreign('semester_sessions_id')->references('id')->on('semester_sessions')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
             $table->string('users_username');

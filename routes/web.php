@@ -79,8 +79,9 @@ Route::post('/dashboard/semester/transcript/{studentID}/{studyLevel}/{semester}'
 Route::post('/dashboard/semester/transcript/update/{studentID}/{studyLevel}/{semester}', [ExamController::class, 'transcriptAddUpdate'])->middleware(['auth']);
 
 // Semester Registration
-Route::get('/dashboard/semester/registration', [SemesterRegistrationController::class, 'registrationMainView'])->name('semester.registration.view')->middleware(['auth']);
-Route::get('/dashboard/semester/registration/view/{id}', [SemesterRegistrationController::class, 'registrationIndividualViewPDF'])->name('semester.registration.view')->middleware(['auth']);
+Route::get('/dashboard/semester/registration/{username}', [SemesterRegistrationController::class, 'registrationMainView'])->name('semester.registration.view')->middleware(['auth']);
+Route::get('/dashboard/semester/registration/view/{username}/{id}', [SemesterRegistrationController::class, 'registrationIndividualViewPDF'])->name('semester.registration.view')->middleware(['auth']);
+Route::get('/dashboard/semester/registration/apply/{username}/{id}', [SemesterRegistrationController::class, 'registrationApplyView'])->name('semester.registration.apply')->middleware(['auth']);
 
 Route::get('/dashboard/admin/semester/registration', [SemesterRegistrationController::class, 'adminSemesterRegistrationView'])->name('admin.semester.registration')->middleware(['auth', 'userIsAdmin']);
 Route::get('/dashboard/admin/semester/registration/add', [SemesterRegistrationController::class, 'adminSemesterRegistrationAddView'])->name('admin.semester.registration.add')->middleware(['auth', 'userIsAdmin']);

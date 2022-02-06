@@ -16,11 +16,13 @@
                     <table class="table table-hover table-bordered border-secondary text-center">
                         <thead class="table-dark">
                             <tr>
-                                <th class="col-3">Sesi/Tahun</th>
+                                <th class="col-2">Kod Tahap Pengajian</th>
+                                <th class="col-2">Kod Program</th>
+                                <th class="col-2">Sesi/Tahun</th>
                                 <th class="col-2">Status Sesi</th>
                                 <th class="col-2">Status Permohonan</th>
-                                <th class="col-2">Mohon</th>
-                                <th class="col-2">Muat Turun Permohonan</th>
+                                <th class="col-1">Mohon</th>
+                                <th class="col-1">Muat Turun Permohonan</th>
                                 {{-- @if(Gate::allows('authAdmin') || Gate::allows('authCoordinator', $studentID))
                                     <th class="col-2">Kemas Kini</th>
                                     <th class="col-2">Buang</th>
@@ -33,6 +35,8 @@
                             @endphp
                             @foreach ($semesterSessions as $session)
                                 <tr>
+                                    <td>{{ strtoupper($session['studyLevel']) }}</td>
+                                    <td>{{ strtoupper($session['program']) }}</td>
                                     <td>{{ $session['session'] }}/{{ $session['year'] }}</td>
                                     <td>
                                         @if($session['sessionStatus'] == 'open')
@@ -50,16 +54,16 @@
                                     </td>
                                     <td>
                                         @if($session['registrationStatus'] == 0 && $session['sessionStatus'] == 'open')
-                                            <a href="" class="btn btn-primary hvr-shrink"><i class="bi bi-pen"></i></a>
+                                            <a href="{{ route('semester.registration.apply', ['username' => Auth::user()->username, 'id' => $session['id']]) }}" class="btn btn-primary hvr-shrink"><i class="bi bi-pen"></i></a>
                                         @else
-                                            <button class="btn btn-primary hvr-shrink"><i class="bi bi-slash-circle"></i></button>
+                                            <button class="btn btn-primary hvr-shrink" disabled><i class="bi bi-slash-circle"></i></button>
                                         @endif
                                     </td>
                                     <td>
                                         @if($session['registrationStatus'] == 1)
                                             <a href="" class="btn btn-primary hvr-shrink"><i class="bi bi-download"></i></a>
                                         @else
-                                            <button class="btn btn-primary hvr-shrink"><i class="bi bi-slash-circle"></i></button>
+                                            <button class="btn btn-primary hvr-shrink" disabled><i class="bi bi-slash-circle"></i></button>
                                         @endif
 
                                     </td>
@@ -87,7 +91,7 @@
                     </table>
                 </div>
             @else
-                <p class="fst-italic fw-bold text-center my-4">Tiada transkrip dijumpai untuk pelajar ini!</p>
+                <p class="fst-italic fw-bold text-center my-4">Tiada sesi pendaftaran semester dijumpai!</p>
             @endif
         </div>
     </div>

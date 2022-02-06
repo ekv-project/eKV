@@ -102,7 +102,7 @@
     <div class="mt-1 mx-0 w-100 min-vh-100">
         @yield('content')
     </div>
-    <footer class="footer mt-auto py-3 bg-dark">
+    <footer class="footer mt-5 py-3 bg-dark">
         <!-- Modal -->
         <div class="modal fade" id="licenseModal" tabindex="-1" aria-labelledby="licenseModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-scrollable">
