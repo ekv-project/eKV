@@ -126,7 +126,7 @@
                                                 <p class="btn btn-success text-light w-100">Buka</p>
                                             @elseif($ss->status == 'close')
                                                 <p class="btn btn-danger text-light w-100">Tutup</p>
-                                        @endif
+                                            @endif
                                         </td>
                                         <td>
                                             <a class="btn btn-primary hvr-shrink" href="{{ route('admin.semester.registration.update', ['id' => $ss->id]) }}"><i class="bi bi-pencil-square"></i></a>

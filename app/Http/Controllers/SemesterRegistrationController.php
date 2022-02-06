@@ -7,10 +7,56 @@ use Carbon\Carbon;
 use App\Models\CourseSet;
 use Illuminate\Http\Request;
 use App\Models\SemesterSession;
+use App\Models\ClassroomStudent;
+use App\Models\SemesterRegistration;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 
 class SemesterRegistrationController extends MainController
 {
+    public function registrationMainView(Request $request){
+        // Checks if authenticated user is student
+        if(Gate::allows('authStudent')){
+            // Check if student is associated with a class
+            if (ClassroomStudent::where('users_username', Auth::user()->username)) {
+                $studentClassroom = ClassroomStudent::where('users_username', Auth::user()->username)->first()->classroom;
+                $programsCode = $studentClassroom->programs_code;
+                // Checks if have semester session for that program
+                if(CourseSet::where('programs_code', $programsCode)->first()){
+                    $courseSets = CourseSet::where('programs_code', $programsCode)->get();
+                    $semesterSessionIDArr = [];
+                    foreach ($courseSets as $courseSet) {
+                        $csID = $courseSet->id;
+                        if(SemesterSession::where('course_sets_id', $csID)->first()){
+                            array_push($semesterSessionIDArr, SemesterSession::where('course_sets_id', $csID)->first()->toArray()['id']);
+                        }
+                    }
+                    $semesterSessions = [];
+                    foreach ($semesterSessionIDArr as $id) {
+                        $session = SemesterSession::where('id', $id)->first();
+                        if(SemesterRegistration::where('semester_sessions_id', $id)->where('users_username', Auth::user()->username)->first()){
+                            $registrationStatus = 1;
+                        }else{
+                            $registrationStatus = 0;
+                        }
+                        array_push($semesterSessions, ['session' => $session->session, 'year' => $session->year, 'sessionStatus' => $session->status, 'registrationStatus' => $registrationStatus]);
+                    }
+
+                    return view('dashboard.semester.registration.view')->with(['settings' => $this->instituteSettings, 'page' => 'Pendaftaran Semester', 'semesterSessions' => $semesterSessions]);
+                }else{
+                    abort(404, 'idk');
+                }
+            } else {
+                abort(404, 'Pelajar tidak berada dalam mana-mana kelas!');
+            }
+        }else{
+            dd('test');
+        }
+        // Display the semester sessions based on his classroom program
+        // also display based on whether they applied or not for the session
+    }
+
     public function adminSemesterRegistrationView(Request $request)
     {
         $pagination = 15;
