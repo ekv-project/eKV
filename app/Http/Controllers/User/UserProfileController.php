@@ -76,9 +76,14 @@ class UserProfileController extends MainController
                     'home_address' => ['required'],
                     'guardian_name' => ['required'],
                     'phone_number' => ['required', 'regex:/\d{3}-\d{7,8}/'],
-                    'home_number' => ['regex:/\d{2}-\d{7,8}/'],
                     'guardian_phone_number' => ['required', 'regex:/\d{3}-\d{7,8}/'],
                 ]);
+
+                if(!empty($request->home_number)){
+                    $validated = $request->validate([
+                        'home_number' => ['regex:/\d{2}-\d{7,8}/'],
+                    ]);
+                }
 
                 // Place of birth and home number is optional
                 if ($request->filled('place_of_birth')) {
