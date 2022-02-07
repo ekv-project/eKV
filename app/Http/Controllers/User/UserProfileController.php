@@ -79,7 +79,7 @@ class UserProfileController extends MainController
                     'guardian_phone_number' => ['required', 'regex:/\d{3}-\d{7,8}/'],
                 ]);
 
-                if(!empty($request->home_number)){
+                if (!empty($request->home_number)) {
                     $validated = $request->validate([
                         'home_number' => ['regex:/\d{2}-\d{7,8}/'],
                     ]);

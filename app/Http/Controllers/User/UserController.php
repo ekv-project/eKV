@@ -82,6 +82,14 @@ class UserController extends MainController
                 // Add Bearer API Token to session
                 $request->session()->put('bearerAPIToken', $token->plainTextToken);
 
+                // Check if this is user first time login
+                $firstTimeLoginStatus = User::select('first_time_login')->where('username', $username)->first()->first_time_login;
+                if ('yes' == $firstTimeLoginStatus) {
+                    $request->session()->flash('firstTimeLogin', 'yes');
+                    User::where('id', $id)
+                        ->update(['first_time_login' => 'no']);
+                }
+
                 return redirect()->intended('dashboard');
             } else {
                 return back()->withInput()->withErrors([

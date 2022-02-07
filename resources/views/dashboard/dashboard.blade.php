@@ -16,12 +16,6 @@
                         <span>Kelas</span>
                     </a>
                 </div>
-                {{-- <div class="col my-3 text-center align-middle">
-                    <a href="" class="btn btn-primary btn-lg hvr-shrink">
-                        <i class="bi bi-person-check"></i>
-                        <span>Kehadiran</span>
-                    </a>
-                </div> --}}
             </div>
         </div>
         <div class="row rounded-3 shadow-lg my-3 w-100 d-flex flex-column align-items-center justify-content-center bg-light">
@@ -40,7 +34,7 @@
                                     <div class="row mt-3"><span><a href="{{ route('announcement.view', ['id' => $post->id]) }}" class="btn btn-outline-primary btn-sm col hvr-shrink"><i class="bi bi-arrow-right-circle"></i> Baca Lanjut</a></span></div>
                                 </div>
                             </div>
-                        </div> 
+                        </div>
                     @endforeach
                 </div>
                 <div class="d-flex align-items-center justify-content-center w-100">

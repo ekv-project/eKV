@@ -19,20 +19,21 @@ use Illuminate\Support\Facades\Storage;
 
 class SemesterRegistrationController extends MainController
 {
-    public function registrationMainView($username){
+    public function registrationMainView($username)
+    {
         // Checks if user existed
-        if(User::where('username', $username)->first()){
+        if (User::where('username', $username)->first()) {
             // Checks if current user is accessing their page
-            if(Gate::allows('authUser', $username)){
+            if (Gate::allows('authUser', $username)) {
                 // Checks if authenticated user is student
-                if(Gate::allows('authStudent')){
+                if (Gate::allows('authStudent')) {
                     // Checks if student is associated with a class
                     if (ClassroomStudent::where('users_username', Auth::user()->username)) {
                         $studentClassroom = ClassroomStudent::where('users_username', Auth::user()->username)->first()->classroom;
                         $programsCode = $studentClassroom->programs_code;
                         $studyLevelsCode = $studentClassroom->study_levels_code;
                         // Checks if have semester session for that program
-                        if(CourseSet::where('programs_code', $programsCode)->first()){
+                        if (CourseSet::where('programs_code', $programsCode)->first()) {
                             // Only show previous, current and next year
                             $currentYear = Carbon::now()->format('Y');
                             $nextYear = Carbon::now()->addYear()->format('Y');
@@ -42,7 +43,7 @@ class SemesterRegistrationController extends MainController
                             $semesterSessionIDArr = [];
                             foreach ($courseSets as $courseSet) {
                                 $csID = $courseSet->id;
-                                if(SemesterSession::where('course_sets_id', $csID)->first()){
+                                if (SemesterSession::where('course_sets_id', $csID)->first()) {
                                     array_push($semesterSessionIDArr, SemesterSession::where('course_sets_id', $csID)->first()->toArray()['id']);
                                 }
                             }
@@ -50,52 +51,53 @@ class SemesterRegistrationController extends MainController
                             foreach ($semesterSessionIDArr as $id) {
                                 $session = SemesterSession::where('id', $id)->first();
                                 foreach ($years as $y) {
-                                    if($session->year == $y){
-                                        if(SemesterRegistration::where('semester_sessions_id', $id)->where('users_username', Auth::user()->username)->first()){
+                                    if ($session->year == $y) {
+                                        if (SemesterRegistration::where('semester_sessions_id', $id)->where('users_username', Auth::user()->username)->first()) {
                                             $registrationStatus = 1;
-                                        }else{
+                                        } else {
                                             $registrationStatus = 0;
                                         }
                                         array_push($semesterSessions, ['id' => $id, 'studyLevel' => $studyLevelsCode, 'program' => $programsCode, 'session' => $session->session, 'year' => $session->year, 'sessionStatus' => $session->status, 'registrationStatus' => $registrationStatus]);
-                                    }else{
+                                    } else {
                                         continue;
                                     }
                                 }
                             }
 
                             return view('dashboard.semester.registration.view')->with(['settings' => $this->instituteSettings, 'page' => 'Pendaftaran Semester', 'semesterSessions' => $semesterSessions]);
-                        }else{
-
+                        } else {
                             $semesterSessions = [];
+
                             return view('dashboard.semester.registration.view')->with(['settings' => $this->instituteSettings, 'page' => 'Pendaftaran Semester', 'semesterSessions' => $semesterSessions]);
                         }
                     } else {
                         abort(404, 'Pelajar tidak berada dalam mana-mana kelas!');
                     }
-                }else{
+                } else {
                     // For now, only students can access registration page.
                     // Maybe later I'll allow admins maybe to edit or something.
                     abort(403, 'Anda tidak dibenarkan mengakses laman ini!');
                 }
-            }else{
+            } else {
                 abort(403, 'Anda tidak dibenarkan mengakses laman ini!');
             }
-        }else{
+        } else {
             abort(404, 'Pengguna tidak dijumpai!');
         }
     }
 
-    public function registrationApplyView($username, $id){
-        if($this->studentChecks($username, $id)){
+    public function registrationApplyView($username, $id)
+    {
+        if ($this->studentChecks($username, $id)) {
             $courseSetID = SemesterSession::where('id', $id)->first()->course_sets_id;
             $courseSetCourses = CourseSetCourse::where('course_sets_id', $courseSetID)
-            ->join('courses', 'course_set_courses.courses_code', '=', 'courses.code')
-            ->select('courses.code', 'courses.name', 'courses.credit_hour', 'courses.total_hour', 'courses.category')
-            ->get();
+                ->join('courses', 'course_set_courses.courses_code', '=', 'courses.code')
+                ->select('courses.code', 'courses.name', 'courses.credit_hour', 'courses.total_hour', 'courses.category')
+                ->get();
 
-            if(UserProfile::where('users_username', Auth::user()->username)->first()){
+            if (UserProfile::where('users_username', Auth::user()->username)->first()) {
                 $userProfile = UserProfile::where('users_username', Auth::user()->username)->first();
-            }else{
+            } else {
                 $userProfile = '';
             }
 
@@ -104,9 +106,9 @@ class SemesterRegistrationController extends MainController
             $program = Program::where('code', $programsCode)->first();
             $semesterSession = SemesterSession::where('id', $id)->first();
             $semester = $courseSet->semester;
-            if(SemesterRegistration::where('semester_sessions_id', $id)->where('users_username', Auth::user()->username)->first()){
+            if (SemesterRegistration::where('semester_sessions_id', $id)->where('users_username', Auth::user()->username)->first()) {
                 $registrationStatus = 1;
-            }else{
+            } else {
                 $registrationStatus = 0;
             }
 
@@ -241,16 +243,16 @@ class SemesterRegistrationController extends MainController
 
     public function registrationIndividualViewPDF($username, $id)
     {
-        if($this->studentChecks($username, $id)){
+        if ($this->studentChecks($username, $id)) {
             $courseSetID = SemesterSession::where('id', $id)->first()->course_sets_id;
             $courseSetCourses = CourseSetCourse::where('course_sets_id', $courseSetID)
-            ->join('courses', 'course_set_courses.courses_code', '=', 'courses.code')
-            ->select('courses.code', 'courses.name', 'courses.credit_hour', 'courses.total_hour', 'courses.category')
-            ->get();
+                ->join('courses', 'course_set_courses.courses_code', '=', 'courses.code')
+                ->select('courses.code', 'courses.name', 'courses.credit_hour', 'courses.total_hour', 'courses.category')
+                ->get();
 
-            if(UserProfile::where('users_username', Auth::user()->username)->first()){
+            if (UserProfile::where('users_username', Auth::user()->username)->first()) {
                 $userProfile = UserProfile::where('users_username', Auth::user()->username)->first();
-            }else{
+            } else {
                 $userProfile = '';
             }
 
@@ -430,15 +432,16 @@ class SemesterRegistrationController extends MainController
     /**
      * Handling POST Request.
      */
-
-    public function registrationApply($username, $id){
-        if($this->studentChecks($username, $id)){
+    public function registrationApply($username, $id)
+    {
+        if ($this->studentChecks($username, $id)) {
             // idk why I even made a form if there's also the same data in the URL. Maybe just to have a POST request.
             SemesterRegistration::updateOrCreate(
                 ['semester_sessions_id' => $id, 'users_username' => $username],
                 ['semester_sessions_id' => $id, 'users_username' => $username]
             );
             session()->flash('semesterRegistrationSuccess', 'Pendaftaran Semester berjaya!');
+
             return redirect()->back();
         }
     }
@@ -569,51 +572,51 @@ class SemesterRegistrationController extends MainController
     }
 
     /**
-     * Resuable codes
+     * Resuable codes.
      */
-
-    protected function studentChecks($username, $id){
+    protected function studentChecks($username, $id)
+    {
         // Checks if user existed
-        if(User::where('username', $username)->first()){
+        if (User::where('username', $username)->first()) {
             // Checks if current user is accessing their page
-            if(Gate::allows('authUser', $username)){
+            if (Gate::allows('authUser', $username)) {
                 // Checks if authenticated user is student
                 // Only students can apply
-                if(Gate::allows('authStudent')){
+                if (Gate::allows('authStudent')) {
                     // Checks if user have set their profile
-                    if(UserProfile::where('users_username', $username)->first()){
+                    if (UserProfile::where('users_username', $username)->first()) {
                         // Check if student is associated with a class
                         if (ClassroomStudent::where('users_username', Auth::user()->username)) {
                             $studentClassroom = ClassroomStudent::where('users_username', Auth::user()->username)->first()->classroom;
                             $programsCode = $studentClassroom->programs_code;
                             // Checks if have semester session for that program
-                            if(CourseSet::where('programs_code', $programsCode)->first()){
+                            if (CourseSet::where('programs_code', $programsCode)->first()) {
                                 // Checks if semester registration for that session is still open
-                                if(SemesterSession::where('id', $id)->first()){
-                                    if(SemesterSession::where('id', $id)->first()->status === 'open'){
+                                if (SemesterSession::where('id', $id)->first()) {
+                                    if ('open' === SemesterSession::where('id', $id)->first()->status) {
                                         return true;
-                                    }else{
+                                    } else {
                                         abort(500, 'Sesi Pendaftaran Semester tersebut sudah ditutup!');
                                     }
-                                }else{
+                                } else {
                                     return redirect()->route('semester.registration.view', ['username' => $username]);
                                 }
-                            }else{
+                            } else {
                                 return redirect()->route('semester.registration.view', ['username' => $username]);
                             }
                         } else {
                             abort(404, 'Pelajar tidak berada dalam mana-mana kelas!');
                         }
-                    }else{
+                    } else {
                         abort(404, 'Profil pengguna tidak dijumpai!');
                     }
-                }else{
+                } else {
                     abort(403, 'Anda tidak dibenarkan mengakses laman ini!');
                 }
-            }else{
+            } else {
                 abort(403, 'Anda tidak dibenarkan mengakses laman ini!');
             }
-        }else{
+        } else {
             abort(404, 'Pengguna tidak dijumpai!');
         }
     }
