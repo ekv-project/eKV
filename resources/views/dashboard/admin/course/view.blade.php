@@ -85,10 +85,11 @@
                                     @if(session()->has('successRemove'))
                                         <div class="alert alert-success">{{ session('successRemove') }}</div>
                                     @endif
-                                    <th class="col-1">NO</th>
-                                    <th class="col-3">KOD KURSUS</th>
-                                    <th class="col-4">NAMA KURSUS</th>
-                                    <th class="col-2">JAM KREDIT</th>
+                                    <th class="col-2">KOD KURSUS</th>
+                                    <th class="col-3">NAMA KURSUS</th>
+                                    <th class="col-1">JAM KREDIT</th>
+                                    <th class="col-1">JAM PERTEMUAN</th>
+                                    <th class="col-3">KATEGORI</th>
                                     <th class="col-2">KEMAS KINI</th>
                                     <th class="col-1">BUANG</th>
                                 </tr>
@@ -99,14 +100,38 @@
                                 @endphp
                                 @foreach ($course as $c)
                                     <tr>
-                                        <td>
-                                            @php
-                                                echo $i;
-                                            @endphp
-                                        </td>
                                         <td>{{ strtoupper($c->code) }}</td>
                                         <td>{{ strtoupper($c->name) }}</td>
                                         <td>{{ strtoupper($c->credit_hour) }}</td>
+                                        <td>{{ strtoupper($c->total_hour) }}</td>
+                                        {{-- 1 = Pengajian Umum
+                                        2 = Teras
+                                        3 = Pengkhususan
+                                        4 = Elektif
+                                        5 = On-The-Job Training --}}
+                                        <td>
+                                            @if(!empty($c->category))
+                                                @switch($c->category)
+                                                    @case(1)
+                                                        PENGAJIAN UMUM
+                                                        @break
+                                                    @case(2)
+                                                        TERAS
+                                                        @break
+                                                    @case(3)
+                                                        PENGKHUSUSAN
+                                                        @break
+                                                    @case(4)
+                                                        ELEKTIF
+                                                        @break
+                                                    @case(5)
+                                                        ON-THE-JOB TRAINING
+                                                        @break
+                                                    @default
+                                                        @break
+                                                @endswitch
+                                            @endif
+                                        </td>
                                         <td><a class="btn btn-primary hvr-shrink" href="{{ route('admin.course.update', ['code' => strtolower($c->code)]) }}"><i class="bi bi-pencil-square"></i></a></td>
                                         <td>
                                             <!-- Delete Static Backdrop Confirmation -->
@@ -117,9 +142,6 @@
                                             <x-delete-confirmation-button :increment="$i"/>
                                         </td>
                                     </tr>
-                                    @php
-                                        $i = $i + 1;
-                                    @endphp
                                 @endforeach
                             </tbody>
                         </table>

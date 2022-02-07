@@ -71,13 +71,19 @@ class UserProfileController extends MainController
             if ($request->has('profile')) {
                 // User's profile update
                 $validated = $request->validate([
-                    'identification_number' => ['required'],
-                    'phone_number' => ['required'],
+                    'identification_number' => ['required', 'regex:/\d{6}-\d{2}-\d{4}/'],
                     'date_of_birth' => ['required'],
                     'home_address' => ['required'],
                     'guardian_name' => ['required'],
-                    'guardian_phone_number' => ['required'],
+                    'phone_number' => ['required', 'regex:/\d{3}-\d{7,8}/'],
+                    'guardian_phone_number' => ['required', 'regex:/\d{3}-\d{7,8}/'],
                 ]);
+
+                if(!empty($request->home_number)){
+                    $validated = $request->validate([
+                        'home_number' => ['regex:/\d{2}-\d{7,8}/'],
+                    ]);
+                }
 
                 // Place of birth and home number is optional
                 if ($request->filled('place_of_birth')) {
@@ -202,14 +208,19 @@ class UserProfileController extends MainController
                     $logo = '.' . Storage::disk('local')->url('public/img/system/logo-def-300.png');
                 }
                 // Header
-                PDF::Image($logo, 15, 10, 26, 26);
+                // Header
+                PDF::Image($logo, 10, 10, 26, 26);
                 PDF::SetFont('helvetica', 'B', 12);
-                PDF::Multicell(0, 6, strtoupper($instituteName), 0, 'L', 0, 2, 42, 10);
-                PDF::SetFont('helvetica', '', 9);
-                PDF::Multicell(0, 10, 'ALAMAT INSTITUSI: ' . strtoupper($settings['institute_address']), 0, 'L', 0, 2, 42, 16);
-                PDF::Multicell(0, 5, 'ALAMAT E-MEL: ' . strtoupper($settings['institute_email_address']), 0, 'L', 0, 2, 42, 26);
-                PDF::Multicell(0, 5, 'NO. TELEFON PEJABAT: ' . strtoupper($settings['institute_phone_number']), 0, 'L', 0, 2, 42, 31);
-                PDF::Ln(1);
+                PDF::SetXY(38, 10);
+                PDF::Multicell(135, 0, strtoupper($instituteName), 0, 'L', 0, '', '', '');
+                PDF::SetFont('helvetica', '', 7);
+                PDF::Ln();
+                PDF::Multicell(135, 0, 'ALAMAT KOLEJ: ' . strtoupper($settings['institute_address']), 0, 'L', 0, '', 38, '');
+                PDF::Ln();
+                PDF::Multicell(135, 0, 'E-MEL: ' . strtoupper($settings['institute_email_address']), 0, 'L', 0, '', 38, '');
+                PDF::Ln();
+                PDF::Multicell(135, 0, 'NO TELEFON: ' . strtoupper($settings['institute_phone_number']), 0, 'L', 0, '', 38, '');
+                //PDF::Image($logo, 174, 10, 26, 26); // KPM logo *TBA if allowed by them
                 PDF::Line(10, 40, 200, 40, []);
                 PDF::SetFont('helvetica', 'b', 10);
                 PDF::Multicell(0, 5, 'SLIP PROFIL PENGGUNA', 0, 'C', 0, 2, 10, 42);
@@ -283,7 +294,7 @@ class UserProfileController extends MainController
                 PDF::MultiCell(0, 5, 'Tandatangan tidak diperlukan.', 0, 'C', 0, 0, '', '', true);
                 PDF::Ln(3);
                 PDF::MultiCell(0, 5, 'Dijana menggunakan sistem eKV.', 0, 'C', 0, 0, '', '', true);
-                PDF::Output($title, 'D');
+                PDF::Output('Slip Profil Pengguna' . ' ' . ucwords($profile['fullname']) . '.pdf', 'D');
             } else {
                 abort(404, 'Profil pelajar tidak dijumpai!');
             }

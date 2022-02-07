@@ -99,7 +99,7 @@
                                     <input type="text" name="phone_number" id="phone_number" class="form-control" placeholder="phone" value="@php if(old('phone_number') !== null){echo old('phone_number');}elseif(isset($profile['phone_number'])){echo $profile['phone_number'];}else{echo NULL;} @endphp">
                                     <label for="phone_number" class="form-label">No. Telefon Peribadi</label>
                                     <div class="form-text">
-                                        Format: +6012-3456789
+                                        Format: XXX-XXXXXXXX
                                     </div>
                                     @error('phone_number')
                                         <div class="alert alert-danger">{{ $message }}</div>
@@ -152,7 +152,7 @@
                                     <label for="home_number" class="form-label">No. Telefon Rumah</label>
                                     <div class="form-text">
                                         Ruangan ini tidak wajib diisi. <br>
-                                        Format: +601-2345678
+                                        Format: XX-XXXXXXXX
                                     </div>
                                     @error('home_number')
                                         <div class="alert alert-danger">{{ $message }}</div>
@@ -164,7 +164,7 @@
                                     <input type="text" name="guardian_phone_number" id="guardian_phone_number" class="form-control" placeholder="phone" value="@php if(old('guardian_phone_number') !== null){echo old('guardian_phone_number');}elseif(isset($profile['guardian_phone_number'])){echo $profile['guardian_phone_number'];}else{echo NULL;} @endphp">
                                     <label for="guardian_phone_number" class="form-label">No. Telefon Penjaga</label>
                                     <div class="form-text">
-                                        Format: +6012-3456789
+                                        Format: XXX-XXXXXXXX
                                     </div>
                                     @error('guardian_phone_number')
                                         <div class="alert alert-danger">{{ $message }}</div>

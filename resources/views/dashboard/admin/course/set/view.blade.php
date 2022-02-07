@@ -2,7 +2,7 @@
 @section('content')
     <div class="w-100 h-100 mt-3">
         <div class="row text-center">
-            <h1>Senarai Program</h1>
+            <h1>Senarai Set Kursus</h1>
         </div>
         <div class="row d-flex justify-content-center align-items-center mb-5">
             <div class="row d-flex justify-content-center align-items-center col-12 col-lg-10">
@@ -12,8 +12,10 @@
                             <div class="col mb-2">
                                 <div class="form-floating">
                                     <select class="form-select" id="sort_by" name="sort_by" aria-label="sortby">
-                                        <option value="code">Kod Program</option>
-                                        <option value="name">Nama Program</option>
+                                        <option value="id">ID</option>
+                                        <option value="study_levels_code">Kod Tahap Pengajian</option>
+                                        <option value="programs_code">Kod Program</option>
+                                        <option value="semester">Semester</option>
                                     </select>
                                     <label for="sort_by">Susun Mengikut:</label>
                                 </div>
@@ -46,10 +48,14 @@
                         <div class="row">
                             @if($filterAndSearch['sortBy'] != NULL AND $filterAndSearch['sortOrder'] != NULL)
                                 <div class="col-6">
-                                    @if($filterAndSearch['sortBy'] == 'code')
-                                        <p>Susun Mengikut: <span class="fst-italic">Kod Kursus</span></p>
-                                    @elseif($filterAndSearch['sortBy'] == 'nama')
-                                        <p>Susun Mengikut: <span class="fst-italic">Nama Kursus</span></p>
+                                    @if($filterAndSearch['sortBy'] == 'id')
+                                        <p>Susun Mengikut: <span class="fst-italic">ID</span></p>
+                                    @elseif($filterAndSearch['sortBy'] == 'study_levels_code')
+                                        <p>Susun Mengikut: <span class="fst-italic">Kod Tahap Pengajian</span></p>
+                                    @elseif($filterAndSearch['sortBy'] == 'programs_code')
+                                        <p>Susun Mengikut: <span class="fst-italic">Kod Program</span></p>
+                                    @elseif($filterAndSearch['sortBy'] == 'semester')
+                                        <p>Susun Mengikut: <span class="fst-italic">Semester</span></p>
                                     @endif
                                 </div>
                                 <div class="col-6">
@@ -73,7 +79,7 @@
                         <div class="col-11 col-lg-11 alert alert-success">{{ session('deleteSuccess') }}</div>
                     </div>
                 @endif
-                @if($program->count() < 1)
+                @if($course->count() < 1)
                     <div class="row d-flex justify-content-center align-content-center mt-3">
                         <p class="text-center mt-3 fs-5">Tiada rekod dijumpai.</p>
                     </div>
@@ -85,46 +91,41 @@
                                     @if(session()->has('successRemove'))
                                         <div class="alert alert-success">{{ session('successRemove') }}</div>
                                     @endif
-                                    <th class="col-1 align-middle">NO</th>
-                                    <th class="col-2 align-middle">KOD PROGRAM</th>
-                                    <th class="col-3 align-middle">NAMA PROGRAM</th>
-                                    <th class="col-3 align-middle">NAMA JABATAN</th>
-                                    <th class="col-2 align-middle">KEMAS KINI</th>
-                                    <th class="col-1 align-middle">BUANG</th>
+                                    <th class="col-2">ID</th>
+                                    <th class="col-2">TAHAP PENGAJIAN</th>
+                                    <th class="col-2">PROGRAM</th>
+                                    <th class="col-2">SEMESTER</th>
+                                    <th class="col-2">KEMAS KINI</th>
+                                    <th class="col-1">BUANG</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @php
                                     $i = 1;
                                 @endphp
-                                @foreach ($program as $p)
+                                @foreach ($course as $c)
                                     <tr>
+                                        <td>{{ strtoupper($c->id) }}</td>
+                                        <td>{{ strtoupper($c->study_levels_code) }}</td>
+                                        <td>{{ strtoupper($c->programs_code) }}</td>
+                                        <td>{{ strtoupper($c->semester) }}</td>
                                         <td>
-                                            @php
-                                                echo $i;
-                                            @endphp
+                                            <a class="btn btn-primary hvr-shrink" href="{{ route('admin.course.set.update', ['id' => strtolower($c->id)]) }}"><i class="bi bi-pencil-square"></i></a>
                                         </td>
-                                        <td>{{ strtoupper($p->code) }}</td>
-                                        <td>{{ strtoupper($p->name) }}</td>
-                                        <td>{{ strtoupper($p->department_name) }}</td>
-                                        <td><a class="btn btn-primary hvr-shrink" href="{{ route('admin.program.update', ['code' => strtolower($p->code)]) }}"><i class="bi bi-pencil-square"></i></a></td>
                                         <td>
                                             <!-- Delete Static Backdrop Confirmation -->
                                             @php
-                                                $deleteFormData = [array("nameAttr" => "code", "valueAttr" => strtolower($p->code))];
+                                                $deleteFormData = [array("nameAttr" => "id", "valueAttr" => strtolower($c->id))];
                                             @endphp
-                                            <x-delete-confirmation name="program" :formData="$deleteFormData" :increment="$i"/>
+                                            <x-delete-confirmation name="set kursus" :formData="$deleteFormData" :increment="$i"/>
                                             <x-delete-confirmation-button :increment="$i"/>
                                         </td>
                                     </tr>
-                                    @php
-                                        $i = $i + 1;
-                                    @endphp
                                 @endforeach
                             </tbody>
                         </table>
                     </div>
-                    {{ $program->links() }}
+                    {{ $course->links() }}
                 @endif
             </div>
         </div>
