@@ -52,7 +52,7 @@
                     <p>SEMESTER: {{ $semester }}</p>
                     <p>SESI/TAHUN: {{ $semesterSession->session }}/{{ $semesterSession->year }}</p>
                     <p>NAMA PELAJAR: {{ strtoupper(Auth::user()->fullname) }}</p>
-                    <p>NO K/P: {{ $userProfile->identification_number }}</p>
+                    <p>NO K/P: {{ Auth::user()->nric }}</p>
                     <p>ANGKA GILIRAN: {{ strtoupper(Auth::user()->username) }}</p>
                 </div>
                 <div class="col-12">
