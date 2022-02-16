@@ -14,13 +14,13 @@
             </div>
             <div class="row">
                 <div class="col-6">
-                    <p><strong>Nama: </strong>{{ ucwords($studentDetails['name']) }}</p>
-                    <p><strong>No. Kad Pengenalan: </strong>{{ $studentDetails['identificationNumber'] }}</p>
+                    <p><strong>Nama: </strong>{{ strtoupper($studentDetails['name']) }}</p>
+                    <p><strong>No. Kad Pengenalan: </strong>{{ $studentDetails['nric'] }}</p>
                     <p><strong>Angka Giliran: </strong>{{ strtoupper($studentDetails['matrixNumber']) }}</p>
                 </div>
                 <div class="col-6">
-                    <p><strong>Peringkat Pengajian: </strong>{{ ucwords($studyLevelName) }}</p>
-                    <p><strong>Program: </strong>{{ ucwords($studentProgram) }}</p>
+                    <p><strong>Peringkat Pengajian: </strong>{{ strtoupper($studyLevelName) }}</p>
+                    <p><strong>Program: </strong>{{ strtoupper($studentProgram) }}</p>
                     <p><strong>Semester: </strong>{{ $semester }}</p>
                 </div>
             </div>

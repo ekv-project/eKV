@@ -70,15 +70,13 @@ class ExamController extends MainController
                         $studyLevelName = StudyLevel::where('code', $studyLevel)->first()->name;
                         $semesterGrade = SemesterGrade::where('users_username', $studentID)->where('study_levels_code', $studyLevel)->where('semester', $semester)->first();
                         // Student Details
-                        $studentName = User::select('fullname')->where('username', $studentID)->first()->fullname;
-                        if (null != UserProfile::select('identification_number')->where('users_username', $studentID)->first()) {
-                            $studentIdentificationNumber = UserProfile::select('identification_number')->where('users_username', $studentID)->first()->identification_number;
-                        } else {
-                            $studentIdentificationNumber = 'N/A';
-                        }
+                        $student = User::select('fullname', 'nric')->where('username', $studentID)->first();
+                        $studentName = $student->fullname;
+                        $studentNRIC = $student->nric;
+
                         $studentDetails = [
                             'name' => $studentName,
-                            'identificationNumber' => $studentIdentificationNumber,
+                            'nric' => $studentNRIC,
                             'matrixNumber' => $studentID,
                         ];
                         $courseGrades = CourseGrade::join('courses', 'course_grades.courses_code', 'courses.code')->select('courses.credit_hour', 'course_grades.grade_pointer', 'courses.code', 'courses.name')->where('users_username', $studentID)->where('study_levels_code', $studyLevel)->where('semester', $semester)->orderBy('courses.code', 'asc')->get();
@@ -187,15 +185,13 @@ class ExamController extends MainController
                             $studyLevelName = StudyLevel::where('code', $studyLevel)->first()->name;
                             $semesterGrade = SemesterGrade::where('users_username', $studentID)->where('study_levels_code', $studyLevel)->where('semester', $semester)->first();
                             // Student Details
-                            $studentName = User::select('fullname')->where('username', $studentID)->first()->fullname;
-                            if (null != UserProfile::select('identification_number')->where('users_username', $studentID)->first()) {
-                                $studentIdentificationNumber = UserProfile::select('identification_number')->where('users_username', $studentID)->first()->identification_number;
-                            } else {
-                                $studentIdentificationNumber = 'N/A';
-                            }
+                            $student = User::select('fullname', 'nric')->where('username', $studentID)->first();
+                            $studentName = $student->fullname;
+                            $studentNRIC = $student->nric;
+
                             $studentDetails = [
                                 'name' => $studentName,
-                                'identificationNumber' => $studentIdentificationNumber,
+                                'nric' => $studentNRIC,
                                 'matrixNumber' => $studentID,
                             ];
                             $courseGrades = CourseGrade::join('courses', 'course_grades.courses_code', 'courses.code')->select('courses.credit_hour', 'course_grades.grade_pointer', 'courses.code', 'courses.name')->where('users_username', $studentID)->where('study_levels_code', $studyLevel)->where('semester', $semester)->get();
@@ -240,7 +236,7 @@ class ExamController extends MainController
                             PDF::MultiCell(95, 13, 'NAMA: ' . strtoupper($studentDetails['name']), 0, 'L', 0, 0, '', '', true);
                             PDF::MultiCell(95, 13, 'PERINGKAT PENGAJIAN: ' . strtoupper($studyLevelName), 0, 'L', 0, 0, '', '', true);
                             PDF::Ln();
-                            PDF::MultiCell(95, 13, 'NO. K/P: ' . $studentDetails['identificationNumber'], 0, 'L', 0, 0, '', '', true);
+                            PDF::MultiCell(95, 13, 'NO. K/P: ' . $studentDetails['nric'], 0, 'L', 0, 0, '', '', true);
                             PDF::MultiCell(95, 13, 'PROGRAM: ' . strtoupper($studentProgram), 0, 'L', 0, 0, '', '', true);
                             PDF::Ln();
                             PDF::MultiCell(95, 13, 'ANGKA GILIRAN: ' . strtoupper($studentDetails['matrixNumber']), 0, 'L', 0, 0, '', '', true);
