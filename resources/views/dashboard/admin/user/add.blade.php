@@ -57,7 +57,7 @@
                     @enderror
                 </div>
                 <div class="form-floating mb-3">
-                    <input type="text" name="nric" id="nric" class="form-control" placeholder="number" value="@php if(old('nric') !== null){echo old('nric');}elseif(isset($profile['nric'])){echo $profile['nric'];}else{echo NULL;} @endphp">
+                    <input type="text" name="nric" id="nric" class="form-control" placeholder="number" value="@php if(old('nric') !== null){echo old('nric');}else{echo NULL;} @endphp">
                     <label for="nric" class="form-label">No. Kad Pengenalan</label>
                     <div class="form-text">
                         Format: XXXXXX-XX-XXXX

@@ -135,7 +135,6 @@ class UserController extends MainController
                 'role' => ['required'],
             ]);
 
-            // 'nric' => ['required', 'regex:/\d{6}-\d{2}-\d{4}/'],
             $username = strtolower($request->username);
             if (User::where('username', $username)->first()) {
                 return back()->withInput()->withErrors([
@@ -361,12 +360,14 @@ class UserController extends MainController
         $validated = $request->validate([
             'username' => ['required'],
             'fullname' => ['required'],
+            'nric' => ['required', 'regex:/\d{6}-\d{2}-\d{4}/'],
             'gender' => ['required'],
             'email' => ['required', 'email:rfc'],
         ]);
         $username = $request->username;
         $fullname = $request->fullname;
         $email = $request->email;
+        $nric = $request->nric;
 
         switch ($request->input('gender')) {
             case 'male':
@@ -390,10 +391,11 @@ class UserController extends MainController
             User::where('username', $username)->update([
                 'username' => strtolower($username),
                 'fullname' => strtolower($fullname),
+                'nric' => strtolower($nric),
                 'gender' => strtolower($userGender),
                 'email' => strtolower($email),
             ]);
-            session()->flash('userBulkAddSuccess', 'Pengguna berjaya dikemas kini!');
+            session()->flash('userUpdateSuccess', 'Pengguna berjaya dikemas kini!');
 
             return redirect()->back();
         } else {
