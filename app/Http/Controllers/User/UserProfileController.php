@@ -84,7 +84,6 @@ class UserProfileController extends MainController
                     ]);
                 }
 
-                // 'nric' => ['required', 'regex:/\d{6}-\d{2}-\d{4}/'],
                 // Place of birth and home number is optional
                 if ($request->filled('place_of_birth')) {
                     $userPlaceOfBirth = $request->place_of_birth;

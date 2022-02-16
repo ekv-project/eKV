@@ -98,13 +98,14 @@
                                     @endif
                                     <th class="col-1 align-middle">NO</th>
                                     <th class="col-2 align-middle">ID PENGGUNA</th>
-                                    <th class="col-4 align-middle">NAMA PENUH</th>
+                                    <th class="col-2 align-middle">NO KAD PENGENALAN</th>
+                                    <th class="col-2 align-middle">NAMA PENUH</th>
                                     <th class="col-2 align-middle">JANTINA</th>
-                                    <th class="col-1 align-middle">ALAMAT E-MEL</th>
+                                    <th class="col-2 align-middle">ALAMAT E-MEL</th>
                                     <th class="col-2 align-middle">PERANAN</th>
-                                    <th class="col-1 align-middle">PROFIL</th>
+                                    <th class="col-2 align-middle">PROFIL</th>
                                     <th class="col-2 align-middle">KEMAS KINI</th>
-                                    <th class="col-1 align-middle">BUANG</th>
+                                    <th class="col-2 align-middle">BUANG</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -119,6 +120,7 @@
                                             @endphp
                                         </td>
                                         <td>{{ strtoupper($u->username) }}</td>
+                                        <td>{{ strtoupper($u->nric) }}</td>
                                         <td>{{ strtoupper($u->fullname) }}</td>
                                         @switch($u->gender)
                                             @case(0)

@@ -128,12 +128,14 @@ class UserController extends MainController
             $validated = $request->validate([
                 'username' => ['required'],
                 'fullname' => ['required'],
+                'nric' => ['required', 'regex:/\d{6}-\d{2}-\d{4}/'],
                 'gender' => ['required'],
                 'email' => ['required', 'email:rfc'],
                 'password' => ['required', 'confirmed'],
                 'role' => ['required'],
             ]);
 
+            // 'nric' => ['required', 'regex:/\d{6}-\d{2}-\d{4}/'],
             $username = strtolower($request->username);
             if (User::where('username', $username)->first()) {
                 return back()->withInput()->withErrors([
@@ -166,6 +168,7 @@ class UserController extends MainController
                 User::create([
                     'username' => strtolower($username),
                     'fullname' => strtolower($request->fullname),
+                    'nric' => strtolower($request->nric),
                     'gender' => $userGender,
                     'email' => strtolower($request->email),
                     'password' => Hash::make($request->password),
