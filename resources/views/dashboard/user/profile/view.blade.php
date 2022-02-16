@@ -25,7 +25,7 @@
                 <div class="row mt-1 mb-4 d-flex justify-content-center">
                     <div class="row row-cols-1 row-cols-lg-2">
                         <p class="col fw-bold my-4"><i class="bi bi-person-lines-fill"></i>NAMA PENUH: <span class="fw-normal">{{ strtoupper($profile->fullname) }}</span></p>
-                        <p class="col fw-bold my-4"><i class="bi bi-person-badge"></i>NO. KAD PENGENALAN: <span class="fw-normal">{{ $profile->identification_number }}</span></p>
+                        <p class="col fw-bold my-4"><i class="bi bi-person-badge"></i>NO. KAD PENGENALAN: <span class="fw-normal">{{ $profile->nric }}</span></p>
                         <p class="col fw-bold my-4"><i class="bi bi-envelope-fill"></i>ALAMAT E-MEL: <span class="fw-normal">{{ strtoupper($profile->email) }}</span></p>
                         <p class="col fw-bold my-4"><i class="bi bi-phone-fill"></i>NO. TELEFON PERIBADI: <span class="fw-normal">{{ $profile->phone_number }}</span></p>
                         @php

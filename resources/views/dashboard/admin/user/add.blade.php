@@ -85,6 +85,16 @@
                         <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
                 </div>
+                <div class="form-floating mb-3">
+                    <input type="text" name="identification_number" id="identification_number" class="form-control" placeholder="number" value="@php if(old('identification_number') !== null){echo old('identification_number');}elseif(isset($profile['identification_number'])){echo $profile['identification_number'];}else{echo NULL;} @endphp">
+                    <label for="identification_number" class="form-label">No. Kad Pengenalan</label>
+                    <div class="form-text">
+                        Format: XXXXXX-XX-XXXX
+                    </div>
+                    @error('identification_number')
+                        <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror
+                </div>
                 <div class="form-floating">
                     <select name="role" id="role" class="form-select">
                         <option value="student">Pelajar</option>

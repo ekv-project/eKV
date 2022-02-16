@@ -29,7 +29,7 @@ class UserProfileController extends MainController
         // Check if user exist. If true, return view
         if (User::where('username', '=', $username)->count() > 0) {
             if (Gate::allows('authUser', $username) || Gate::allows('authCoordinator', $username) || Gate::allows('authAdmin') || Gate::allows('authSuperAdmin')) {
-                $profile = UserProfile::join('users', 'users.username', 'user_profiles.users_username')->where('users_username', $username)->select('users.fullname', 'users.email', 'users.gender', 'user_profiles.identification_number', 'user_profiles.phone_number', 'user_profiles.date_of_birth', 'user_profiles.place_of_birth', 'user_profiles.home_address', 'user_profiles.home_number', 'user_profiles.guardian_name', 'user_profiles.guardian_phone_number')->first();
+                $profile = UserProfile::join('users', 'users.username', 'user_profiles.users_username')->where('users_username', $username)->select('users.fullname', 'users.email', 'users.gender', 'users.nric', 'user_profiles.phone_number', 'user_profiles.date_of_birth', 'user_profiles.place_of_birth', 'user_profiles.home_address', 'user_profiles.home_number', 'user_profiles.guardian_name', 'user_profiles.guardian_phone_number')->first();
                 $noProfile = User::select('username', 'fullname', 'email', 'gender')->where('username', $username)->first();
 
                 return view('dashboard.user.profile.view')->with(['settings' => $this->instituteSettings, 'page' => 'Profil Pengguna', 'username' => $username, 'profile' => $profile, 'noProfile' => $noProfile]);
@@ -71,7 +71,6 @@ class UserProfileController extends MainController
             if ($request->has('profile')) {
                 // User's profile update
                 $validated = $request->validate([
-                    'identification_number' => ['required', 'regex:/\d{6}-\d{2}-\d{4}/'],
                     'date_of_birth' => ['required'],
                     'home_address' => ['required'],
                     'guardian_name' => ['required'],
@@ -85,6 +84,7 @@ class UserProfileController extends MainController
                     ]);
                 }
 
+                // 'nric' => ['required', 'regex:/\d{6}-\d{2}-\d{4}/'],
                 // Place of birth and home number is optional
                 if ($request->filled('place_of_birth')) {
                     $userPlaceOfBirth = $request->place_of_birth;
@@ -101,7 +101,6 @@ class UserProfileController extends MainController
                 UserProfile::upsert([
                     [
                         'users_username' => $username,
-                        'identification_number' => strtolower($request->identification_number),
                         'phone_number' => strtolower($request->phone_number),
                         'date_of_birth' => $request->date_of_birth,
                         'place_of_birth' => strtolower($userPlaceOfBirth),
@@ -110,7 +109,7 @@ class UserProfileController extends MainController
                         'guardian_name' => strtolower($request->guardian_name),
                         'guardian_phone_number' => strtolower($request->guardian_phone_number),
                     ],
-                ], ['users_username'], ['identification_number', 'phone_number', 'date_of_birth', 'place_of_birth', 'home_address', 'home_number', 'guardian_name', 'guardian_phone_number']);
+                ], ['users_username'], ['phone_number', 'date_of_birth', 'place_of_birth', 'home_address', 'home_number', 'guardian_name', 'guardian_phone_number']);
                 session()->flash('profileUpdateSuccess', 'Profil berjaya dikemas kini!');
 
                 return redirect()->back();
@@ -174,7 +173,7 @@ class UserProfileController extends MainController
         if (Gate::allows('authUser', $username) || Gate::allows('authCoordinator', $username) || Gate::allows('authAdmin')) {
             //Check if student updated their profile
             if (UserProfile::where('users_username', $username)->first()) {
-                $profile = UserProfile::join('users', 'users.username', 'user_profiles.users_username')->where('users_username', $username)->select('users.fullname', 'users.email', 'users.gender', 'user_profiles.identification_number', 'user_profiles.phone_number', 'user_profiles.date_of_birth', 'user_profiles.place_of_birth', 'user_profiles.home_address', 'user_profiles.home_number', 'user_profiles.guardian_name', 'user_profiles.guardian_phone_number')->first();
+                $profile = UserProfile::join('users', 'users.username', 'user_profiles.users_username')->where('users_username', $username)->select('users.fullname', 'users.email', 'users.gender', 'users.nric', 'user_profiles.phone_number', 'user_profiles.date_of_birth', 'user_profiles.place_of_birth', 'user_profiles.home_address', 'user_profiles.home_number', 'user_profiles.guardian_name', 'user_profiles.guardian_phone_number')->first();
                 switch ($profile->gender) {
                     case 0:
                         $userGender = 'lelaki';
@@ -276,7 +275,7 @@ class UserProfileController extends MainController
 
                 PDF::SetFont('helvetica', '', 10);
                 PDF::Multicell(0, 5, strtoupper($profile['fullname']), 0, 'L', 0, 2, 64, 90);
-                PDF::Multicell(0, 5, strtoupper($profile['identification_number']), 0, 'L', 0, 2, 64, 105);
+                PDF::Multicell(0, 5, strtoupper($profile['nric']), 0, 'L', 0, 2, 64, 105);
                 PDF::Multicell(0, 5, strtoupper($profile['email']), 0, 'L', 0, 2, 64, 120);
                 PDF::Multicell(0, 5, strtoupper($profile['phone_number']), 0, 'L', 0, 2, 64, 135);
                 PDF::Multicell(0, 5, strtoupper($userGender), 0, 'L', 0, 2, 64, 150);
