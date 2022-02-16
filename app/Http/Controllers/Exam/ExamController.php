@@ -105,15 +105,13 @@ class ExamController extends MainController
             if (User::where('username', $studentID)->first()) {
                 if ('student' == User::where('username', $studentID)->first()->role) {
                     // Student Details
-                    $studentName = User::select('fullname')->where('username', $studentID)->first()->fullname;
-                    if (null != UserProfile::select('identification_number')->where('users_username', $studentID)->first()) {
-                        $studentIdentificationNumber = UserProfile::select('identification_number')->where('users_username', $studentID)->first()->identification_number;
-                    } else {
-                        $studentIdentificationNumber = 'N/A';
-                    }
+                    $student = User::select('fullname', 'nric')->where('username', $studentID)->first();
+                    $studentName = $student->fullname;
+                    $studentNRIC = $student->nric;
+
                     $studentDetails = [
                         'name' => $studentName,
-                        'identificationNumber' => $studentIdentificationNumber,
+                        'nric' => $studentNRIC,
                         'matrixNumber' => $studentID,
                     ];
                     $studyLevels = StudyLevel::select('code', 'name', 'total_semester')->get();
@@ -141,15 +139,13 @@ class ExamController extends MainController
                     $courseGrades = CourseGrade::where('users_username', $studentID)->where('study_levels_code', $studyLevel)->where('semester', $semester)->get();
                     if ($semesterGrade) {
                         // Student Details
-                        $studentName = User::select('fullname')->where('username', $studentID)->first()->fullname;
-                        if (null != UserProfile::select('identification_number')->where('users_username', $studentID)->first()) {
-                            $studentIdentificationNumber = UserProfile::select('identification_number')->where('users_username', $studentID)->first()->identification_number;
-                        } else {
-                            $studentIdentificationNumber = 'N/A';
-                        }
+                        $student = User::select('fullname', 'nric')->where('username', $studentID)->first();
+                        $studentName = $student->fullname;
+                        $studentNRIC = $student->nric;
+
                         $studentDetails = [
                             'name' => $studentName,
-                            'identificationNumber' => $studentIdentificationNumber,
+                            'nric' => $studentNRIC,
                             'matrixNumber' => $studentID,
                         ];
                         $studyLevel = StudyLevel::where('code', $studyLevel)->select('code', 'name')->first();
