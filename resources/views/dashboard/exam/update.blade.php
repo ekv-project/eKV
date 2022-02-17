@@ -20,15 +20,15 @@
             </div>
             <form action="" method="post" class="mt-3">
                 @csrf
-                <div class="row">
+                <div class="row mt-3">
                     <div class="col">
-                        <p class="fw-bold">Nama Pelajar: <span class="fw-normal">{{ ucwords($studentDetails['name']) }}</span></p>
+                        <p class="fw-bold">Nama Pelajar: <span class="fw-normal">{{ strtoupper($studentDetails['name']) }}</span></p>
                     </div>
                     <div class="col">
-                        <p class="fw-bold">No Kad Pengenalan: <span class="fw-normal">{{ $studentDetails['identificationNumber'] }}</span></p>
+                        <p class="fw-bold">No Kad Pengenalan: <span class="fw-normal">{{ $studentDetails['nric'] }}</span></p>
                     </div>
                     <div class="col">
-                        <p class="fw-bold">ID Pelajar: <span class="fw-normal">{{ $studentDetails['matrixNumber'] }}</span></p>
+                        <p class="fw-bold">ID Pelajar: <span class="fw-normal">{{ strtoupper($studentDetails['matrixNumber']) }}</span></p>
                     </div>
                 </div>
                 <div class="row mt-2 mb-2">

@@ -128,6 +128,7 @@ class UserController extends MainController
             $validated = $request->validate([
                 'username' => ['required'],
                 'fullname' => ['required'],
+                'nric' => ['required', 'regex:/\d{6}-\d{2}-\d{4}/'],
                 'gender' => ['required'],
                 'email' => ['required', 'email:rfc'],
                 'password' => ['required', 'confirmed'],
@@ -166,6 +167,7 @@ class UserController extends MainController
                 User::create([
                     'username' => strtolower($username),
                     'fullname' => strtolower($request->fullname),
+                    'nric' => strtolower($request->nric),
                     'gender' => $userGender,
                     'email' => strtolower($request->email),
                     'password' => Hash::make($request->password),
@@ -196,9 +198,9 @@ class UserController extends MainController
                 exit('Error loading file: ' . $e->getMessage());
             }
             // Get all available rows. If a row is empty (in the username field), the rest of the row will be ignored. Warn the admin.
-            $rows = $spreadsheet->getActiveSheet()->rangeToArray('A6:F106', null, false, false, true);
+            $rows = $spreadsheet->getActiveSheet()->rangeToArray('A6:G106', null, false, false, true);
 
-            if (empty($rows[6]['A']) || empty($rows[6]['B']) || empty($rows[6]['C']) || empty($rows[6]['D']) || empty($rows[6]['E']) || empty($rows[6]['F'])) {
+            if (empty($rows[6]['A']) || empty($rows[6]['B']) || empty($rows[6]['C']) || empty($rows[6]['D']) || empty($rows[6]['E']) || empty($rows[6]['F']) || empty($rows[6]['G'])) {
                 $error = 'Sekurang-kurangnya satu data pengguna diperlukan!';
                 array_push($spreadsheetErr, $error);
                 $request->session()->flash('spreadsheetErr', $spreadsheetErr);
@@ -218,19 +220,37 @@ class UserController extends MainController
 
             $userData = [];
             foreach ($availableRows as $row) {
-                $data = $spreadsheet->getActiveSheet()->rangeToArray('A' . $row . ':F' . $row, null, false, false, true);
+                $data = $spreadsheet->getActiveSheet()->rangeToArray('A' . $row . ':G' . $row, null, false, false, true);
                 array_push($userData, $data);
             }
 
             $validUserList = [];
             foreach ($userData as $dataIndex) {
                 foreach ($dataIndex as $data) {
+                    /**
+                     * A = Full name
+                     * B = Username / matrix number
+                     * C = NRIC
+                     * D = E-mail address
+                     * E = Password
+                     * F = Role
+                     * G = Gender.
+                     */
                     $fullname = strtolower($data['A']);
                     $username = strtolower($data['B']);
                     $email = strtolower($data['C']);
                     $password = $data['D'];
                     $role = $data['E'];
                     $gender = $data['F'];
+                    $gender = $data['G'];
+
+                    $fullname = strtolower($data['A']);
+                    $username = strtolower($data['B']);
+                    $nric = strtolower($data['C']);
+                    $email = $data['D'];
+                    $password = $data['E'];
+                    $role = $data['F'];
+                    $gender = $data['G'];
                     $currentRow = key($dataIndex);
 
                     // Check if user already existed with the username
@@ -251,18 +271,27 @@ class UserController extends MainController
                             $fullnameValid = $fullname;
                         }
 
-                        if (empty($email)) {
-                            $error = '[C' . $currentRow . '] ' . 'Ruangan alamat e-mel kosong!';
+                        if (empty($nric)) {
+                            $error = '[C' . $currentRow . '] ' . 'Ruangan no kad pengenalan kosong!';
                             array_push($spreadsheetErr, $error);
                         } else {
-                            // Check if email valid
+                            $nricValid = $nric;
+                        }
+
+                        if (empty($email)) {
+                            $error = '[D' . $currentRow . '] ' . 'Ruangan alamat e-mel kosong!';
+                            array_push($spreadsheetErr, $error);
+                        } else {
+                            // Check if email is not valid
                             if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                                $error = '[C' . $currentRow . '] ' . 'Alamat e-mel mestilah merupakan alamat e-mel yang sah!';
+                                $error = '[D' . $currentRow . '] ' . 'Alamat e-mel mestilah merupakan alamat e-mel yang sah!';
                                 array_push($spreadsheetErr, $error);
+                                $emailValid = null;
                             } else {
                                 if (User::where('email', strtolower($email))->first()) {
-                                    $error = '[C' . $currentRow . '] ' . 'Pengguna dengan e-mel tersebut telah wujud!';
+                                    $error = '[D' . $currentRow . '] ' . 'Pengguna dengan e-mel tersebut telah wujud!';
                                     array_push($spreadsheetErr, $error);
+                                    $emailValid = null;
                                 } else {
                                     $emailValid = $email;
                                 }
@@ -270,14 +299,14 @@ class UserController extends MainController
                         }
 
                         if (empty($password)) {
-                            $error = '[D' . $currentRow . '] ' . 'Ruangan kata laluan kosong!';
+                            $error = '[E' . $currentRow . '] ' . 'Ruangan kata laluan kosong!';
                             array_push($spreadsheetErr, $error);
                         } else {
                             $passwordValid = $password;
                         }
 
                         if (empty($role)) {
-                            $error = '[E' . $currentRow . '] ' . 'Ruangan peranan kosong!';
+                            $error = '[F' . $currentRow . '] ' . 'Ruangan peranan kosong!';
                             array_push($spreadsheetErr, $error);
                         } else {
                             // Check if role valid
@@ -295,7 +324,7 @@ class UserController extends MainController
                                     $roleValid = 'admin';
                                     break;
                                 default:
-                                    $error = '[E' . $currentRow . '] ' . 'Hanya masukkan huruf yang diperlukan di ruangan peranan!';
+                                    $error = '[F' . $currentRow . '] ' . 'Hanya masukkan huruf yang diperlukan di ruangan peranan!';
                                     array_push($spreadsheetErr, $error);
                                     break;
                             }
@@ -303,7 +332,7 @@ class UserController extends MainController
 
                         // User gender
                         if (empty($gender)) {
-                            $error = '[F' . $currentRow . '] ' . 'Ruangan jantina kosong!';
+                            $error = '[G' . $currentRow . '] ' . 'Ruangan jantina kosong!';
                             array_push($spreadsheetErr, $error);
                         } else {
                             // Lelaki = L
@@ -320,7 +349,7 @@ class UserController extends MainController
                                     $genderValid = 2;
                                     break;
                                 default:
-                                    $error = '[F' . $currentRow . '] ' . 'Hanya masukkan huruf yang diperlukan di ruangan jantina!';
+                                    $error = '[G' . $currentRow . '] ' . 'Hanya masukkan huruf yang diperlukan di ruangan jantina!';
                                     array_push($spreadsheetErr, $error);
                                     break;
                             }
@@ -329,6 +358,7 @@ class UserController extends MainController
                         $validUser = [
                             'username' => $usernameValid,
                             'fullname' => $fullnameValid,
+                            'nric' => $nricValid,
                             'email' => $emailValid,
                             'password' => Hash::make($passwordValid),
                             'role' => $roleValid,
@@ -339,13 +369,27 @@ class UserController extends MainController
                 }
             }
 
+            // Checks if there's the same email addresses in valid user list
+            $userEmails = [];
+            for ($i = 0; $i < count($validUserList); ++$i) {
+                $userEmails[$i] = $validUserList[$i]['email'];
+            }
+
+            // Get duplicated emails
+            $duplicatedEmails = array_diff_assoc($userEmails, array_unique($userEmails));
+
+            foreach ($duplicatedEmails as $e) {
+                $error = '[' . $e . '] ' . 'Pengguna dengan alamat e-mel yang sama telah digunakan dalam templat ini!';
+                array_push($spreadsheetErr, $error);
+            }
+
             // If if there's no problem with the spreadsheet, if doesn't, proceed to add the users.
             if (count($spreadsheetErr) > 0) {
                 $request->session()->flash('spreadsheetErr', $spreadsheetErr);
 
                 return back();
             } else {
-                User::upsert($validUserList, ['username'], ['fullname', 'email', 'password', 'role', 'gender']);
+                User::upsert($validUserList, ['username'], ['fullname', 'nric', 'email', 'password', 'role', 'gender']);
                 $request->session()->flash('userBulkAddSuccess', count($validUserList) . ' pengguna berjaya ditambah secara pukal!');
 
                 return back();
@@ -358,12 +402,14 @@ class UserController extends MainController
         $validated = $request->validate([
             'username' => ['required'],
             'fullname' => ['required'],
+            'nric' => ['required', 'regex:/\d{6}-\d{2}-\d{4}/'],
             'gender' => ['required'],
             'email' => ['required', 'email:rfc'],
         ]);
         $username = $request->username;
         $fullname = $request->fullname;
         $email = $request->email;
+        $nric = $request->nric;
 
         switch ($request->input('gender')) {
             case 'male':
@@ -387,10 +433,11 @@ class UserController extends MainController
             User::where('username', $username)->update([
                 'username' => strtolower($username),
                 'fullname' => strtolower($fullname),
+                'nric' => strtolower($nric),
                 'gender' => strtolower($userGender),
                 'email' => strtolower($email),
             ]);
-            session()->flash('userBulkAddSuccess', 'Pengguna berjaya dikemas kini!');
+            session()->flash('userUpdateSuccess', 'Pengguna berjaya dikemas kini!');
 
             return redirect()->back();
         } else {

@@ -57,6 +57,16 @@
                     @enderror
                 </div>
                 <div class="form-floating mb-3">
+                    <input type="text" name="nric" id="nric" class="form-control" placeholder="number" value="@php if(old('nric') !== null){echo old('nric');}else{echo NULL;} @endphp">
+                    <label for="nric" class="form-label">No. Kad Pengenalan</label>
+                    <div class="form-text">
+                        Format: XXXXXX-XX-XXXX
+                    </div>
+                    @error('nric')
+                        <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+                <div class="form-floating mb-3">
                     <select name="gender" id="gender" class="form-select mb-1">
                         <option value="male">Lelaki</option>
                         <option value="female">Perempuan</option>

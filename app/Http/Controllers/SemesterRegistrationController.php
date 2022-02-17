@@ -282,12 +282,13 @@ class SemesterRegistrationController extends MainController
                     $studyYear = '';
                     break;
             }
+            $user = User::where('username', $username)->first();
             $registrationStudyYear = $studyYear;
             $registrationSemester = $semester;
             $registrationSessionYear = $semesterSession->session . '/' . $semesterSession->year;
-            $studentName = User::where('username', $username)->first()->fullname;
-            $studentICNo = $userProfile->identification_number;
-            $studentMatrixNumber = User::where('username', $username)->first()->username;
+            $studentName = $user->fullname;
+            $studentICNo = $user->nric;
+            $studentMatrixNumber = $user->username;
 
             $pdfTitle = 'Pendaftaran Semester ' . $semester . ' ' . strtoupper($studyLevelsCode) . ' ' . ucwords($studentName);
             PDF::SetCreator('eKV');

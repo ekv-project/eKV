@@ -30,6 +30,17 @@
             @endif
             <form action="" method="post">
                 @csrf
+                <div class="row mt-3">
+                    <div class="col">
+                        <p class="fw-bold">Nama Pelajar: <span class="fw-normal">{{ strtoupper($studentDetails['name']) }}</span></p>
+                    </div>
+                    <div class="col">
+                        <p class="fw-bold">No Kad Pengenalan: <span class="fw-normal">{{ $studentDetails['nric'] }}</span></p>
+                    </div>
+                    <div class="col">
+                        <p class="fw-bold">ID Pelajar: <span class="fw-normal">{{ strtoupper($studentDetails['matrixNumber']) }}</span></p>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col">
                         <div class="form-floating mb-3">
