@@ -96,16 +96,16 @@
                                     @if(session()->has('successRemove'))
                                         <div class="alert alert-success">{{ session('successRemove') }}</div>
                                     @endif
-                                    <th class="col-1 align-middle">NO</th>
-                                    <th class="col-2 align-middle">ID PENGGUNA</th>
-                                    <th class="col-2 align-middle">NO KAD PENGENALAN</th>
-                                    <th class="col-2 align-middle">NAMA PENUH</th>
-                                    <th class="col-2 align-middle">JANTINA</th>
-                                    <th class="col-2 align-middle">ALAMAT E-MEL</th>
-                                    <th class="col-2 align-middle">PERANAN</th>
-                                    <th class="col-2 align-middle">PROFIL</th>
-                                    <th class="col-2 align-middle">KEMAS KINI</th>
-                                    <th class="col-2 align-middle">BUANG</th>
+                                    <th class="align-middle">NO</th>
+                                    <th class="align-middle">ID PENGGUNA</th>
+                                    <th class="align-middle">NO KAD PENGENALAN</th>
+                                    <th class="align-middle">NAMA PENUH</th>
+                                    <th class="align-middle">JANTINA</th>
+                                    <th class="align-middle text-break text-wrap">ALAMAT E-MEL</th>
+                                    <th class="align-middle">PERANAN</th>
+                                    <th class="align-middle">PROFIL</th>
+                                    <th class="align-middle">KEMAS KINI</th>
+                                    <th class="align-middle">BUANG</th>
                                 </tr>
                             </thead>
                             <tbody>

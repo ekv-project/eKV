@@ -8,7 +8,6 @@ use App\Models\Course;
 use App\Models\Program;
 use App\Models\StudyLevel;
 use App\Models\CourseGrade;
-use App\Models\UserProfile;
 use Illuminate\Http\Request;
 use App\Models\SemesterGrade;
 use App\Models\ClassroomStudent;
