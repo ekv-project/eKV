@@ -13,7 +13,6 @@
         "doctrine/dbal": "^3.2",
         "elibyy/tcpdf-laravel": "^9.0",
         "erusev/parsedown": "^1.7",
-        "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "intervention/image": "^2.5",
