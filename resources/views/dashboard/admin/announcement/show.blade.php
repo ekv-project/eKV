@@ -20,7 +20,7 @@
                 <span class="fw-bold">Penulis: <span class="fw-normal">{{ strtoupper($announcementPost->username) }}</span></span>
             </div>
             <div class="row my-3">
-                <p class="fw-bold">Kandugan:</p>
+                <p class="fw-bold">Kandungan:</p>
                 <div class="border border-primary border-1">
                     <div class="my-2">@parsedown($announcementPost->content)</div>
                 </div>
