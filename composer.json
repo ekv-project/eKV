@@ -9,7 +9,7 @@
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.0",
-        "blade-ui-kit/blade-ui-kit": "^0.3.1",
+        "blade-ui-kit/blade-ui-kit": "^0.3.4",
         "doctrine/dbal": "^3.2",
         "elibyy/tcpdf-laravel": "^9.0",
         "erusev/parsedown": "^1.7",

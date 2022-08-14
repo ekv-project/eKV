@@ -24,7 +24,7 @@
         <link rel="shortcut icon" href="{{ asset('storage/img/system/logo-def-300.png') }}" type="image/png">
     @endif
     <title>{{ $page }} - {{ env('APP_NAME') }} | {{ $instituteName }}</title>
-    @bukStyles
+    @bukStyles(true)
 </head>
 <body>
     <div id="background-image"></div>
@@ -132,6 +132,6 @@
         </div>
     </div>
     <script type="module" src="{{ asset('js/app.js') }}"></script>
-    @bukScripts
+    @bukScripts(true)
 </body>
 </html>
