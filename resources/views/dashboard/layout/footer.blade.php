@@ -17,7 +17,7 @@
                                 eKV
                             </div>
                             <div class="col-6">
-                                <p>Oleh: eKV Contributors</p>
+                                <p>Oleh: Hanis Irfan, Hadirah Aina, Iskandar Luqman & eKV Contributors</p>
                                 <p>Lesen: GPLv3</p>
                             </div>
                         </div>
