@@ -85,6 +85,9 @@ class CourseController extends MainController
 
     public function setAddView()
     {
+        if (StudyLevel::select('code', 'name', 'total_semester')->count() < 1) {
+            abort(404, 'Tiada tahap pengajian dijumpai!');
+        }
         $studyLevels = StudyLevel::select('code', 'name', 'total_semester')->get();
         $maxSemester = StudyLevel::select('total_semester')->get()->max()['total_semester'];
 
