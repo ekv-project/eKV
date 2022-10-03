@@ -1,6 +1,6 @@
 -----------------------------------------
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 # THIS PROJECT IS STILL UNDER DEVELOPMENT
 -----------------------------------------
@@ -48,11 +48,17 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
 <table>
-  <tr>
-    <td align="center"><a href="https://www.hanisirfan.xyz"><img src="https://avatars.githubusercontent.com/u/66242389?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Muhammad Hanis Irfan Mohd Zaid</b></sub></a><br /><a href="#maintenance-hanisirfan" title="Maintenance">🚧</a> <a href="https://github.com/hadiirfan/eKV/commits?author=hanisirfan" title="Code">💻</a> <a href="#ideas-hanisirfan" title="Ideas, Planning, & Feedback">🤔</a> <a href="#design-hanisirfan" title="Design">🎨</a> <a href="https://github.com/hadiirfan/eKV/commits?author=hanisirfan" title="Documentation">📖</a></td>
-    <td align="center"><a href="https://github.com/amihadi"><img src="https://avatars.githubusercontent.com/u/95136371?v=4?s=100" width="100px;" alt=""/><br /><sub><b>amihadi</b></sub></a><br /><a href="#maintenance-amihadi" title="Maintenance">🚧</a></td>
-    <td align="center"><a href="https://github.com/GenericNominalUser"><img src="https://avatars.githubusercontent.com/u/67431218?v=4?s=100" width="100px;" alt=""/><br /><sub><b>GenericNominalUser</b></sub></a><br /><a href="https://github.com/hadiirfan/eKV/commits?author=GenericNominalUser" title="Code">💻</a></td>
-  </tr>
+  <tbody>
+    <tr>
+      <td align="center"><a href="https://www.hanisirfan.xyz"><img src="https://avatars.githubusercontent.com/u/66242389?v=4?s=100" width="100px;" alt="Muhammad Hanis Irfan Mohd Zaid"/><br /><sub><b>Muhammad Hanis Irfan Mohd Zaid</b></sub></a><br /><a href="#maintenance-hanisirfan" title="Maintenance">🚧</a> <a href="https://github.com/ekv-project/eKV/commits?author=hanisirfan" title="Code">💻</a> <a href="#ideas-hanisirfan" title="Ideas, Planning, & Feedback">🤔</a> <a href="#design-hanisirfan" title="Design">🎨</a> <a href="https://github.com/ekv-project/eKV/commits?author=hanisirfan" title="Documentation">📖</a></td>
+      <td align="center"><a href="https://github.com/amihadi"><img src="https://avatars.githubusercontent.com/u/95136371?v=4?s=100" width="100px;" alt="amihadi"/><br /><sub><b>amihadi</b></sub></a><br /><a href="#maintenance-amihadi" title="Maintenance">🚧</a></td>
+      <td align="center"><a href="https://github.com/GenericNominalUser"><img src="https://avatars.githubusercontent.com/u/67431218?v=4?s=100" width="100px;" alt="GenericNominalUser"/><br /><sub><b>GenericNominalUser</b></sub></a><br /><a href="https://github.com/ekv-project/eKV/commits?author=GenericNominalUser" title="Code">💻</a></td>
+      <td align="center"><a href="http://farhanhelmy.xyz"><img src="https://avatars.githubusercontent.com/u/59960562?v=4?s=100" width="100px;" alt="Farhan Helmy"/><br /><sub><b>Farhan Helmy</b></sub></a><br /><a href="https://github.com/ekv-project/eKV/commits?author=farhan-helmy" title="Code">💻</a></td>
+    </tr>
+  </tbody>
+  <tfoot>
+    
+  </tfoot>
 </table>
 
 <!-- markdownlint-restore -->
