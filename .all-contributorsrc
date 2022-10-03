@@ -35,11 +35,20 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "farhan-helmy",
+      "name": "Farhan Helmy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/59960562?v=4",
+      "profile": "http://farhanhelmy.xyz",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
   "projectName": "eKV",
-  "projectOwner": "hadiirfan",
+  "projectOwner": "ekv-project",
   "repoType": "github",
   "repoHost": "https://github.com",
   "skipCi": true
